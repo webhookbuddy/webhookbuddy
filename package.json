@@ -18,11 +18,13 @@
     "typescript": "^3.7.5"
   },
   "scripts": {
-    "electron": "electron .",
-    "start": "react-scripts start",
+    "start": "nf start -p 3000",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "electron": "electron .",
+    "electron-start": "node src/electron-wait-react",
+    "react-start": "react-scripts start"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -41,6 +43,7 @@
   },
   "devDependencies": {
     "electron": "^8.2.1",
-    "electron-is-dev": "^1.2.0"
+    "electron-is-dev": "^1.2.0",
+    "foreman": "^3.0.1"
   }
 }
