@@ -1,0 +1,23 @@
+.viewport--endpoints {
+  grid-template-areas:
+    "header"
+    "endpoints";
+  grid-template-rows: auto 1fr;
+  grid-template-columns: auto;
+}
+
+.endpoints {
+  grid-area: endpoints;
+  height: 100%;
+  overflow-y: hidden;
+}
+
+.endpoints__container {
+  height: 100%;
+  overflow-y: auto;
+}
+
+.endpoints__container__pad {
+  margin-top: 40px;
+  margin-bottom: 40px;
+}

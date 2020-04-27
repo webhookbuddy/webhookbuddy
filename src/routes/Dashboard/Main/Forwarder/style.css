@@ -1,0 +1,11 @@
+.forwarder {
+  padding: 10px;
+  display: grid;
+  grid-template-columns: min-content auto;
+  align-items: center;
+}
+
+.forwarder__icon {
+  color: #28a745;
+  margin-right: 10px;
+}

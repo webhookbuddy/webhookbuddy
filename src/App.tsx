@@ -1,13 +1,15 @@
 import React from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
-import Dashboard from 'routes/Dashboard';
 import Endpoints from 'routes/Endpoints';
+import Dashboard from 'routes/Dashboard';
+
+import './App.css';
 
 function App() {
   return (
     <Router>
-      <Route exact path="/" component={Dashboard} />
-      <Route path="/endpoints" component={Endpoints} />
+      <Route exact path="/" component={Endpoints} />
+      <Route path="/endpoints/:id" component={Dashboard} />
     </Router>
   );
 }

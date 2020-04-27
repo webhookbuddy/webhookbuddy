@@ -1,0 +1,6 @@
+.main__body {
+  overflow-y: auto;
+
+  /* not sure why, but without the -112px, we can't scroll to the bottom of the content due to player and bootstrap's tabs */
+  height: calc(100% - 112px);
+}

@@ -1,0 +1,37 @@
+.webhooks__item {
+  padding: 6px 10px;
+  display: grid;
+  grid-template-columns: 1fr 78px;
+}
+
+.webhooks__item:hover {
+  background: #ededed;
+  cursor: pointer;
+}
+
+.webhooks__item--active,
+.webhooks__item--active:hover {
+  background: #f09e22;
+  color: white;
+}
+
+.webhooks__item__label {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* SASS nest */
+.webhooks__item--unread .webhooks__item__label {
+  font-weight: bold;
+}
+
+.webhooks__item__badges {
+  text-align: right;
+}
+
+.webhooks__item__badges > .badge {
+  /* A little hack to verticall center the bootstrap badges */
+  margin-top: -4px;
+  vertical-align: middle;
+}

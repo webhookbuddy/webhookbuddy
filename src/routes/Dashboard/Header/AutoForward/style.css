@@ -1,0 +1,37 @@
+.dash-header__auto-forward {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+}
+
+.dash-header__auto-forward__icon {
+  margin-right: 10px;
+}
+
+.dash-header__auto-forward__icon__button {
+  color: hsl(354, 70%, 54%);
+}
+
+/* TODO: nested sass */
+.dash-header__auto-forward__icon--on
+  .dash-header__auto-forward__icon__button {
+  animation: autoForwardButtonOn 1.6s infinite;
+}
+
+@keyframes autoForwardButtonOn {
+  0% {
+    color: hsl(354, 70%, 54%);
+  }
+  30% {
+    color: hsl(354, 70%, 75%);
+  }
+  50% {
+    color: hsl(354, 70%, 75%);
+  }
+  90% {
+    color: hsl(354, 70%, 54%);
+  }
+  100% {
+    color: hsl(354, 70%, 54%);
+  }
+}

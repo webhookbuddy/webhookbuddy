@@ -1,0 +1,39 @@
+.forward__header {
+  padding: 6px 10px;
+  display: grid;
+  grid-template-columns: 1fr 24px;
+}
+
+.forward__header:hover {
+  background: #ededed;
+  cursor: pointer;
+}
+
+.forward--active .forward__header {
+  background: #f09e22;
+  color: white;
+}
+
+.forward__header__label {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.forward__header__badges {
+  text-align: right;
+}
+
+.forward__header__badges__icon--success {
+  color: #28a745;
+}
+
+.forward__header__badges__icon--error {
+  color: #dc3545;
+}
+
+.forward__details {
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+  padding: 6px 10px;
+}

@@ -1,0 +1,7 @@
+.dash-header {
+  grid-area: header;
+  padding: 10px;
+  border-bottom: 1px solid #bbb;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
