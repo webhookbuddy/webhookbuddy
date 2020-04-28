@@ -6,6 +6,7 @@ const Webhooks = () => {
     <div className="webhooks" style={{ height: '1500px' }}>
       <Item
         key="1"
+        id="1"
         label="Apr 12, 16:43 Stripe invoice.created"
         isActive={false}
         isUnread={true}
@@ -14,6 +15,7 @@ const Webhooks = () => {
       />
       <Item
         key="2"
+        id="2"
         label="Apr 12, 16:43 Stripe invoice.created"
         isActive={false}
         isUnread={true}
@@ -22,6 +24,7 @@ const Webhooks = () => {
       />
       <Item
         key="3"
+        id="3"
         label="Apr 12, 16:43 Stripe invoice.created"
         isActive={true}
         isUnread={false}
@@ -30,6 +33,7 @@ const Webhooks = () => {
       />
       <Item
         key="4"
+        id="4"
         label="Apr 12, 16:43 Stripe invoice.created"
         isActive={false}
         isUnread={false}
@@ -38,6 +42,7 @@ const Webhooks = () => {
       />
       <Item
         key="5"
+        id="5"
         label="Apr 12, 16:43 Stripe invoice.created Lorem ipsum dolor sit amet, consectetur adipiscing elit."
         isActive={false}
         isUnread={false}
@@ -46,6 +51,7 @@ const Webhooks = () => {
       />
       <Item
         key="6"
+        id="6"
         label="Apr 12, 16:43 Stripe invoice.created"
         isActive={false}
         isUnread={false}

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import Header from './Header';
 
 import './style.css';
@@ -13,8 +14,8 @@ const Endpoints = () => {
             <div className="container">
               <h2>Endpoints</h2>
               <div className="list-group">
-                <a
-                  href="/"
+                <Link
+                  to={`/endpoints/1`}
                   className="list-group-item list-group-item-action list-group-item-secondary active"
                 >
                   <div className="d-flex w-100 justify-content-between">
@@ -28,9 +29,9 @@ const Endpoints = () => {
                     http://proxy.example.com/some-random-value | Copy
                     to clipboard
                   </p>
-                </a>
-                <a
-                  href="/"
+                </Link>
+                <Link
+                  to={`/endpoints/1`}
                   className="list-group-item list-group-item-action list-group-item-secondary"
                 >
                   <div className="d-flex w-100 justify-content-between">
@@ -44,9 +45,9 @@ const Endpoints = () => {
                     http://proxy.example.com/some-random-value | Copy
                     to clipboard
                   </p>
-                </a>
-                <a
-                  href="/"
+                </Link>
+                <Link
+                  to={`/endpoints/1`}
                   className="list-group-item list-group-item-action list-group-item-secondary"
                 >
                   <div className="d-flex w-100 justify-content-between">
@@ -60,9 +61,9 @@ const Endpoints = () => {
                     http://proxy.example.com/some-random-value | Copy
                     to clipboard
                   </p>
-                </a>
-                <a
-                  href="/"
+                </Link>
+                <Link
+                  to={`/endpoints/1`}
                   className="list-group-item list-group-item-action list-group-item-secondary"
                 >
                   <div className="d-flex w-100 justify-content-between">
@@ -76,9 +77,9 @@ const Endpoints = () => {
                     http://proxy.example.com/some-random-value | Copy
                     to clipboard
                   </p>
-                </a>
-                <a
-                  href="/"
+                </Link>
+                <Link
+                  to={`/endpoints/1`}
                   className="list-group-item list-group-item-action list-group-item-secondary"
                 >
                   <div className="d-flex w-100 justify-content-between">
@@ -92,9 +93,9 @@ const Endpoints = () => {
                     http://proxy.example.com/some-random-value | Copy
                     to clipboard
                   </p>
-                </a>
-                <a
-                  href="/"
+                </Link>
+                <Link
+                  to={`/endpoints/1`}
                   className="list-group-item list-group-item-action list-group-item-secondary"
                 >
                   <div className="d-flex w-100 justify-content-between">
@@ -108,9 +109,9 @@ const Endpoints = () => {
                     http://proxy.example.com/some-random-value | Copy
                     to clipboard
                   </p>
-                </a>
-                <a
-                  href="/"
+                </Link>
+                <Link
+                  to={`/endpoints/1`}
                   className="list-group-item list-group-item-action list-group-item-secondary"
                 >
                   <div className="d-flex w-100 justify-content-between">
@@ -124,9 +125,9 @@ const Endpoints = () => {
                     http://proxy.example.com/some-random-value | Copy
                     to clipboard
                   </p>
-                </a>
-                <a
-                  href="/"
+                </Link>
+                <Link
+                  to={`/endpoints/1`}
                   className="list-group-item list-group-item-action list-group-item-secondary"
                 >
                   <div className="d-flex w-100 justify-content-between">
@@ -140,9 +141,9 @@ const Endpoints = () => {
                     http://proxy.example.com/some-random-value | Copy
                     to clipboard
                   </p>
-                </a>
-                <a
-                  href="/"
+                </Link>
+                <Link
+                  to={`/endpoints/1`}
                   className="list-group-item list-group-item-action list-group-item-secondary"
                 >
                   <div className="d-flex w-100 justify-content-between">
@@ -156,9 +157,9 @@ const Endpoints = () => {
                     http://proxy.example.com/some-random-value | Copy
                     to clipboard
                   </p>
-                </a>
-                <a
-                  href="/"
+                </Link>
+                <Link
+                  to={`/endpoints/1`}
                   className="list-group-item list-group-item-action list-group-item-secondary"
                 >
                   <div className="d-flex w-100 justify-content-between">
@@ -172,7 +173,7 @@ const Endpoints = () => {
                     http://proxy.example.com/some-random-value | Copy
                     to clipboard
                   </p>
-                </a>
+                </Link>
               </div>
               <button
                 type="button"

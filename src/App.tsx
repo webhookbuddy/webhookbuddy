@@ -9,7 +9,7 @@ function App() {
   return (
     <Router>
       <Route exact path="/" component={Endpoints} />
-      <Route path="/endpoints/:id" component={Dashboard} />
+      <Route path="/endpoints/:endpointId" component={Dashboard} />
     </Router>
   );
 }

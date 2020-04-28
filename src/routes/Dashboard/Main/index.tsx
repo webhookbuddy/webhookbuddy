@@ -1,16 +1,18 @@
 import React from 'react';
-import Forwarder from './Forwarder';
-import Tabs from './Tabs';
-import Body from './Body';
+import { Route } from 'react-router-dom';
+import None from './None';
+import Some from './Some';
 
 import './style.css';
 
 const Main = () => {
   return (
     <div className="main">
-      <Forwarder />
-      <Tabs />
-      <Body />
+      <Route exact path="/endpoints/:endpointId" component={None} />
+      <Route
+        path="/endpoints/:endpointId/webhooks/:webhookIds"
+        component={Some}
+      />
     </div>
   );
 };
