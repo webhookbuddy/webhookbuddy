@@ -8,6 +8,8 @@ import { HttpLink } from 'apollo-link-http';
 import { onError } from 'apollo-link-error';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 
+import { typeDefs, resolvers } from 'schema/resolvers';
+
 import 'bootstrap/dist/css/bootstrap.css';
 import 'font-awesome/css/font-awesome.min.css';
 import './index.css';
@@ -31,6 +33,8 @@ const cache = new InMemoryCache();
 const client = new ApolloClient({
   link,
   cache,
+  typeDefs,
+  resolvers,
 });
 
 ReactDOM.render(
