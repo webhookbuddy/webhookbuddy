@@ -10,6 +10,8 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 
 import { typeDefs, resolvers } from 'schema/resolvers';
 
+import { UserProvider } from 'context/user-context';
+
 import 'bootstrap/dist/css/bootstrap.css';
 import 'font-awesome/css/font-awesome.min.css';
 import './index.css';
@@ -40,7 +42,9 @@ const client = new ApolloClient({
 ReactDOM.render(
   <React.StrictMode>
     <ApolloProvider client={client}>
-      <App />
+      <UserProvider>
+        <App />
+      </UserProvider>
     </ApolloProvider>
   </React.StrictMode>,
   document.getElementById('root'),
