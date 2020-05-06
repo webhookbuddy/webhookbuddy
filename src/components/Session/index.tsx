@@ -7,7 +7,7 @@ import Error from 'components/Error';
 import Loading from 'components/Loading';
 import { User } from 'schema/types';
 
-export const GET_Me = gql`
+export const GET_ME = gql`
   query getMe {
     me {
       ...user
@@ -16,13 +16,13 @@ export const GET_Me = gql`
   ${USER_FRAGMENT}
 `;
 
-export interface MePayload {
+interface MePayload {
   me: User;
 }
 
 const Session = () => {
   const setMe = useSetMe();
-  const { loading, error, refetch } = useQuery<MePayload>(GET_Me, {
+  const { loading, error, refetch } = useQuery<MePayload>(GET_ME, {
     notifyOnNetworkStatusChange: true,
     onCompleted: ({ me }) => {
       setMe(me);
