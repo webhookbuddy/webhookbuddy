@@ -10,3 +10,12 @@ export const USER_FRAGMENT = gql`
     email
   }
 `;
+
+export const ENDPOINT_FRAGMENT = gql`
+  fragment endpoint on Endpoint {
+    id
+    createdAt
+    url
+    name
+  }
+`;

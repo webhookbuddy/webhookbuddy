@@ -1,8 +1,17 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Header from './Header';
+import gql from 'graphql-tag';
+import { ENDPOINT_FRAGMENT } from 'schema/fragments';
 
 import './style.css';
+
+export const GET_ENDPOINTS = gql`
+  query getEndpoints {
+    ...endpoint
+  }
+  ${ENDPOINT_FRAGMENT}
+`;
 
 const Endpoints = () => {
   return (
