@@ -41,3 +41,10 @@ export type User = {
   lastName: string;
   email: string;
 };
+
+export type Endpoint = {
+  id: string;
+  createdAt: Date;
+  url: string;
+  name: string;
+};
