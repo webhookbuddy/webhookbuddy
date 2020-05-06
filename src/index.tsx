@@ -5,8 +5,13 @@ import { ApolloProvider } from '@apollo/react-hooks';
 import { ApolloClient } from 'apollo-client';
 import { ApolloLink } from 'apollo-link';
 import { HttpLink } from 'apollo-link-http';
+import { setContext } from 'apollo-link-context';
 import { onError } from 'apollo-link-error';
 import { InMemoryCache } from 'apollo-cache-inmemory';
+
+import { typeDefs, resolvers } from 'schema/resolvers';
+
+import { UserProvider } from 'context/user-context';
 
 import 'bootstrap/dist/css/bootstrap.css';
 import 'font-awesome/css/font-awesome.min.css';
@@ -14,29 +19,61 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
+const cache = new InMemoryCache();
+cache.writeData({
+  data: {
+    isLoggedIn: !!localStorage.getItem('x-token'),
+  },
+});
+
 const httpLink = new HttpLink({
   uri: `${process.env.REACT_APP_API_ORIGIN}/graphql`,
 });
 
+const authLink = setContext((_, { headers }) => ({
+  headers: {
+    ...headers,
+    'x-token': localStorage.getItem('x-token') || '',
+  },
+}));
+
 const errorLink = onError(({ graphQLErrors, networkError }) => {
-  if (graphQLErrors) console.log('graphQLErrors', graphQLErrors);
+  if (graphQLErrors) {
+    for (const err of graphQLErrors) {
+      if (
+        err.extensions &&
+        (err.extensions.code === 'AUTHENTICATION' ||
+          err.extensions.code === 'FORBIDDEN')
+      ) {
+        localStorage.removeItem('x-token');
+        cache.writeData({
+          data: {
+            isLoggedIn: false,
+          },
+        });
+      } else if (err.extensions)
+        console.log(`${err.extensions?.code} error`);
+    }
+  }
 
   if (networkError) console.log('networkError', networkError);
 });
 
-const link = ApolloLink.from([errorLink, httpLink]);
-
-const cache = new InMemoryCache();
+const link = ApolloLink.from([errorLink, authLink, httpLink]);
 
 const client = new ApolloClient({
   link,
   cache,
+  typeDefs,
+  resolvers,
 });
 
 ReactDOM.render(
   <React.StrictMode>
     <ApolloProvider client={client}>
-      <App />
+      <UserProvider>
+        <App />
+      </UserProvider>
     </ApolloProvider>
   </React.StrictMode>,
   document.getElementById('root'),
