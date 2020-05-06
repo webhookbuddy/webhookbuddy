@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { Endpoint as EndpointType } from 'schema/types';
 import moment from 'moment';
 
+import './style.css';
+
 const Endpoint = ({ endpoint }: { endpoint: EndpointType }) => {
   const handleCopyClick = (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
@@ -19,15 +21,22 @@ const Endpoint = ({ endpoint }: { endpoint: EndpointType }) => {
         </h5>
         <small>Created {moment(endpoint.createdAt).fromNow()}</small>
       </div>
-      <p className="mb-1">Send your webhooks to this URL:</p>
-      <p className="mb-1">
-        <mark>{endpoint.url}</mark>{' '}
-        <a
-          href=""
-          className="fa fa-clipboard"
+      <div className="mb-1">Send your webhooks to this URL:</div>
+      <div className="mb-1 endpoint-url">
+        <div>
+          <input
+            type="text"
+            value={endpoint.url}
+            onFocus={e => e.target.select()}
+            readOnly
+            className="endpoint-url__input"
+          />
+        </div>
+        <i
+          className="fa fa-clipboard pointer endpoint-url__icon"
           onClick={handleCopyClick}
-        ></a>
-      </p>
+        ></i>
+      </div>
     </div>
   );
 };

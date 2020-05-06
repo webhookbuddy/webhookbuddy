@@ -1,0 +1,15 @@
+.endpoint-url {
+  display: grid;
+  grid-template-columns: 1fr auto;
+}
+
+.endpoint-url__input {
+  width: 100%;
+}
+
+.endpoint-url__icon {
+  display: flex;
+  align-items: center;
+  font-size: 1.2rem;
+  margin-left: 10px;
+}
