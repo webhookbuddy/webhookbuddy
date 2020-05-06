@@ -5,6 +5,7 @@ import { ApolloProvider } from '@apollo/react-hooks';
 import { ApolloClient } from 'apollo-client';
 import { ApolloLink } from 'apollo-link';
 import { HttpLink } from 'apollo-link-http';
+import { setContext } from 'apollo-link-context';
 import { onError } from 'apollo-link-error';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 
@@ -28,6 +29,13 @@ cache.writeData({
 const httpLink = new HttpLink({
   uri: `${process.env.REACT_APP_API_ORIGIN}/graphql`,
 });
+
+const authLink = setContext((_, { headers }) => ({
+  headers: {
+    ...headers,
+    'x-token': localStorage.getItem('x-token') || '',
+  },
+}));
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors) {
