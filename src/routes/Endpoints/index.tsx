@@ -1,10 +1,46 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import Header from './Header';
+import gql from 'graphql-tag';
+import { ENDPOINT_FRAGMENT } from 'schema/fragments';
+import { useQuery } from '@apollo/react-hooks';
+import { Endpoint } from 'schema/types';
+import EndpointComponent from './Endpoint';
+import Loading from 'components/Loading';
+import Error from 'components/Error';
 
 import './style.css';
 
+export const GET_ENDPOINTS = gql`
+  query getEndpoints {
+    endpoints {
+      ...endpoint
+    }
+  }
+  ${ENDPOINT_FRAGMENT}
+`;
+
+export interface EndpointsPayload {
+  endpoints: Endpoint[];
+}
+
 const Endpoints = () => {
+  const { data, error, loading, refetch } = useQuery<
+    EndpointsPayload
+  >(GET_ENDPOINTS);
+
+  const retry = () => refetch().catch(() => {}); // Unless we catch, a network error will cause an unhandled rejection: https://github.com/apollographql/apollo-client/issues/3963
+
+  if (error)
+    return (
+      <Error error={error}>
+        <button className="btn btn-primary" onClick={retry}>
+          Try again!
+        </button>
+      </Error>
+    );
+
+  if (loading) return <Loading />;
+
   return (
     <div className="viewport viewport--endpoints">
       <Header />
@@ -14,166 +50,12 @@ const Endpoints = () => {
             <div className="container">
               <h2>Endpoints</h2>
               <div className="list-group">
-                <Link
-                  to={`/endpoints/1`}
-                  className="list-group-item list-group-item-action list-group-item-secondary active"
-                >
-                  <div className="d-flex w-100 justify-content-between">
-                    <h5 className="mb-1">ACME w/ Stripe</h5>
-                    <small>Created 3 days ago</small>
-                  </div>
-                  <p className="mb-1">
-                    Send your webhooks to this URL:
-                  </p>
-                  <p className="mb-1">
-                    http://proxy.example.com/some-random-value | Copy
-                    to clipboard
-                  </p>
-                </Link>
-                <Link
-                  to={`/endpoints/1`}
-                  className="list-group-item list-group-item-action list-group-item-secondary"
-                >
-                  <div className="d-flex w-100 justify-content-between">
-                    <h5 className="mb-1">ACME w/ Stripe</h5>
-                    <small>Created 3 days ago</small>
-                  </div>
-                  <p className="mb-1">
-                    Send your webhooks to this URL:
-                  </p>
-                  <p className="mb-1">
-                    http://proxy.example.com/some-random-value | Copy
-                    to clipboard
-                  </p>
-                </Link>
-                <Link
-                  to={`/endpoints/1`}
-                  className="list-group-item list-group-item-action list-group-item-secondary"
-                >
-                  <div className="d-flex w-100 justify-content-between">
-                    <h5 className="mb-1">ACME w/ Stripe</h5>
-                    <small>Created 3 days ago</small>
-                  </div>
-                  <p className="mb-1">
-                    Send your webhooks to this URL:
-                  </p>
-                  <p className="mb-1">
-                    http://proxy.example.com/some-random-value | Copy
-                    to clipboard
-                  </p>
-                </Link>
-                <Link
-                  to={`/endpoints/1`}
-                  className="list-group-item list-group-item-action list-group-item-secondary"
-                >
-                  <div className="d-flex w-100 justify-content-between">
-                    <h5 className="mb-1">ACME w/ Stripe</h5>
-                    <small>Created 3 days ago</small>
-                  </div>
-                  <p className="mb-1">
-                    Send your webhooks to this URL:
-                  </p>
-                  <p className="mb-1">
-                    http://proxy.example.com/some-random-value | Copy
-                    to clipboard
-                  </p>
-                </Link>
-                <Link
-                  to={`/endpoints/1`}
-                  className="list-group-item list-group-item-action list-group-item-secondary"
-                >
-                  <div className="d-flex w-100 justify-content-between">
-                    <h5 className="mb-1">ACME w/ Stripe</h5>
-                    <small>Created 3 days ago</small>
-                  </div>
-                  <p className="mb-1">
-                    Send your webhooks to this URL:
-                  </p>
-                  <p className="mb-1">
-                    http://proxy.example.com/some-random-value | Copy
-                    to clipboard
-                  </p>
-                </Link>
-                <Link
-                  to={`/endpoints/1`}
-                  className="list-group-item list-group-item-action list-group-item-secondary"
-                >
-                  <div className="d-flex w-100 justify-content-between">
-                    <h5 className="mb-1">ACME w/ Stripe</h5>
-                    <small>Created 3 days ago</small>
-                  </div>
-                  <p className="mb-1">
-                    Send your webhooks to this URL:
-                  </p>
-                  <p className="mb-1">
-                    http://proxy.example.com/some-random-value | Copy
-                    to clipboard
-                  </p>
-                </Link>
-                <Link
-                  to={`/endpoints/1`}
-                  className="list-group-item list-group-item-action list-group-item-secondary"
-                >
-                  <div className="d-flex w-100 justify-content-between">
-                    <h5 className="mb-1">ACME w/ Stripe</h5>
-                    <small>Created 3 days ago</small>
-                  </div>
-                  <p className="mb-1">
-                    Send your webhooks to this URL:
-                  </p>
-                  <p className="mb-1">
-                    http://proxy.example.com/some-random-value | Copy
-                    to clipboard
-                  </p>
-                </Link>
-                <Link
-                  to={`/endpoints/1`}
-                  className="list-group-item list-group-item-action list-group-item-secondary"
-                >
-                  <div className="d-flex w-100 justify-content-between">
-                    <h5 className="mb-1">ACME w/ Stripe</h5>
-                    <small>Created 3 days ago</small>
-                  </div>
-                  <p className="mb-1">
-                    Send your webhooks to this URL:
-                  </p>
-                  <p className="mb-1">
-                    http://proxy.example.com/some-random-value | Copy
-                    to clipboard
-                  </p>
-                </Link>
-                <Link
-                  to={`/endpoints/1`}
-                  className="list-group-item list-group-item-action list-group-item-secondary"
-                >
-                  <div className="d-flex w-100 justify-content-between">
-                    <h5 className="mb-1">ACME w/ Stripe</h5>
-                    <small>Created 3 days ago</small>
-                  </div>
-                  <p className="mb-1">
-                    Send your webhooks to this URL:
-                  </p>
-                  <p className="mb-1">
-                    http://proxy.example.com/some-random-value | Copy
-                    to clipboard
-                  </p>
-                </Link>
-                <Link
-                  to={`/endpoints/1`}
-                  className="list-group-item list-group-item-action list-group-item-secondary"
-                >
-                  <div className="d-flex w-100 justify-content-between">
-                    <h5 className="mb-1">ACME w/ Stripe</h5>
-                    <small>Created 3 days ago</small>
-                  </div>
-                  <p className="mb-1">
-                    Send your webhooks to this URL:
-                  </p>
-                  <p className="mb-1">
-                    http://proxy.example.com/some-random-value | Copy
-                    to clipboard
-                  </p>
-                </Link>
+                {data?.endpoints.map(endpoint => (
+                  <EndpointComponent
+                    key={endpoint.id}
+                    endpoint={endpoint}
+                  />
+                ))}
               </div>
               <button
                 type="button"
