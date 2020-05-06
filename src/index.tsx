@@ -18,19 +18,40 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
+const cache = new InMemoryCache();
+cache.writeData({
+  data: {
+    isLoggedIn: !!localStorage.getItem('x-token'),
+  },
+});
+
 const httpLink = new HttpLink({
   uri: `${process.env.REACT_APP_API_ORIGIN}/graphql`,
 });
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {
-  if (graphQLErrors) console.log('graphQLErrors', graphQLErrors);
+  if (graphQLErrors) {
+    for (const err of graphQLErrors) {
+      if (
+        err.extensions &&
+        (err.extensions.code === 'AUTHENTICATION' ||
+          err.extensions.code === 'FORBIDDEN')
+      ) {
+        localStorage.removeItem('x-token');
+        cache.writeData({
+          data: {
+            isLoggedIn: false,
+          },
+        });
+      } else if (err.extensions)
+        console.log(`${err.extensions?.code} error`);
+    }
+  }
 
   if (networkError) console.log('networkError', networkError);
 });
 
-const link = ApolloLink.from([errorLink, httpLink]);
-
-const cache = new InMemoryCache();
+const link = ApolloLink.from([errorLink, authLink, httpLink]);
 
 const client = new ApolloClient({
   link,
