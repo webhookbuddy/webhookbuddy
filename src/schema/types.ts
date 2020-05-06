@@ -28,3 +28,16 @@ export interface MutationFunctionOptions<
   context?: Context;
   fetchPolicy?: WatchQueryFetchPolicy;
 }
+
+/*
+======================================================================================================
+*/
+
+export type User = {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+  firstName: string;
+  lastName: string;
+  email: string;
+};

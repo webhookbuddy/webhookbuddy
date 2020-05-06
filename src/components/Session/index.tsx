@@ -1,10 +1,11 @@
 import React from 'react';
 import gql from 'graphql-tag';
 import { useQuery } from '@apollo/react-hooks';
-import { Me, useSetMe } from 'context/user-context';
+import { useSetMe } from 'context/user-context';
 import { USER_FRAGMENT } from 'schema/fragments';
 import Error from 'components/Error';
 import Loading from 'components/Loading';
+import { User } from 'schema/types';
 
 export const GET_Me = gql`
   query getMe {
@@ -16,7 +17,7 @@ export const GET_Me = gql`
 `;
 
 export interface MePayload {
-  me: Me;
+  me: User;
 }
 
 const Session = () => {

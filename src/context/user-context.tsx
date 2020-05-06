@@ -5,14 +5,11 @@ import React, {
   Dispatch,
   SetStateAction,
 } from 'react';
+import { User } from 'schema/types';
 
 type Context = {
-  me: Me | null;
-  setMe: Dispatch<SetStateAction<Me | null>>;
-};
-
-export type Me = {
-  id: number;
+  me: User | null;
+  setMe: Dispatch<SetStateAction<User | null>>;
 };
 
 const UserContext = React.createContext<Context>({
@@ -21,7 +18,7 @@ const UserContext = React.createContext<Context>({
 }); // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/37023#issuecomment-568299311
 
 const UserProvider = ({ children }: { children: ReactNode }) => {
-  const [me, setMe] = useState<Me | null>(null);
+  const [me, setMe] = useState<User | null>(null);
 
   return (
     <UserContext.Provider value={{ me, setMe }}>
