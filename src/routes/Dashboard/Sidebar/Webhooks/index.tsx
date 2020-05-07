@@ -45,6 +45,27 @@ const Webhooks = () => {
   });
 
   const loadMore = (data: WebhooksPayload) => {
+    /*
+    TODO: fix the double load problem described below:
+
+    There is a race condition problem which results in the query with the same variables being called twice.
+    It goes like this:
+    useQuery's onCompleted: data.pageInfo.endCursor === 20
+    fetchMore's updateQuery: fetchMoreResult.pageInfo.endCursor === 15
+    useQuery's onCompleted: data.pageInfo.endCursor === 20 (not good, should be 15)
+    fetchMore's updateQuery: fetchMoreResult.pageInfo.endCursor === 15
+    useQuery's onCompleted: data.pageInfo.endCursor === 15 (this is good, but it should have been 15 last time)
+    fetchMore's updateQuery: fetchMoreResult.pageInfo.endCursor === 10
+    useQuery's onCompleted: data.pageInfo.endCursor === 15 (not good, should be 15)
+    fetchMore's updateQuery: fetchMoreResult.pageInfo.endCursor === 10
+    useQuery's onCompleted: data.pageInfo.endCursor === 10  (this is good, but it should have been 10 last time)
+
+    There's also a question of how onCompleted is being called after fetchMore, as I did some isolated tests with new React projects
+    where that wasn't the case.
+
+    For now, the workaround is the ensure double entries aren't returned from FetchMore's updateQuery
+    */
+
     if (!data?.webhooks.pageInfo.hasNextPage) return;
 
     fetchMore({
@@ -67,7 +88,14 @@ const Webhooks = () => {
           },
           nodes: [
             ...previousResult.webhooks.nodes,
-            ...fetchMoreResult.webhooks.nodes,
+
+            // See comment above about race condition
+            ...fetchMoreResult.webhooks.nodes.filter(
+              n =>
+                !previousResult.webhooks.nodes.some(
+                  p => p.id === n.id,
+                ),
+            ),
           ],
         },
       }),
