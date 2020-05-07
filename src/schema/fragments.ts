@@ -19,3 +19,47 @@ export const ENDPOINT_FRAGMENT = gql`
     name
   }
 `;
+
+export const FORWARD_FRAGMENT = gql`
+  fragment forward on Forward {
+    id
+    createdAt
+    url
+    method
+    statusCode
+    success
+    headers {
+      key
+      value
+    }
+    query {
+      key
+      value
+    }
+    body
+  }
+`;
+
+export const WEBHOOK_FRAGMENT = gql`
+  fragment webhook on Webhook {
+    id
+    createdAt
+    ipAddress
+    method
+    headers {
+      key
+      value
+    }
+    query {
+      key
+      value
+    }
+    contentType
+    body
+    read
+    forwards {
+      ...forward
+    }
+  }
+  ${FORWARD_FRAGMENT}
+`;
