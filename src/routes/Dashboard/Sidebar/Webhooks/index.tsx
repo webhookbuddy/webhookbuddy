@@ -1,63 +1,139 @@
 import React from 'react';
+import { WEBHOOK_FRAGMENT } from 'schema/fragments';
+import gql from 'graphql-tag';
+import { useQuery } from '@apollo/react-hooks';
+import { useParams } from 'react-router-dom';
+import Loading from 'components/Loading';
+import Error from 'components/Error';
 import Item from './Item';
+import { WebhookConnection } from 'schema/types';
+import moment from 'moment';
+
+const GET_WEBHOOKS = gql`
+  query getWebhooks($endpointId: ID!, $after: Int) {
+    webhooks(endpointId: $endpointId, after: $after) {
+      nodes {
+        ...webhook
+      }
+      pageInfo {
+        endCursor
+        hasNextPage
+      }
+    }
+  }
+  ${WEBHOOK_FRAGMENT}
+`;
+
+interface WebhooksPayload {
+  webhooks: WebhookConnection;
+}
 
 const Webhooks = () => {
+  const {
+    endpointId,
+  }: {
+    endpointId: string;
+  } = useParams();
+  const { data, loading, error, refetch, fetchMore } = useQuery<
+    WebhooksPayload
+  >(GET_WEBHOOKS, {
+    variables: {
+      endpointId,
+    },
+    notifyOnNetworkStatusChange: true,
+    onCompleted: data => loadMore(data),
+  });
+
+  const loadMore = (data: WebhooksPayload) => {
+    /*
+    TODO: fix the double load problem described below:
+
+    There is a race condition problem which results in the query with the same variables being called twice.
+    It goes like this:
+    useQuery's onCompleted: data.pageInfo.endCursor === 20
+    fetchMore's updateQuery: fetchMoreResult.pageInfo.endCursor === 15
+    useQuery's onCompleted: data.pageInfo.endCursor === 20 (not good, should be 15)
+    fetchMore's updateQuery: fetchMoreResult.pageInfo.endCursor === 15
+    useQuery's onCompleted: data.pageInfo.endCursor === 15 (this is good, but it should have been 15 last time)
+    fetchMore's updateQuery: fetchMoreResult.pageInfo.endCursor === 10
+    useQuery's onCompleted: data.pageInfo.endCursor === 15 (not good, should be 15)
+    fetchMore's updateQuery: fetchMoreResult.pageInfo.endCursor === 10
+    useQuery's onCompleted: data.pageInfo.endCursor === 10  (this is good, but it should have been 10 last time)
+
+    There's also a question of how onCompleted is being called after fetchMore, as I did some isolated tests with new React projects
+    where that wasn't the case.
+
+    For now, the workaround is the ensure double entries aren't returned from FetchMore's updateQuery
+    */
+
+    if (!data?.webhooks.pageInfo.hasNextPage) return;
+
+    fetchMore({
+      variables: {
+        after: data?.webhooks.pageInfo.endCursor,
+      },
+      // @ts-ignore: No overload matches this call error. Can't seem to to get around this error: https://github.com/apollographql/react-apollo/issues/2443#issuecomment-624971593
+      updateQuery: (
+        previousResult,
+        { fetchMoreResult }: { fetchMoreResult: WebhooksPayload },
+      ) => ({
+        ...previousResult,
+        webhooks: {
+          ...previousResult.webhooks,
+          pageInfo: {
+            ...previousResult.webhooks.pageInfo,
+            endCursor: fetchMoreResult?.webhooks.pageInfo.endCursor,
+            hasNextPage:
+              fetchMoreResult?.webhooks.pageInfo.hasNextPage,
+          },
+          nodes: [
+            ...previousResult.webhooks.nodes,
+
+            // See comment above about race condition
+            ...fetchMoreResult.webhooks.nodes.filter(
+              n =>
+                !previousResult.webhooks.nodes.some(
+                  p => p.id === n.id,
+                ),
+            ),
+          ],
+        },
+      }),
+    });
+  };
+
+  const retry = () => refetch().catch(() => {}); // Unless we catch, a network error will cause an unhandled rejection: https://github.com/apollographql/apollo-client/issues/3963
+
   return (
-    <div className="webhooks" style={{ height: '1500px' }}>
-      <Item
-        key="1"
-        id="1"
-        label="Apr 12, 16:43 Stripe invoice.created"
-        isActive={false}
-        isUnread={true}
-        forwardSuccessCount={0}
-        forwardErrorCount={0}
-      />
-      <Item
-        key="2"
-        id="2"
-        label="Apr 12, 16:43 Stripe invoice.created"
-        isActive={false}
-        isUnread={true}
-        forwardSuccessCount={0}
-        forwardErrorCount={0}
-      />
-      <Item
-        key="3"
-        id="3"
-        label="Apr 12, 16:43 Stripe invoice.created"
-        isActive={true}
-        isUnread={false}
-        forwardSuccessCount={1}
-        forwardErrorCount={3}
-      />
-      <Item
-        key="4"
-        id="4"
-        label="Apr 12, 16:43 Stripe invoice.created"
-        isActive={false}
-        isUnread={false}
-        forwardSuccessCount={1}
-        forwardErrorCount={0}
-      />
-      <Item
-        key="5"
-        id="5"
-        label="Apr 12, 16:43 Stripe invoice.created Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-        isActive={false}
-        isUnread={false}
-        forwardSuccessCount={20}
-        forwardErrorCount={15}
-      />
-      <Item
-        key="6"
-        id="6"
-        label="Apr 12, 16:43 Stripe invoice.created"
-        isActive={false}
-        isUnread={false}
-        forwardSuccessCount={1}
-        forwardErrorCount={3}
-      />
+    <div className="webhooks">
+      {data?.webhooks.nodes.map(webhook => (
+        <Item
+          key={webhook.id}
+          id={webhook.id}
+          label={`${webhook.method}: ${moment(
+            webhook.createdAt,
+          ).format('LLL')}`}
+          isActive={false} // TODO
+          isUnread={!webhook.read}
+          forwardSuccessCount={
+            webhook.forwards.filter(f => f.success).length
+          }
+          forwardErrorCount={
+            webhook.forwards.filter(f => !f.success).length
+          }
+        />
+      ))}
+      {loading ? (
+        <Loading />
+      ) : (
+        error && (
+          <Error error={error}>
+            <button className="btn btn-primary" onClick={retry}>
+              Try again!
+            </button>
+          </Error>
+        )
+      )}
     </div>
   );
 };
