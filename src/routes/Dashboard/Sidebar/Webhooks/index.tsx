@@ -41,7 +41,38 @@ const Webhooks = () => {
       endpointId,
     },
     notifyOnNetworkStatusChange: true,
+    onCompleted: data => loadMore(data),
   });
+
+  const loadMore = (data: WebhooksPayload) => {
+    if (!data?.webhooks.pageInfo.hasNextPage) return;
+
+    fetchMore({
+      variables: {
+        after: data?.webhooks.pageInfo.endCursor,
+      },
+      // @ts-ignore: No overload matches this call error. Can't seem to to get around this error: https://github.com/apollographql/react-apollo/issues/2443#issuecomment-624971593
+      updateQuery: (
+        previousResult,
+        { fetchMoreResult }: { fetchMoreResult: WebhooksPayload },
+      ) => ({
+        ...previousResult,
+        webhooks: {
+          ...previousResult.webhooks,
+          pageInfo: {
+            ...previousResult.webhooks.pageInfo,
+            endCursor: fetchMoreResult?.webhooks.pageInfo.endCursor,
+            hasNextPage:
+              fetchMoreResult?.webhooks.pageInfo.hasNextPage,
+          },
+          nodes: [
+            ...previousResult.webhooks.nodes,
+            ...fetchMoreResult.webhooks.nodes,
+          ],
+        },
+      }),
+    });
+  };
 
   const retry = () => refetch().catch(() => {}); // Unless we catch, a network error will cause an unhandled rejection: https://github.com/apollographql/apollo-client/issues/3963
 
