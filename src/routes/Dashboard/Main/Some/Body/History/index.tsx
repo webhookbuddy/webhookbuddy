@@ -10,26 +10,9 @@ const History = ({ webhook }: { webhook: Webhook }) => {
       <div className="forwards">
         <div className="forwards__title">Forwards</div>
         <div className="forwards__list">
-          <Forward
-            key="1"
-            label="Apr 12, 17:43 http://localhost:3000/events/foo/bar"
-            isSuccess={true}
-          />
-          <Forward
-            key="2"
-            label="Apr 12, 17:43 http://localhost:3000/events/foo/bar"
-            isSuccess={true}
-          />
-          <Forward
-            key="3"
-            label="Apr 12, 17:43 http://localhost:3000/events/foo/bar"
-            isSuccess={true}
-          />
-          <Forward
-            key="4"
-            label="Apr 12, 17:43 http://localhost:3000/events/foo/bar"
-            isSuccess={false}
-          />
+          {webhook.forwards.map(forward => (
+            <Forward key={forward.id} forward={forward} />
+          ))}
         </div>
       </div>
     </div>
