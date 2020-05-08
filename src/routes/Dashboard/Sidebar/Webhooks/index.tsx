@@ -6,7 +6,7 @@ import { useParams } from 'react-router-dom';
 import Loading from 'components/Loading';
 import Error from 'components/Error';
 import Item from './Item';
-import { WebhookConnection } from 'schema/types';
+import { WebhookConnection, Webhook } from 'schema/types';
 import moment from 'moment';
 
 const GET_WEBHOOKS = gql`
@@ -24,6 +24,17 @@ const GET_WEBHOOKS = gql`
   ${WEBHOOK_FRAGMENT}
 `;
 
+const WEBHOOK_CREATED = gql`
+  subscription webhookCreated($endpointId: ID!) {
+    webhookCreated(endpointId: $endpointId) {
+      webhook {
+        ...webhook
+      }
+    }
+  }
+  ${WEBHOOK_FRAGMENT}
+`;
+
 interface WebhooksPayload {
   webhooks: WebhookConnection;
 }
@@ -34,9 +45,14 @@ const Webhooks = () => {
   }: {
     endpointId: string;
   } = useParams();
-  const { data, loading, error, refetch, fetchMore } = useQuery<
-    WebhooksPayload
-  >(GET_WEBHOOKS, {
+  const {
+    data,
+    loading,
+    error,
+    refetch,
+    fetchMore,
+    subscribeToMore,
+  } = useQuery<WebhooksPayload>(GET_WEBHOOKS, {
     variables: {
       endpointId,
     },
@@ -103,6 +119,40 @@ const Webhooks = () => {
   };
 
   const retry = () => refetch().catch(() => {}); // Unless we catch, a network error will cause an unhandled rejection: https://github.com/apollographql/apollo-client/issues/3963
+
+  subscribeToMore({
+    document: WEBHOOK_CREATED,
+    variables: {
+      endpointId,
+    },
+    updateQuery: (
+      previousResult,
+      {
+        subscriptionData,
+      }: {
+        subscriptionData: {
+          data: { webhookCreated: { webhook: Webhook } };
+        };
+      },
+    ) => {
+      if (!previousResult || !subscriptionData.data)
+        return previousResult;
+
+      const webhook = subscriptionData.data.webhookCreated.webhook;
+      if (
+        previousResult.webhooks.nodes.some(w => w.id === webhook.id)
+      )
+        return previousResult;
+      else
+        return {
+          ...previousResult,
+          webhooks: {
+            ...previousResult.webhooks,
+            nodes: [webhook, ...previousResult.webhooks.nodes],
+          },
+        };
+    },
+  });
 
   return (
     <div className="webhooks">
