@@ -71,6 +71,9 @@ const wsLink = new WebSocketLink({
   uri: `${process.env.REACT_APP_WS_ORIGIN}/graphql`,
   options: {
     reconnect: true,
+    connectionParams: () => ({
+      'x-token': localStorage.getItem('x-token') || '',
+    }),
   },
 });
 
