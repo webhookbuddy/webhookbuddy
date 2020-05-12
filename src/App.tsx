@@ -10,6 +10,12 @@ import Dashboard from 'routes/Dashboard';
 
 import './App.css';
 
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.min.css';
+toast.configure({
+  autoClose: 6000,
+});
+
 const IS_LOGGED_IN = gql`
   query isUserLoggedIn {
     isLoggedIn @client
