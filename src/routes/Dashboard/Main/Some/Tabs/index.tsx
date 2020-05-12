@@ -1,10 +1,14 @@
 import React from 'react';
 import { NavLink, useParams } from 'react-router-dom';
+import useForwardingIds from 'hooks/useForwardingIds';
 
 import './style.css';
 
 const Tabs = () => {
   const { endpointId, webhookIds } = useParams();
+
+  const { forwardingIds } = useForwardingIds();
+
   return (
     <div className="main__tabs">
       <ul className="nav nav-tabs">
@@ -22,7 +26,10 @@ const Tabs = () => {
             to={`/endpoints/${endpointId}/webhooks/${webhookIds}/history`}
             className="nav-link"
           >
-            History
+            History{' '}
+            {forwardingIds.some(id =>
+              webhookIds.split(',').includes(id),
+            ) && <i className="fa fa-circle-o-notch fa-spin"></i>}
           </NavLink>
         </li>
       </ul>

@@ -10,6 +10,7 @@ import Body from './Body';
 import None from '../None';
 import gql from 'graphql-tag';
 import { toast } from 'react-toastify';
+import useForwardingIds from 'hooks/useForwardingIds';
 const { ipcRenderer } = window.require('electron');
 
 const ADD_FORWARD = gql`
@@ -51,6 +52,7 @@ const appendQuery = (url: string, query: KeyValue[]) =>
     : `${url}?${queryString(query)}`;
 
 const Some = () => {
+  const { addForwardingId, removeForwardingId } = useForwardingIds();
   const [addForward] = useMutation(ADD_FORWARD);
 
   useEffect(() => {
@@ -119,6 +121,8 @@ const Some = () => {
           },
         },
       }).catch(error => toast.error(error.message));
+
+      removeForwardingId(webhook.id);
     };
 
     ipcRenderer.on('http-request-completed', onForwardedListener);
@@ -129,7 +133,7 @@ const Some = () => {
         onForwardedListener,
       );
     };
-  }, [addForward]);
+  }, [addForward, removeForwardingId]);
 
   const { webhookIds } = useParams<{ webhookIds: string }>();
   const ids = webhookIds.split(',');
@@ -151,6 +155,7 @@ const Some = () => {
 
   const forwardTo = (url: string) => {
     webhooks.forEach(webhook => {
+      addForwardingId(webhook.id);
       ipcRenderer.send('http-request', {
         url: appendQuery(url, webhook.query),
         webhook,
