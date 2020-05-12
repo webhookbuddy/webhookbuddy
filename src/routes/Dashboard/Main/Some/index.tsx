@@ -1,14 +1,42 @@
 import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import Jumbotron from 'components/Jumbotron';
-import { useApolloClient } from '@apollo/react-hooks';
+import { useApolloClient, useMutation } from '@apollo/react-hooks';
 import { WEBHOOK_FRAGMENT } from 'schema/fragments';
-import { Webhook, KeyValue } from 'schema/types';
+import { Webhook, KeyValue, Forward } from 'schema/types';
 import Forwarder from './Forwarder';
 import Tabs from './Tabs';
 import Body from './Body';
 import None from '../None';
+import gql from 'graphql-tag';
+import { toast } from 'react-toastify';
 const { ipcRenderer } = window.require('electron');
+
+const ADD_FORWARD = gql`
+  mutation($input: AddForwardInput!) {
+    addForward(input: $input) {
+      webhook {
+        ...webhook
+      }
+    }
+  }
+  ${WEBHOOK_FRAGMENT}
+`;
+
+const parseContentType = (header: string) => {
+  const parts = header.split(';').map(s => s.trim().toLowerCase());
+  return parts.length > 0 ? parts[0] : null;
+};
+
+const extractContentType = (headers: any) => {
+  const key = Object.keys(headers).find(
+    key => key.toLocaleLowerCase() === 'content-type',
+  );
+
+  if (!key) return null;
+
+  return parseContentType(headers[key] as string);
+};
 
 const queryString = (query: KeyValue[]) =>
   query
@@ -23,6 +51,8 @@ const appendQuery = (url: string, query: KeyValue[]) =>
     : `${url}?${queryString(query)}`;
 
 const Some = () => {
+  const [addForward] = useMutation(ADD_FORWARD);
+
   useEffect(() => {
     const onForwardedListener = (
       _: any,
@@ -40,13 +70,55 @@ const Some = () => {
         data: string;
       },
     ) => {
-      console.log(
-        webhook.id,
-        webhook.method,
-        headers,
+      const forward = {
+        __typename: 'Forward',
+        id: '_' + Math.round(Math.random() * 1000000),
+        url: reference.url,
         statusCode,
-        data,
-      );
+        success: statusCode >= 200 && statusCode < 300,
+        createdAt: new Date(),
+        method: webhook.method,
+        headers: Object.entries(headers).map(kv => ({
+          __typename: 'KeyValue',
+          key: kv[0],
+          value: kv[1],
+        })) as KeyValue[],
+        query: webhook.query,
+        contentType: extractContentType(headers),
+        body: data,
+      } as Forward;
+
+      addForward({
+        variables: {
+          input: {
+            webhookId: webhook.id,
+            url: forward.url,
+            method: forward.method,
+            statusCode: forward.statusCode,
+            // need to remap here b/c server rejects __typename property
+            headers: forward.headers.map(kv => ({
+              key: kv.key,
+              value: kv.value,
+            })),
+            // need to remap here b/c server rejects __typename property
+            query: forward.query.map(kv => ({
+              key: kv.key,
+              value: kv.value,
+            })),
+            body: forward.body,
+          },
+        },
+        optimisticResponse: {
+          addForward: {
+            __typename: 'AddForwardPayload',
+            webhook: {
+              __typename: 'Webhook',
+              ...webhook,
+              forwards: [forward, ...webhook.forwards],
+            },
+          },
+        },
+      }).catch(error => toast.error(error.message));
     };
 
     ipcRenderer.on('http-request-completed', onForwardedListener);
@@ -57,18 +129,21 @@ const Some = () => {
         onForwardedListener,
       );
     };
-  }, []);
+  }, [addForward]);
 
   const { webhookIds } = useParams<{ webhookIds: string }>();
   const ids = webhookIds.split(',');
   const client = useApolloClient();
   const webhooks = ids
     .map(id =>
-      client.readFragment<Webhook>({
-        id: `Webhook:${id}`,
-        fragment: WEBHOOK_FRAGMENT,
-        fragmentName: 'webhook',
-      }),
+      client.readFragment<Webhook>(
+        {
+          id: `Webhook:${id}`,
+          fragment: WEBHOOK_FRAGMENT,
+          fragmentName: 'webhook',
+        },
+        true, // TODO: optimistic true doesn't seem to work
+      ),
     )
     // These can be nulls if page is being loaded and webhooks aren't in the cache yet.
     // We will minimize this problem in the future by using `apollo-cache-persist`.
