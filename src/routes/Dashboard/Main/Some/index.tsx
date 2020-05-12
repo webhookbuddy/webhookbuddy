@@ -24,20 +24,9 @@ const ADD_FORWARD = gql`
   ${WEBHOOK_FRAGMENT}
 `;
 
-const parseContentType = (header: string) => {
-  const parts = header.split(';').map(s => s.trim().toLowerCase());
-  return parts.length > 0 ? parts[0] : null;
-};
-
-const extractContentType = (headers: any) => {
-  const key = Object.keys(headers).find(
-    key => key.toLocaleLowerCase() === 'content-type',
-  );
-
-  if (!key) return null;
-
-  return parseContentType(headers[key] as string);
-};
+const extractContentType = (headers: KeyValue[]) =>
+  headers.find(header => header.key.toLowerCase() === 'content-type')
+    ?.value ?? null;
 
 const queryString = (query: KeyValue[]) =>
   query
@@ -51,6 +40,18 @@ const appendQuery = (url: string, query: KeyValue[]) =>
     ? `${url}&${queryString(query)}`
     : `${url}?${queryString(query)}`;
 
+const mapHeaders = (rawHeaders: string[]) => {
+  const headers = [];
+  for (let i = 0; i < rawHeaders.length; i = i + 2)
+    headers.push({
+      __typename: 'KeyValue',
+      key: rawHeaders[i],
+      value: rawHeaders[i + 1],
+    });
+
+  return headers;
+};
+
 const Some = () => {
   const { addForwardingId, removeForwardingId } = useForwardingIds();
   const [addForward] = useMutation(ADD_FORWARD);
@@ -59,34 +60,30 @@ const Some = () => {
     const onForwardedListener = (
       _: any,
       {
-        reference,
+        metadata,
         webhook,
-        headers,
+        rawHeaders,
         statusCode,
         data,
       }: {
-        reference: any;
+        metadata: { url: string };
         webhook: Webhook;
-        headers: any;
         statusCode: number;
+        rawHeaders: string[];
         data: string;
       },
     ) => {
       const forward = {
         __typename: 'Forward',
         id: '_' + Math.round(Math.random() * 1000000),
-        url: reference.url,
+        url: metadata.url,
         statusCode,
         success: statusCode >= 200 && statusCode < 300,
         createdAt: new Date(),
         method: webhook.method,
-        headers: Object.entries(headers).map(kv => ({
-          __typename: 'KeyValue',
-          key: kv[0],
-          value: kv[1],
-        })) as KeyValue[],
+        headers: mapHeaders(rawHeaders),
         query: webhook.query,
-        contentType: extractContentType(headers),
+        contentType: extractContentType(mapHeaders(rawHeaders)),
         body: data,
       } as Forward;
 
@@ -159,7 +156,7 @@ const Some = () => {
       ipcRenderer.send('http-request', {
         url: appendQuery(url, webhook.query),
         webhook,
-        reference: {
+        metadata: {
           url,
         },
       });
