@@ -13,22 +13,24 @@ const Forward = ({ forward }: { forward: ForwardType }) => {
   ] as KeyValue[];
 
   return (
-    <div
-      className={`forward ${isActive ? 'forward--active' : ''}`}
-      onClick={() => setIsActive(!isActive)}
-    >
-      <div className="forward__header">
-        <div className="forward__header__label">{`${moment(
-          forward.createdAt,
-        ).format('LLL')} ${forward.url}`}</div>
-        <div className="forward__header__badges">
-          <i
-            className={`fa ${
-              forward.success
-                ? 'fa-check forward__header__badges__icon--success'
-                : 'fa-exclamation forward__header__badges__icon--error'
-            }`}
-          ></i>
+    <>
+      <div
+        className={`forward ${isActive ? 'forward--active' : ''}`}
+        onClick={() => setIsActive(!isActive)}
+      >
+        <div className="forward__header">
+          <div className="forward__header__label">{`${moment(
+            forward.createdAt,
+          ).format('LLL')} ${forward.url}`}</div>
+          <div className="forward__header__badges">
+            <i
+              className={`fa ${
+                forward.success
+                  ? 'fa-check forward__header__badges__icon--success'
+                  : 'fa-exclamation forward__header__badges__icon--error'
+              }`}
+            ></i>
+          </div>
         </div>
       </div>
       {isActive && (
@@ -40,7 +42,7 @@ const Forward = ({ forward }: { forward: ForwardType }) => {
           />
         </div>
       )}
-    </div>
+    </>
   );
 };
 
