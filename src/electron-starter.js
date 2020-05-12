@@ -9,31 +9,28 @@ const request = require('request');
 // - Insecure Content-Security-Policy
 process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = true;
 
-ipcMain.on('http-request', (event, { url, webhook, metadata }) => {
-  request(
-    {
-      method: webhook.method,
-      url,
-      headers: webhook.headers
-        .filter(header => header.key.toLowerCase() !== 'host')
-        .reduce((acc, cur) => {
-          acc[cur.key] = cur.value;
-          return acc;
-        }, {}),
-      body: webhook.body,
-      followAllRedirects: true,
-    },
-    (error, response, data) => {
-      event.sender.send('http-request-completed', {
-        metadata,
-        webhook,
-        statusCode: response.statusCode,
-        rawHeaders: response.rawHeaders,
-        data,
-      });
-    },
-  );
-});
+ipcMain.on(
+  'http-request',
+  (event, { method, url, headers, body, metadata }) => {
+    request(
+      {
+        method,
+        url,
+        headers,
+        body,
+        followAllRedirects: true,
+      },
+      (error, response, data) => {
+        event.sender.send('http-request-completed', {
+          metadata,
+          statusCode: response.statusCode,
+          rawHeaders: response.rawHeaders,
+          data,
+        });
+      },
+    );
+  },
+);
 
 function createWindow() {
   // Create the browser window.
