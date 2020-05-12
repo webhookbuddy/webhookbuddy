@@ -4,11 +4,10 @@ import { Webhook } from 'schema/types';
 
 import './style.css';
 
-const History = ({ webhook }: { webhook: Webhook }) => {
+const Forwards = ({ webhook }: { webhook: Webhook }) => {
   return (
-    <div className="main_body__history">
+    <div className="main_body__forwards">
       <div className="forwards">
-        <div className="forwards__title">Forwards</div>
         <div className="forwards__list">
           {webhook.forwards.map(forward => (
             <Forward key={forward.id} forward={forward} />
@@ -19,4 +18,4 @@ const History = ({ webhook }: { webhook: Webhook }) => {
   );
 };
 
-export default History;
+export default Forwards;

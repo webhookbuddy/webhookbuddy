@@ -23,10 +23,10 @@ const Tabs = () => {
         </li>
         <li className="nav-item">
           <NavLink
-            to={`/endpoints/${endpointId}/webhooks/${webhookIds}/history`}
+            to={`/endpoints/${endpointId}/webhooks/${webhookIds}/forwards`}
             className="nav-link"
           >
-            History{' '}
+            Forwards{' '}
             {forwardingIds.some(id =>
               webhookIds.split(',').includes(id),
             ) && <i className="fa fa-circle-o-notch fa-spin"></i>}

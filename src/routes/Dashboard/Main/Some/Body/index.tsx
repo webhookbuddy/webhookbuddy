@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
 import Request from './Request';
-import History from './History';
+import Forwards from './Forwards';
 import { Webhook } from 'schema/types';
 
 import './style.css';
@@ -16,8 +16,8 @@ const Body = ({ webhook }: { webhook: Webhook }) => {
           render={props => <Request {...props} webhook={webhook} />}
         />
         <Route
-          path={`/endpoints/:endpointId/webhooks/:webhookIds/history`}
-          render={props => <History {...props} webhook={webhook} />}
+          path={`/endpoints/:endpointId/webhooks/:webhookIds/forwards`}
+          render={props => <Forwards {...props} webhook={webhook} />}
         />
       </div>
     </div>
