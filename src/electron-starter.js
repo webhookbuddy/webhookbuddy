@@ -1,6 +1,52 @@
-const { app, BrowserWindow } = require('electron');
+const { app, net, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const isDev = require('electron-is-dev');
+
+// Disable warnings for:
+// - Disabled webSecurity
+// - allowRunningInsecureContent
+// - Insecure Content-Security-Policy
+process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = true;
+
+ipcMain.on('http-request', (event, { url, webhook, reference }) => {
+  const request = net.request({
+    method: webhook.method,
+    url,
+  });
+
+  // TODO: can't seem to remove these default headers using request.removeHeader():
+  // Proxy-Connection
+  // Sec-Fetch-Site
+  // Sec-Fetch-Mode
+  // Accept-Language
+
+  webhook.headers
+    .filter(
+      header =>
+        !['content-length', 'host'].some(
+          blacklist => blacklist === header.key.toLowerCase(),
+        ),
+    )
+    .forEach(header => request.setHeader(header.key, header.value));
+
+  request.on('response', response => {
+    let data = '';
+    response.on('data', chunk => {
+      data += chunk;
+    });
+
+    response.on('end', () =>
+      event.sender.send('http-request-completed', {
+        reference,
+        webhook,
+        data,
+        headers: response.headers,
+        statusCode: response.statusCode,
+      }),
+    );
+  });
+  request.end(webhook.body);
+});
 
 function createWindow() {
   // Create the browser window.
@@ -9,6 +55,7 @@ function createWindow() {
     height: 600,
     webPreferences: {
       nodeIntegration: true,
+      webSecurity: false,
     },
   });
 

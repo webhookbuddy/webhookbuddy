@@ -25,6 +25,7 @@ const cache = new InMemoryCache();
 cache.writeData({
   data: {
     isLoggedIn: !!localStorage.getItem('x-token'),
+    forwardingIds: [],
   },
 });
 

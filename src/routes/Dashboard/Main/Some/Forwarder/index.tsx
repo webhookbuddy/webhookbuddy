@@ -1,18 +1,45 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 
 import './style.css';
 
-const Forwarder = () => {
+const Forwarder = ({
+  forwardTo,
+}: {
+  forwardTo: (url: string) => void;
+}) => {
+  const [url, setUrl] = useState<string>('');
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
+  const handlePlayClick = (e: React.MouseEvent<HTMLElement>) => {
+    buttonRef.current?.click();
+  };
+
+  const onSubmit = (
+    e: React.FormEvent<HTMLFormElement> | undefined,
+  ) => {
+    e?.preventDefault();
+    forwardTo(url);
+  };
+
   return (
-    <div className="forwarder">
-      <i className="forwarder__icon fa fa-play fa-lg"></i>
-      <select className="custom-select custom-select-sm">
-        <option>http://localhost/webhooks/take</option>
-        <option>http://localhost/webhooks/take</option>
-        <option>http://localhost/webhooks/take</option>
-        <option>Edit...</option>
-      </select>
-    </div>
+    <form className="forwarder" onSubmit={onSubmit}>
+      <i
+        className="forwarder__icon fa fa-play fa-lg pointer"
+        onClick={handlePlayClick}
+      ></i>
+      <input
+        type="url"
+        className="form-control form-control-sm"
+        value={url}
+        onChange={e => setUrl(e.target.value)}
+        required
+      />
+      <button
+        type="submit"
+        className="d-none"
+        ref={buttonRef}
+      ></button>
+    </form>
   );
 };
 

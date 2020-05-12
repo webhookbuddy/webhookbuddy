@@ -1,5 +1,6 @@
 import React from 'react';
 import { useParams, useHistory } from 'react-router-dom';
+import useForwardingIds from 'hooks/useForwardingIds';
 
 import './style.css';
 
@@ -23,6 +24,7 @@ const Item = ({
 }) => {
   const { endpointId } = useParams();
   const history = useHistory();
+  const { forwardingIds } = useForwardingIds();
 
   return (
     <div
@@ -35,19 +37,44 @@ const Item = ({
     >
       <div className="webhooks__item__label">{label}</div>
       <div className="webhooks__item__badges">
-        {forwardSuccessCount > 0 && (
-          <span className="badge badge-success">
-            {formatCount(forwardSuccessCount)}
-          </span>
-        )}{' '}
-        {forwardErrorCount > 0 && (
-          <span className="badge badge-danger">
-            {formatCount(forwardErrorCount)}
-          </span>
-        )}{' '}
-        <i className="fa fa-times-circle"></i>
+        {forwardingIds.includes(id) ? (
+          <ForwardingBadges />
+        ) : (
+          <IdleBadges
+            forwardSuccessCount={forwardSuccessCount}
+            forwardErrorCount={forwardErrorCount}
+          />
+        )}
       </div>
     </div>
+  );
+};
+
+const ForwardingBadges = () => {
+  return <i className="fa fa-circle-o-notch fa-spin"></i>;
+};
+
+const IdleBadges = ({
+  forwardSuccessCount,
+  forwardErrorCount,
+}: {
+  forwardSuccessCount: number;
+  forwardErrorCount: number;
+}) => {
+  return (
+    <>
+      {forwardSuccessCount > 0 && (
+        <span className="badge badge-success">
+          {formatCount(forwardSuccessCount)}
+        </span>
+      )}{' '}
+      {forwardErrorCount > 0 && (
+        <span className="badge badge-danger">
+          {formatCount(forwardErrorCount)}
+        </span>
+      )}{' '}
+      <i className="fa fa-times-circle"></i>
+    </>
   );
 };
 
