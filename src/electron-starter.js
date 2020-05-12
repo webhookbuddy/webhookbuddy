@@ -2,6 +2,12 @@ const { app, BrowserWindow } = require('electron');
 const path = require('path');
 const isDev = require('electron-is-dev');
 
+// Disable warnings for:
+// - Disabled webSecurity
+// - allowRunningInsecureContent
+// - Insecure Content-Security-Policy
+process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = true;
+
 function createWindow() {
   // Create the browser window.
   const win = new BrowserWindow({
