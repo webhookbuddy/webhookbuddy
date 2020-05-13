@@ -26,7 +26,9 @@ export interface EndpointsPayload {
 const Endpoints = () => {
   const { data, error, loading, refetch } = useQuery<
     EndpointsPayload
-  >(GET_ENDPOINTS);
+  >(GET_ENDPOINTS, {
+    fetchPolicy: 'cache-and-network',
+  });
 
   const retry = () => refetch().catch(() => {}); // Unless we catch, a network error will cause an unhandled rejection: https://github.com/apollographql/apollo-client/issues/3963
 

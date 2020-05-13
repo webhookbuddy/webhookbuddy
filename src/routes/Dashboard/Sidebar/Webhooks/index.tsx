@@ -58,6 +58,7 @@ const Webhooks = () => {
     },
     notifyOnNetworkStatusChange: true,
     onCompleted: data => loadMore(data),
+    fetchPolicy: 'cache-and-network',
   });
 
   const loadMore = (data: WebhooksPayload) => {
