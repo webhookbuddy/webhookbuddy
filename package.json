@@ -24,6 +24,7 @@
     "apollo-link-http": "^1.5.17",
     "apollo-link-ws": "^1.0.20",
     "bootstrap": "^4.4.1",
+    "electron-is-dev": "^1.2.0",
     "font-awesome": "^4.7.0",
     "graphql": "^15.0.0",
     "graphql-tag": "^2.10.3",
@@ -89,7 +90,6 @@
     "@types/react-router-dom": "^5.1.5",
     "electron": "^8.2.1",
     "electron-builder": "^22.6.0",
-    "electron-is-dev": "^1.2.0",
     "foreman": "^3.0.1",
     "nodemon": "^2.0.3"
   }
