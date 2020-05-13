@@ -7,4 +7,6 @@ Initial configuration inspired by: https://www.freecodecamp.org/news/building-an
 * `npm install`
 
 # Run
-* `npm start`
+* `npm start` (Runs both Electron and React app)
+* `npm run electron` (Runs only Electon. Useful if you want to see console.log() output.)
+* `npm run react-start` (Runs only React app. Needed if you use `npm run electron`.)
