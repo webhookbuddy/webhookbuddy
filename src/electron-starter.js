@@ -35,8 +35,8 @@ ipcMain.on(
 function createWindow() {
   // Create the browser window.
   const win = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 1600,
+    height: 880,
     webPreferences: {
       nodeIntegration: true,
       webSecurity: false,
@@ -52,7 +52,7 @@ function createWindow() {
   );
 
   // Open the DevTools.
-  win.webContents.openDevTools();
+  if (isDev) win.webContents.openDevTools();
 }
 
 // This method will be called when Electron has finished
