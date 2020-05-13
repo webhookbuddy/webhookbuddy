@@ -1,8 +1,10 @@
 {
-  "name": "webhook-buddy-client",
+  "name": "webhook-buddy",
+  "description": "Desktop client that captures and forwards webhooks to your local development server.",
   "version": "0.1.0",
+  "author": "Johnny Oshika",
   "private": true,
-  "main": "src/electron-starter.js",
+  "main": "public/electron.js",
   "homepage": "./",
   "dependencies": {
     "@apollo/react-hooks": "^3.1.5",
@@ -22,6 +24,7 @@
     "apollo-link-http": "^1.5.17",
     "apollo-link-ws": "^1.0.20",
     "bootstrap": "^4.4.1",
+    "electron-is-dev": "^1.2.0",
     "font-awesome": "^4.7.0",
     "graphql": "^15.0.0",
     "graphql-tag": "^2.10.3",
@@ -42,7 +45,32 @@
     "eject": "react-scripts eject",
     "electron": "nodemon --exec \"\"electron .\"\"",
     "electron-start": "node src/electron-wait-react",
-    "react-start": "react-scripts start"
+    "react-start": "react-scripts start",
+    "dist": "npm run build && electron-builder",
+    "postinstall": "electron-builder install-app-deps"
+  },
+  "build": {
+    "appId": "com.webhookbuddy.client",
+    "productName": "Webhook Buddy",
+    "files": [
+      "build/**/*",
+      "node_modules/**/*"
+    ],
+    "directories": {
+      "buildResources": "assets"
+    },
+    "mac": {
+      "category": "developer.tools"
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ]
+    },
+    "win": {
+      "target": "nsis"
+    }
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -62,7 +90,7 @@
   "devDependencies": {
     "@types/react-router-dom": "^5.1.5",
     "electron": "^8.2.1",
-    "electron-is-dev": "^1.2.0",
+    "electron-builder": "^22.6.0",
     "foreman": "^3.0.1",
     "nodemon": "^2.0.3"
   }
