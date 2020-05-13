@@ -24,7 +24,7 @@ const Some = () => {
           fragment: WEBHOOK_FRAGMENT,
           fragmentName: 'webhook',
         },
-        true, // TODO: optimistic true doesn't seem to work
+        true,
       ),
     )
     // These can be nulls if page is being loaded and webhooks aren't in the cache yet.
