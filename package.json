@@ -2,7 +2,7 @@
   "name": "webhook-buddy-client",
   "version": "0.1.0",
   "private": true,
-  "main": "src/electron-starter.js",
+  "main": "public/electron.js",
   "homepage": "./",
   "dependencies": {
     "@apollo/react-hooks": "^3.1.5",
