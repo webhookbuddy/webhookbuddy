@@ -51,6 +51,7 @@
   },
   "build": {
     "appId": "com.webhookbuddy.client",
+    "productName": "Webhook Buddy",
     "files": [
       "build/**/*",
       "node_modules/**/*"
