@@ -32,6 +32,7 @@ const Forwarder = ({
         className="form-control form-control-sm"
         value={url}
         onChange={e => setUrl(e.target.value)}
+        placeholder="Forward to URL (e.g. http://localhost:8000/send-webhook-here)"
         required
       />
       <button
