@@ -1,6 +1,8 @@
 {
-  "name": "webhook-buddy-client",
+  "name": "webhook-buddy",
+  "description": "Desktop client that captures and forwards webhooks to your local development server.",
   "version": "0.1.0",
+  "author": "Johnny Oshika",
   "private": true,
   "main": "public/electron.js",
   "homepage": "./",
@@ -42,7 +44,31 @@
     "eject": "react-scripts eject",
     "electron": "nodemon --exec \"\"electron .\"\"",
     "electron-start": "node src/electron-wait-react",
-    "react-start": "react-scripts start"
+    "react-start": "react-scripts start",
+    "dist": "npm run build && electron-builder",
+    "postinstall": "electron-builder install-app-deps"
+  },
+  "build": {
+    "appId": "com.webhookbuddy.client",
+    "files": [
+      "build/**/*",
+      "node_modules/**/*"
+    ],
+    "directories": {
+      "buildResources": "assets"
+    },
+    "mac": {
+      "category": "developer.tools"
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ]
+    },
+    "win": {
+      "target": "nsis"
+    }
   },
   "eslintConfig": {
     "extends": "react-app"
