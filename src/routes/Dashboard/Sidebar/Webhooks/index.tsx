@@ -7,7 +7,6 @@ import Loading from 'components/Loading';
 import Error from 'components/Error';
 import Item from './Item';
 import { WebhookConnection, Webhook } from 'schema/types';
-import moment from 'moment';
 
 const GET_WEBHOOKS = gql`
   query getWebhooks($endpointId: ID!, $after: Int) {
@@ -159,20 +158,7 @@ const Webhooks = () => {
   return (
     <div className="webhooks">
       {data?.webhooks.nodes.map(webhook => (
-        <Item
-          key={webhook.id}
-          id={webhook.id}
-          label={`${webhook.method}: ${moment(
-            webhook.createdAt,
-          ).format('LLL')}`}
-          isUnread={!webhook.read}
-          forwardSuccessCount={
-            webhook.forwards.filter(f => f.success).length
-          }
-          forwardErrorCount={
-            webhook.forwards.filter(f => !f.success).length
-          }
-        />
+        <Item key={webhook.id} webhook={webhook} />
       ))}
       {loading ? (
         <Loading />

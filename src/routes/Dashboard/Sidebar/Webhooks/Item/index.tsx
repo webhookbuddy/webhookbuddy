@@ -6,29 +6,25 @@ import {
   matchPath,
 } from 'react-router-dom';
 import useForwardingIds from 'hooks/useForwardingIds';
+import useReadWebhook from 'hooks/useReadWebhook';
+import { Webhook } from 'schema/types';
+import moment from 'moment';
 
 import './style.css';
 
 const formatCount = (n: number) =>
   n === 0 ? '' : n > 9 ? '9+' : n.toString();
 
-const Item = ({
-  id,
-  label,
-  isUnread,
-  forwardSuccessCount,
-  forwardErrorCount,
-}: {
-  id: string;
-  label: string;
-  isUnread: boolean;
-  forwardSuccessCount: number;
-  forwardErrorCount: number;
-}) => {
+const Item = ({ webhook }: { webhook: Webhook }) => {
   const { endpointId } = useParams();
   const history = useHistory();
   const location = useLocation();
   const { forwardingIds } = useForwardingIds();
+  const { readWebhook } = useReadWebhook();
+
+  const label = `${webhook.method}: ${moment(
+    webhook.createdAt,
+  ).format('LLL')}`;
 
   const match = matchPath<{
     webhookIds: string | undefined;
@@ -39,31 +35,36 @@ const Item = ({
   const isActive =
     match?.params.webhookIds
       ?.split(',')
-      .some(paramId => paramId === id) === true;
+      .some(paramId => paramId === webhook.id) === true;
 
   const handleClick = (e: React.MouseEvent<HTMLElement>) => {
     const path = location.pathname.includes('/forwards')
-      ? `/endpoints/${endpointId}/webhooks/${id}/forwards`
-      : `/endpoints/${endpointId}/webhooks/${id}`;
+      ? `/endpoints/${endpointId}/webhooks/${webhook.id}/forwards`
+      : `/endpoints/${endpointId}/webhooks/${webhook.id}`;
 
     if (location.pathname !== path) history.push(path);
+    if (!webhook.read) readWebhook(webhook);
   };
 
   return (
     <div
       className={`webhooks__item ${
         isActive ? 'webhooks__item--active' : ''
-      } ${isUnread ? 'webhooks__item--unread' : ''}`}
+      } ${webhook.read ? '' : 'webhooks__item--unread'}`}
       onClick={handleClick}
     >
       <div className="webhooks__item__label">{label}</div>
       <div className="webhooks__item__badges">
-        {forwardingIds.includes(id) ? (
+        {forwardingIds.includes(webhook.id) ? (
           <ForwardingBadges />
         ) : (
           <IdleBadges
-            forwardSuccessCount={forwardSuccessCount}
-            forwardErrorCount={forwardErrorCount}
+            forwardSuccessCount={
+              webhook.forwards.filter(f => f.success).length
+            }
+            forwardErrorCount={
+              webhook.forwards.filter(f => !f.success).length
+            }
           />
         )}
       </div>
