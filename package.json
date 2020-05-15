@@ -17,6 +17,7 @@
     "@types/react-dom": "^16.9.6",
     "@types/react-toastify": "^4.1.0",
     "apollo-cache-inmemory": "^1.6.5",
+    "apollo-cache-persist": "^0.1.1",
     "apollo-client": "^2.6.8",
     "apollo-link": "^1.2.14",
     "apollo-link-context": "^1.0.20",
