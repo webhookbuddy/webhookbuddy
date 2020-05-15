@@ -26,15 +26,12 @@ const Session = () => {
   const { loading, error, refetch } = useQuery<MePayload>(GET_ME, {
     notifyOnNetworkStatusChange: true,
     onCompleted: ({ me }) => {
-      // Once I started using apollo-cache-persist, I had to wrap this in a setTimeout, otherwise I would get a
-      // 'Can't perform a React state update on an unmounted component.' warning whenever getMe query was in persisted cache.
+      // After installing apollo-cache-persist, this results in 'Can't perform a React state update on an unmounted component.' warning whenever getMe query is in persisted cache.
       // This warning only appears because I'm using <React.StrictMode>.
       // https://github.com/apollographql/react-apollo/issues/3635
       // I believe the reason for this problem is that onCompleted gets called synchronously if it's coming from persisted cache, and then the rest of this
       // component gets rendered by useState triggers inside useQuery. By the time that happens though, this component has unmounted due to setMe().
-      setTimeout(() => {
-        setMe(me);
-      }, 1);
+      setMe(me);
     },
   });
 
