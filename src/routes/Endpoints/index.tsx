@@ -41,7 +41,7 @@ const Endpoints = () => {
       </Error>
     );
 
-  if (loading) return <Loading />;
+  if (!data && loading) return <Loading />;
 
   return (
     <div className="viewport viewport--endpoints">
