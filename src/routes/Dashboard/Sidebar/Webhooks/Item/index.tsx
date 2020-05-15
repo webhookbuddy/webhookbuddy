@@ -1,5 +1,10 @@
 import React from 'react';
-import { useParams, useHistory, useLocation } from 'react-router-dom';
+import {
+  useParams,
+  useHistory,
+  useLocation,
+  matchPath,
+} from 'react-router-dom';
 import useForwardingIds from 'hooks/useForwardingIds';
 
 import './style.css';
@@ -10,14 +15,12 @@ const formatCount = (n: number) =>
 const Item = ({
   id,
   label,
-  isActive,
   isUnread,
   forwardSuccessCount,
   forwardErrorCount,
 }: {
   id: string;
   label: string;
-  isActive: boolean;
   isUnread: boolean;
   forwardSuccessCount: number;
   forwardErrorCount: number;
@@ -26,6 +29,17 @@ const Item = ({
   const history = useHistory();
   const location = useLocation();
   const { forwardingIds } = useForwardingIds();
+
+  const match = matchPath<{
+    webhookIds: string | undefined;
+  }>(location.pathname, {
+    path: '/endpoints/:endpointId/webhooks/:webhookIds',
+  });
+
+  const isActive =
+    match?.params.webhookIds
+      ?.split(',')
+      .some(paramId => paramId === id) === true;
 
   return (
     <div

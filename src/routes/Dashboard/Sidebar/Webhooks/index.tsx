@@ -165,7 +165,6 @@ const Webhooks = () => {
           label={`${webhook.method}: ${moment(
             webhook.createdAt,
           ).format('LLL')}`}
-          isActive={false} // TODO
           isUnread={!webhook.read}
           forwardSuccessCount={
             webhook.forwards.filter(f => f.success).length
