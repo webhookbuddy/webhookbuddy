@@ -41,18 +41,20 @@ const Item = ({
       ?.split(',')
       .some(paramId => paramId === id) === true;
 
+  const handleClick = (e: React.MouseEvent<HTMLElement>) => {
+    const path = location.pathname.includes('/forwards')
+      ? `/endpoints/${endpointId}/webhooks/${id}/forwards`
+      : `/endpoints/${endpointId}/webhooks/${id}`;
+
+    if (location.pathname !== path) history.push(path);
+  };
+
   return (
     <div
       className={`webhooks__item ${
         isActive ? 'webhooks__item--active' : ''
       } ${isUnread ? 'webhooks__item--unread' : ''}`}
-      onClick={() =>
-        location.pathname.includes('/forwards')
-          ? history.push(
-              `/endpoints/${endpointId}/webhooks/${id}/forwards`,
-            )
-          : history.push(`/endpoints/${endpointId}/webhooks/${id}`)
-      }
+      onClick={handleClick}
     >
       <div className="webhooks__item__label">{label}</div>
       <div className="webhooks__item__badges">
