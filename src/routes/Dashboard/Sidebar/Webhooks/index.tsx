@@ -11,7 +11,8 @@ import moment from 'moment';
 
 const GET_WEBHOOKS = gql`
   query getWebhooks($endpointId: ID!, $after: Int) {
-    webhooks(endpointId: $endpointId, after: $after) {
+    webhooks(endpointId: $endpointId, after: $after)
+      @connection(key: "webhooks", filter: ["endpointId"]) {
       nodes {
         ...webhook
       }
