@@ -1,5 +1,5 @@
 import React from 'react';
-import { useParams, useHistory } from 'react-router-dom';
+import { useParams, useHistory, useLocation } from 'react-router-dom';
 import useForwardingIds from 'hooks/useForwardingIds';
 
 import './style.css';
@@ -24,6 +24,7 @@ const Item = ({
 }) => {
   const { endpointId } = useParams();
   const history = useHistory();
+  const location = useLocation();
   const { forwardingIds } = useForwardingIds();
 
   return (
@@ -32,7 +33,11 @@ const Item = ({
         isActive ? 'webhooks__item--active' : ''
       } ${isUnread ? 'webhooks__item--unread' : ''}`}
       onClick={() =>
-        history.push(`/endpoints/${endpointId}/webhooks/${id}`)
+        location.pathname.includes('/forwards')
+          ? history.push(
+              `/endpoints/${endpointId}/webhooks/${id}/forwards`,
+            )
+          : history.push(`/endpoints/${endpointId}/webhooks/${id}`)
       }
     >
       <div className="webhooks__item__label">{label}</div>
