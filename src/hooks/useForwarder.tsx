@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import useForwardingIds from './useForwardingIds';
 import { useMutation } from '@apollo/react-hooks';
 import { toast } from 'react-toastify';
+import useForwardUrls from './useForwardUrls';
 
 const { ipcRenderer } = window.require('electron');
 
@@ -49,6 +50,7 @@ const extractContentType = (headers: KeyValue[]) =>
 
 const useForwarder = () => {
   const { addForwardingId, removeForwardingId } = useForwardingIds();
+  const { addForwardUrl } = useForwardUrls();
   const [addForward] = useMutation(ADD_FORWARD);
 
   useEffect(() => {
@@ -124,6 +126,7 @@ const useForwarder = () => {
   }, [removeForwardingId, addForward]);
 
   const forwardWebhook = (url: string, webhooks: Webhook[]) => {
+    addForwardUrl(url);
     webhooks.forEach(webhook => {
       addForwardingId(webhook.id);
       ipcRenderer.send('http-request', {
