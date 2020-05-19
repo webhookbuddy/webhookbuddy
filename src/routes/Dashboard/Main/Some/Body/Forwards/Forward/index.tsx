@@ -19,9 +19,10 @@ const Forward = ({ forward }: { forward: ForwardType }) => {
         onClick={() => setIsActive(!isActive)}
       >
         <div className="forward__header">
-          <div className="forward__header__label">{`${moment(
-            forward.createdAt,
-          ).format('LLL')} ${forward.url}`}</div>
+          <div className="forward__header__label">
+            <strong>{moment(forward.createdAt).format('LLL')}</strong>{' '}
+            {forward.method} {forward.url}`}
+          </div>
           <div className="forward__header__badges">
             <i
               className={`fa ${

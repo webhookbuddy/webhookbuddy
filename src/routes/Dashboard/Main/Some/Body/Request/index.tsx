@@ -6,6 +6,7 @@ import './style.css';
 
 const Request = ({ webhook }: { webhook: Webhook }) => {
   const headings = [
+    { key: 'Method', value: webhook.method },
     { key: 'Host', value: webhook.ipAddress },
   ] as KeyValue[];
   return (
