@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   HttpMessage as HttpMessageType,
   KeyValue,
@@ -6,6 +6,24 @@ import {
 import moment from 'moment';
 
 import './style.css';
+
+const isJSON = (json: string | undefined) => {
+  try {
+    JSON.parse(json ?? '');
+    return true;
+  } catch {
+    return false;
+  }
+};
+
+const formatJson = (body: string | undefined, format: boolean) =>
+  !format
+    ? body
+    : !body
+    ? body
+    : !isJSON(body)
+    ? body
+    : JSON.stringify(JSON.parse(body), null, 2);
 
 const HttpMessage = ({
   type,
@@ -16,6 +34,7 @@ const HttpMessage = ({
   headings: KeyValue[];
   message: HttpMessageType;
 }) => {
+  const [formatBody, setFormatBody] = useState(true);
   return (
     <div className="http">
       <div className="http__summary">
@@ -99,18 +118,21 @@ const HttpMessage = ({
           <input
             type="checkbox"
             className="custom-control-input"
-            id="customSwitch1"
-            defaultChecked={true}
+            id="format-body-checkbox"
+            defaultChecked={formatBody}
+            onChange={e => setFormatBody(e.target.checked)}
           />
           <label
             className="custom-control-label"
-            htmlFor="customSwitch1"
+            htmlFor="format-body-checkbox"
           >
             Format
           </label>
         </div>
         <div className="http__content__title">Body</div>
-        <pre className="http__content__raw">{message.body}</pre>
+        <pre className="http__content__raw">
+          {formatJson(message.body, formatBody)}
+        </pre>
       </div>
     </div>
   );
