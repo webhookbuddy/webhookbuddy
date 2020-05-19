@@ -75,6 +75,7 @@ export interface HttpMessage {
 }
 
 export interface Webhook extends HttpMessage {
+  description: string;
   ipAddress: string;
   read: boolean;
   forwards: Forward[];

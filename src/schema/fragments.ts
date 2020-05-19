@@ -44,6 +44,7 @@ export const WEBHOOK_FRAGMENT = gql`
   fragment webhook on Webhook {
     id
     createdAt
+    description
     ipAddress
     method
     headers {

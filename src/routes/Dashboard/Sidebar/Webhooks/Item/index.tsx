@@ -22,9 +22,9 @@ const Item = ({ webhook }: { webhook: Webhook }) => {
   const { forwardingIds } = useForwardingIds();
   const { readWebhook } = useReadWebhook();
 
-  const label = `${webhook.method}: ${moment(
-    webhook.createdAt,
-  ).format('LLL')}`;
+  const label = `${moment(webhook.createdAt).format(
+    'MMM DD, YYYY HH:mm',
+  )} | ${webhook.description}`;
 
   const match = matchPath<{
     webhookIds: string | undefined;
