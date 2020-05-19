@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 
+import './style.css';
+
 const SuggestionsList = ({
   activeIndex,
   filteredSuggestions,
@@ -14,7 +16,7 @@ const SuggestionsList = ({
       <div className="dropdown-menu" style={{ display: 'block' }}>
         {filteredSuggestions.map((suggestion, index) => (
           <button
-            className={`dropdown-item ${
+            className={`dropdown-item dropdown-item-forwarder ${
               index === activeIndex ? 'active' : ''
             }`}
             key={suggestion}
