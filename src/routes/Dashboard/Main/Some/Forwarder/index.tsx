@@ -1,4 +1,6 @@
 import React, { useState, useRef } from 'react';
+import useForwardUrls from 'hooks/useForwardUrls';
+import Autosuggest from 'components/Autosuggest';
 
 import './style.css';
 
@@ -7,6 +9,7 @@ const Forwarder = ({
 }: {
   forwardTo: (url: string) => void;
 }) => {
+  const { forwardUrls } = useForwardUrls();
   const [url, setUrl] = useState<string>('');
   const buttonRef = useRef<HTMLButtonElement>(null);
 
@@ -27,13 +30,12 @@ const Forwarder = ({
         className="forwarder__icon fa fa-play fa-lg pointer"
         onClick={handlePlayClick}
       ></i>
-      <input
+      <Autosuggest
         type="url"
-        className="form-control form-control-sm"
-        value={url}
-        onChange={e => setUrl(e.target.value)}
         placeholder="Forward to URL (e.g. http://localhost:8000/send-webhook-here)"
-        required
+        userInput={url}
+        setUserInput={setUrl}
+        suggestions={forwardUrls}
       />
       <button
         type="submit"
