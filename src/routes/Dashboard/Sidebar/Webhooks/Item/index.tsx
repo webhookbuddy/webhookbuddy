@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-  useParams,
-  useHistory,
-  useLocation,
-  matchPath,
-} from 'react-router-dom';
 import useForwardingIds from 'hooks/useForwardingIds';
-import useReadWebhook from 'hooks/useReadWebhook';
 import { Webhook } from 'schema/types';
 import moment from 'moment';
 
@@ -15,43 +8,27 @@ import './style.css';
 const formatCount = (n: number) =>
   n === 0 ? '' : n > 9 ? '9+' : n.toString();
 
-const Item = ({ webhook }: { webhook: Webhook }) => {
-  const { endpointId } = useParams();
-  const history = useHistory();
-  const location = useLocation();
+const Item = ({
+  webhook,
+  isActive,
+  handleClick,
+}: {
+  webhook: Webhook;
+  isActive: boolean;
+  handleClick: (webhook: Webhook) => void;
+}) => {
   const { forwardingIds } = useForwardingIds();
-  const { readWebhook } = useReadWebhook();
 
   const label = `${moment(webhook.createdAt).format(
     'MMM DD, YYYY HH:mm',
   )} | ${webhook.description}`;
-
-  const match = matchPath<{
-    webhookIds: string | undefined;
-  }>(location.pathname, {
-    path: '/endpoints/:endpointId/webhooks/:webhookIds',
-  });
-
-  const isActive =
-    match?.params.webhookIds
-      ?.split(',')
-      .some(paramId => paramId === webhook.id) === true;
-
-  const handleClick = (e: React.MouseEvent<HTMLElement>) => {
-    const path = location.pathname.includes('/forwards')
-      ? `/endpoints/${endpointId}/webhooks/${webhook.id}/forwards`
-      : `/endpoints/${endpointId}/webhooks/${webhook.id}`;
-
-    if (location.pathname !== path) history.push(path);
-    if (!webhook.read) readWebhook(webhook);
-  };
 
   return (
     <div
       className={`webhooks__item ${
         isActive ? 'webhooks__item--active' : ''
       } ${webhook.read ? '' : 'webhooks__item--unread'}`}
-      onClick={handleClick}
+      onClick={() => handleClick(webhook)}
     >
       <div className="webhooks__item__label">{label}</div>
       <div className="webhooks__item__badges">
