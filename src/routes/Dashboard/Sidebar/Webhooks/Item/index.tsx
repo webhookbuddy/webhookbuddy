@@ -23,9 +23,9 @@ const Item = ({
 }) => {
   const { forwardingIds } = useForwardingIds();
 
-  const label = `${moment(webhook.createdAt).format(
+  const label = `[${moment(webhook.createdAt).format(
     'MMM DD, YYYY HH:mm',
-  )} | ${webhook.description}`;
+  )}] ${webhook.description}`;
 
   return (
     <div

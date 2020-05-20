@@ -20,9 +20,7 @@ const Forward = ({ forward }: { forward: ForwardType }) => {
       >
         <div className="forward__header">
           <div className="forward__header__label">
-            <strong>
-              {moment(forward.createdAt).format('MMM DD, YYYY HH:mm')}
-            </strong>{' '}
+            [{moment(forward.createdAt).format('MMM DD, YYYY HH:mm')}]{' '}
             {forward.method} {forward.url}`}
           </div>
           <div className="forward__header__badges">
