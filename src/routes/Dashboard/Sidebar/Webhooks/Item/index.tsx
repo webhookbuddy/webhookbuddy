@@ -15,7 +15,11 @@ const Item = ({
 }: {
   webhook: Webhook;
   isActive: boolean;
-  handleClick: (webhook: Webhook) => void;
+  handleClick: (
+    webhook: Webhook,
+    ctrlKey: boolean,
+    shiftKey: boolean,
+  ) => void;
 }) => {
   const { forwardingIds } = useForwardingIds();
 
@@ -28,7 +32,9 @@ const Item = ({
       className={`webhooks__item ${
         isActive ? 'webhooks__item--active' : ''
       } ${webhook.read ? '' : 'webhooks__item--unread'}`}
-      onClick={() => handleClick(webhook)}
+      onClick={e => {
+        handleClick(webhook, e.ctrlKey, e.shiftKey);
+      }}
     >
       <div className="webhooks__item__label">{label}</div>
       <div className="webhooks__item__badges">
