@@ -9,7 +9,7 @@ const GET_FORWARDING_IDS = gql`
 
 const useForwardingIds = (): {
   forwardingIds: string[];
-  addForwardingId: (id: string) => void;
+  addForwardingIds: (ids: string[]) => void;
   removeForwardingId: (id: string) => void;
 } => {
   const client = useApolloClient();
@@ -18,10 +18,10 @@ const useForwardingIds = (): {
     forwardingIds: string[];
   }>(GET_FORWARDING_IDS);
 
-  const addForwardingId = (id: string) =>
+  const addForwardingIds = (ids: string[]) =>
     client.writeData({
       data: {
-        forwardingIds: data?.forwardingIds.concat(id) ?? [id],
+        forwardingIds: data?.forwardingIds.concat(ids) ?? ids,
       },
     });
 
@@ -37,7 +37,7 @@ const useForwardingIds = (): {
 
   return {
     forwardingIds: data?.forwardingIds || [],
-    addForwardingId,
+    addForwardingIds,
     removeForwardingId,
   };
 };

@@ -49,7 +49,7 @@ const extractContentType = (headers: KeyValue[]) =>
     ?.value ?? null;
 
 const useForwarder = () => {
-  const { addForwardingId, removeForwardingId } = useForwardingIds();
+  const { addForwardingIds, removeForwardingId } = useForwardingIds();
   const { addForwardUrl } = useForwardUrls();
   const [addForward] = useMutation(ADD_FORWARD);
 
@@ -127,24 +127,26 @@ const useForwarder = () => {
 
   const forwardWebhook = (url: string, webhooks: Webhook[]) => {
     addForwardUrl(url);
-    webhooks.forEach(webhook => {
-      addForwardingId(webhook.id);
-      ipcRenderer.send('http-request', {
-        method: webhook.method,
-        url: appendQuery(url, webhook.query),
-        headers: webhook.headers
-          .filter(header => header.key.toLowerCase() !== 'host')
-          .reduce((acc, cur) => {
-            acc[cur.key] = cur.value;
-            return acc;
-          }, {} as any),
-        body: webhook.body,
-        metadata: {
-          url,
-          webhook,
-        },
+    addForwardingIds(webhooks.map(w => w.id));
+    webhooks
+      .sort((a, b) => parseInt(a.id, 10) - parseInt(b.id, 10))
+      .forEach(webhook => {
+        ipcRenderer.send('http-request', {
+          method: webhook.method,
+          url: appendQuery(url, webhook.query),
+          headers: webhook.headers
+            .filter(header => header.key.toLowerCase() !== 'host')
+            .reduce((acc, cur) => {
+              acc[cur.key] = cur.value;
+              return acc;
+            }, {} as any),
+          body: webhook.body,
+          metadata: {
+            url,
+            webhook,
+          },
+        });
       });
-    });
   };
 
   return {

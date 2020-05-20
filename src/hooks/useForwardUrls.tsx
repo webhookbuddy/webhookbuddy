@@ -1,5 +1,6 @@
 import gql from 'graphql-tag';
 import { useQuery, useApolloClient } from '@apollo/react-hooks';
+import { distinct } from 'services/ids';
 
 const GET_FORWARD_URLS = gql`
   query getForwardUrls {
@@ -17,14 +18,9 @@ const useForwardUrls = () => {
   const addForwardUrl = (url: string) =>
     client.writeData({
       data: {
-        forwardUrls: [url]
-          .concat(data?.forwardUrls ?? [])
-          .filter(
-            // only unique values
-            (element, index, array) =>
-              array.indexOf(element) === index,
-          )
-          .slice(0, 8),
+        forwardUrls: distinct(
+          [url].concat(data?.forwardUrls ?? []),
+        ).slice(0, 8),
       },
     });
 
