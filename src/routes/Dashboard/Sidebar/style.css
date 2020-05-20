@@ -14,4 +14,5 @@
 
 .sidebar__content {
   overflow-y: auto;
+  position: relative; /* required to measure offsetTop on .webhooks__item */
 }

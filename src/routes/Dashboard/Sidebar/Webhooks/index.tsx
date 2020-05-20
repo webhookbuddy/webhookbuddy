@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   useParams,
   matchPath,
@@ -14,7 +14,11 @@ import Error from 'components/Error';
 import Item from './Item';
 import { sort, sortDistinct } from 'services/ids';
 
-const Webhooks = () => {
+const Webhooks = ({
+  ensureVisible,
+}: {
+  ensureVisible: (element: HTMLElement) => void;
+}) => {
   const {
     endpointId,
   }: {
@@ -29,6 +33,10 @@ const Webhooks = () => {
   const { readWebhook } = useReadWebhook();
   const history = useHistory();
   const location = useLocation();
+
+  const [activeWebhookId, setActiveWebhookId] = useState<
+    string | undefined
+  >();
 
   const match = matchPath<{
     webhookIds: string | undefined;
@@ -51,6 +59,8 @@ const Webhooks = () => {
     ctrlKey: boolean,
     shiftKey: boolean,
   ) => {
+    setActiveWebhookId(webhook.id);
+
     if (ctrlKey) {
       setSelection(
         sortDistinct(selectedWebhookIds.concat(webhook.id)),
@@ -104,10 +114,13 @@ const Webhooks = () => {
 
   useHotkeys(
     'up',
-    () => {
-      const mostRecent = sort(selectedWebhookIds)[0];
-      let start = webhooks.findIndex(w => w.id === mostRecent);
-      if (start > 0) setSingleSelection(webhooks[start - 1]);
+    e => {
+      e.preventDefault();
+      let start = webhooks.findIndex(w => w.id === activeWebhookId);
+      if (start > 0) {
+        setActiveWebhookId(webhooks[start - 1].id);
+        setSingleSelection(webhooks[start - 1]);
+      }
     },
     undefined,
     [selectedWebhookIds],
@@ -115,16 +128,21 @@ const Webhooks = () => {
 
   useHotkeys(
     'down',
-    () => {
-      const mostRecent = sort(selectedWebhookIds)[0];
-      let start = webhooks.findIndex(w => w.id === mostRecent);
+    e => {
+      e.preventDefault();
+      const start = webhooks.findIndex(w => w.id === activeWebhookId);
       if (start < 0) {
-        if (webhooks.length) setSingleSelection(webhooks[0]);
+        if (webhooks.length) {
+          setActiveWebhookId(webhooks[0].id);
+          setSingleSelection(webhooks[0]);
+        }
         return;
       }
 
-      if (webhooks.length > start + 1)
+      if (webhooks.length > start + 1) {
+        setActiveWebhookId(webhooks[start + 1].id);
         setSingleSelection(webhooks[start + 1]);
+      }
     },
     undefined,
     [selectedWebhookIds],
@@ -132,12 +150,13 @@ const Webhooks = () => {
   useHotkeys(
     'shift+up',
     () => {
-      const mostRecent = sort(selectedWebhookIds)[0];
-      let start = webhooks.findIndex(w => w.id === mostRecent);
-      if (start > 0)
+      const start = webhooks.findIndex(w => w.id === activeWebhookId);
+      if (start > 0) {
+        setActiveWebhookId(webhooks[start - 1].id);
         setSelection(
           selectedWebhookIds.concat(webhooks[start - 1].id),
         );
+      }
     },
     undefined,
     [selectedWebhookIds],
@@ -145,10 +164,11 @@ const Webhooks = () => {
   useHotkeys(
     'shift+down',
     () => {
-      const oldest = sort(selectedWebhookIds).reverse()[0];
-      let end = webhooks.findIndex(w => w.id === oldest);
-      if (end > -1 && end < webhooks.length + 1)
+      const end = webhooks.findIndex(w => w.id === activeWebhookId);
+      if (end > -1 && end < webhooks.length + 1) {
+        setActiveWebhookId(webhooks[end + 1].id);
         setSelection(selectedWebhookIds.concat(webhooks[end + 1].id));
+      }
     },
     undefined,
     [selectedWebhookIds],
@@ -160,8 +180,10 @@ const Webhooks = () => {
         <Item
           key={webhook.id}
           webhook={webhook}
+          isActive={activeWebhookId === webhook.id}
           isSelected={selectedWebhookIds.includes(webhook.id)}
           handleClick={handleWebhookClick}
+          ensureVisible={ensureVisible}
         />
       ))}
       {loading ? (
