@@ -49,7 +49,7 @@ const extractContentType = (headers: KeyValue[]) =>
     ?.value ?? null;
 
 const useForwarder = () => {
-  const { addForwardingId, removeForwardingId } = useForwardingIds();
+  const { addForwardingIds, removeForwardingId } = useForwardingIds();
   const { addForwardUrl } = useForwardUrls();
   const [addForward] = useMutation(ADD_FORWARD);
 
@@ -127,8 +127,8 @@ const useForwarder = () => {
 
   const forwardWebhook = (url: string, webhooks: Webhook[]) => {
     addForwardUrl(url);
+    addForwardingIds(webhooks.map(w => w.id));
     webhooks.forEach(webhook => {
-      addForwardingId(webhook.id);
       ipcRenderer.send('http-request', {
         method: webhook.method,
         url: appendQuery(url, webhook.query),
