@@ -5,6 +5,7 @@ import {
   useLocation,
   useHistory,
 } from 'react-router-dom';
+import { useHotkeys } from 'react-hotkeys-hook';
 import useFetchWebhooks from 'hooks/useFetchWebhooks';
 import useReadWebhook from 'hooks/useReadWebhook';
 import { Webhook } from 'schema/types';
@@ -34,7 +35,6 @@ const Webhooks = () => {
   }>(location.pathname, {
     path: '/endpoints/:endpointId/webhooks/:webhookIds',
   });
-
   const activeWebhookIds = match?.params.webhookIds?.split(',') ?? [];
 
   const setSelection = (ids: string[]) => {
@@ -91,9 +91,63 @@ const Webhooks = () => {
       return;
     }
 
+    setSingleSelection(webhook);
+  };
+
+  const setSingleSelection = (webhook: Webhook) => {
     setSelection([webhook.id]);
     if (!webhook.read) readWebhook(webhook);
   };
+
+  useHotkeys(
+    'up',
+    () => {
+      const mostRecent = sort(activeWebhookIds)[0];
+      let start = webhooks.findIndex(w => w.id === mostRecent);
+      if (start > 0) setSingleSelection(webhooks[start - 1]);
+    },
+    undefined,
+    [activeWebhookIds],
+  );
+
+  useHotkeys(
+    'down',
+    () => {
+      const mostRecent = sort(activeWebhookIds)[0];
+      let start = webhooks.findIndex(w => w.id === mostRecent);
+      if (start < 0) {
+        if (webhooks.length) setSingleSelection(webhooks[0]);
+        return;
+      }
+
+      if (webhooks.length > start + 1)
+        setSingleSelection(webhooks[start + 1]);
+    },
+    undefined,
+    [activeWebhookIds],
+  );
+  useHotkeys(
+    'shift+up',
+    () => {
+      const mostRecent = sort(activeWebhookIds)[0];
+      let start = webhooks.findIndex(w => w.id === mostRecent);
+      if (start > 0)
+        setSelection(activeWebhookIds.concat(webhooks[start - 1].id));
+    },
+    undefined,
+    [activeWebhookIds],
+  );
+  useHotkeys(
+    'shift+down',
+    () => {
+      const oldest = sort(activeWebhookIds).reverse()[0];
+      let end = webhooks.findIndex(w => w.id === oldest);
+      if (end > -1 && end < webhooks.length + 1)
+        setSelection(activeWebhookIds.concat(webhooks[end + 1].id));
+    },
+    undefined,
+    [activeWebhookIds],
+  );
 
   return (
     <div className="webhooks">
