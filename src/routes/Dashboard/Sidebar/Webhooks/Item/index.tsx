@@ -10,11 +10,11 @@ const formatCount = (n: number) =>
 
 const Item = ({
   webhook,
-  isActive,
+  isSelected,
   handleClick,
 }: {
   webhook: Webhook;
-  isActive: boolean;
+  isSelected: boolean;
   handleClick: (
     webhook: Webhook,
     ctrlKey: boolean,
@@ -30,7 +30,7 @@ const Item = ({
   return (
     <div
       className={`webhooks__item ${
-        isActive ? 'webhooks__item--active' : ''
+        isSelected ? 'webhooks__item--selected' : ''
       } ${webhook.read ? '' : 'webhooks__item--unread'}`}
       onClick={e => {
         handleClick(webhook, e.ctrlKey, e.shiftKey);
