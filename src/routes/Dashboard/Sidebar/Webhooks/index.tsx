@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   useParams,
   matchPath,
@@ -14,7 +14,11 @@ import Error from 'components/Error';
 import Item from './Item';
 import { sort, sortDistinct } from 'services/ids';
 
-const Webhooks = () => {
+const Webhooks = ({
+  ensureVisible,
+}: {
+  ensureVisible: (element: HTMLElement) => void;
+}) => {
   const {
     endpointId,
   }: {
@@ -30,12 +34,17 @@ const Webhooks = () => {
   const history = useHistory();
   const location = useLocation();
 
+  const [activeWebhookId, setActiveWebhookId] = useState<
+    string | undefined
+  >();
+
   const match = matchPath<{
     webhookIds: string | undefined;
   }>(location.pathname, {
     path: '/endpoints/:endpointId/webhooks/:webhookIds',
   });
-  const activeWebhookIds = match?.params.webhookIds?.split(',') ?? [];
+  const selectedWebhookIds =
+    match?.params.webhookIds?.split(',') ?? [];
 
   const setSelection = (ids: string[]) => {
     const path = location.pathname.includes('/forwards')
@@ -50,13 +59,17 @@ const Webhooks = () => {
     ctrlKey: boolean,
     shiftKey: boolean,
   ) => {
+    setActiveWebhookId(webhook.id);
+
     if (ctrlKey) {
-      setSelection(sortDistinct(activeWebhookIds.concat(webhook.id)));
+      setSelection(
+        sortDistinct(selectedWebhookIds.concat(webhook.id)),
+      );
       return;
     }
 
     if (shiftKey) {
-      const mostRecent = sort(activeWebhookIds)[0];
+      const mostRecent = sort(selectedWebhookIds)[0];
       let start = webhooks.findIndex(w => w.id === mostRecent);
       if (start === -1) start = 0;
 
@@ -74,19 +87,19 @@ const Webhooks = () => {
         webhooks.reduce(
           (acc, cur, index) => {
             if (acc.including) {
-              acc.active.push(cur.id);
+              acc.selected.push(cur.id);
               if (index === end) acc.including = false;
             } else if (index === start) {
-              acc.active.push(cur.id);
+              acc.selected.push(cur.id);
               acc.including = true;
             }
             return acc;
           },
-          { including: false, active: [] } as {
+          { including: false, selected: [] } as {
             including: boolean;
-            active: string[];
+            selected: string[];
           },
-        ).active,
+        ).selected,
       );
       return;
     }
@@ -101,52 +114,64 @@ const Webhooks = () => {
 
   useHotkeys(
     'up',
-    () => {
-      const mostRecent = sort(activeWebhookIds)[0];
-      let start = webhooks.findIndex(w => w.id === mostRecent);
-      if (start > 0) setSingleSelection(webhooks[start - 1]);
+    e => {
+      e.preventDefault();
+      let start = webhooks.findIndex(w => w.id === activeWebhookId);
+      if (start > 0) {
+        setActiveWebhookId(webhooks[start - 1].id);
+        setSingleSelection(webhooks[start - 1]);
+      }
     },
     undefined,
-    [activeWebhookIds],
+    [selectedWebhookIds],
   );
 
   useHotkeys(
     'down',
-    () => {
-      const mostRecent = sort(activeWebhookIds)[0];
-      let start = webhooks.findIndex(w => w.id === mostRecent);
+    e => {
+      e.preventDefault();
+      const start = webhooks.findIndex(w => w.id === activeWebhookId);
       if (start < 0) {
-        if (webhooks.length) setSingleSelection(webhooks[0]);
+        if (webhooks.length) {
+          setActiveWebhookId(webhooks[0].id);
+          setSingleSelection(webhooks[0]);
+        }
         return;
       }
 
-      if (webhooks.length > start + 1)
+      if (webhooks.length > start + 1) {
+        setActiveWebhookId(webhooks[start + 1].id);
         setSingleSelection(webhooks[start + 1]);
+      }
     },
     undefined,
-    [activeWebhookIds],
+    [selectedWebhookIds],
   );
   useHotkeys(
     'shift+up',
     () => {
-      const mostRecent = sort(activeWebhookIds)[0];
-      let start = webhooks.findIndex(w => w.id === mostRecent);
-      if (start > 0)
-        setSelection(activeWebhookIds.concat(webhooks[start - 1].id));
+      const start = webhooks.findIndex(w => w.id === activeWebhookId);
+      if (start > 0) {
+        setActiveWebhookId(webhooks[start - 1].id);
+        setSelection(
+          selectedWebhookIds.concat(webhooks[start - 1].id),
+        );
+      }
     },
     undefined,
-    [activeWebhookIds],
+    [selectedWebhookIds],
   );
   useHotkeys(
     'shift+down',
     () => {
-      const oldest = sort(activeWebhookIds).reverse()[0];
-      let end = webhooks.findIndex(w => w.id === oldest);
-      if (end > -1 && end < webhooks.length + 1)
-        setSelection(activeWebhookIds.concat(webhooks[end + 1].id));
+      const end = webhooks.findIndex(w => w.id === activeWebhookId);
+      if (end > -1 && end < webhooks.length + 1) {
+        setActiveWebhookId(webhooks[end + 1].id);
+        setSelection(selectedWebhookIds.concat(webhooks[end + 1].id));
+      }
     },
     undefined,
-    [activeWebhookIds],
+    [selectedWebhookIds],
   );
 
   return (
@@ -155,8 +180,10 @@ const Webhooks = () => {
         <Item
           key={webhook.id}
           webhook={webhook}
-          isActive={activeWebhookIds.includes(webhook.id)}
+          isActive={activeWebhookId === webhook.id}
+          isSelected={selectedWebhookIds.includes(webhook.id)}
           handleClick={handleWebhookClick}
+          ensureVisible={ensureVisible}
         />
       ))}
       {loading ? (

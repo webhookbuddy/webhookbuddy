@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import useForwardingIds from 'hooks/useForwardingIds';
 import { Webhook } from 'schema/types';
 import moment from 'moment';
@@ -11,17 +11,28 @@ const formatCount = (n: number) =>
 const Item = ({
   webhook,
   isActive,
+  isSelected,
   handleClick,
+  ensureVisible,
 }: {
   webhook: Webhook;
   isActive: boolean;
+  isSelected: boolean;
   handleClick: (
     webhook: Webhook,
     ctrlKey: boolean,
     shiftKey: boolean,
   ) => void;
+  ensureVisible: (element: HTMLElement) => void;
 }) => {
   const { forwardingIds } = useForwardingIds();
+
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (isActive && containerRef.current)
+      ensureVisible(containerRef.current);
+  }, [isActive, ensureVisible]);
 
   const label = `[${moment(webhook.createdAt).format(
     'MMM DD, YYYY HH:mm',
@@ -30,11 +41,12 @@ const Item = ({
   return (
     <div
       className={`webhooks__item ${
-        isActive ? 'webhooks__item--active' : ''
+        isSelected ? 'webhooks__item--selected' : ''
       } ${webhook.read ? '' : 'webhooks__item--unread'}`}
       onClick={e => {
         handleClick(webhook, e.ctrlKey, e.shiftKey);
       }}
+      ref={containerRef}
     >
       <div className="webhooks__item__label">{label}</div>
       <div className="webhooks__item__badges">

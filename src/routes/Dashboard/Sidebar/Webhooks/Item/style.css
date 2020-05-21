@@ -9,8 +9,8 @@
   cursor: pointer;
 }
 
-.webhooks__item--active,
-.webhooks__item--active:hover {
+.webhooks__item--selected,
+.webhooks__item--selected:hover {
   background: #f09e22;
   color: white;
 }
