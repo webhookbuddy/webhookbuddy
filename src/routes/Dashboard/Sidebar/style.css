@@ -1,18 +1,16 @@
 .sidebar {
   grid-area: sidebar;
-  overflow-y: hidden; /* to properly position scroll bar while keeping 100% height */
   display: grid;
   grid-template-rows: auto 1fr;
   border-right: 1px solid #bbb;
 
   /* resize handler */
   resize: horizontal;
-  overflow-x: auto;
+  overflow-x: hidden;
   min-width: 200px;
   max-width: 50vw;
 }
 
 .sidebar__content {
-  overflow-y: auto;
   position: relative; /* required to measure offsetTop on .webhooks__item */
 }

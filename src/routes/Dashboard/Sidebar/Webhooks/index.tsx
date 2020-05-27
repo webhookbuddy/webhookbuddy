@@ -13,6 +13,27 @@ import Loading from 'components/Loading';
 import Error from 'components/Error';
 import Item from './Item';
 import { sort, sortDistinct } from 'services/ids';
+import {
+  FixedSizeList as List,
+  ListChildComponentProps,
+} from 'react-window';
+import Autosizer from 'react-virtualized-auto-sizer';
+
+const Row = ({ index, style, data }: ListChildComponentProps) => {
+  return (
+    <div style={style} key={index}>
+      <Item
+        webhook={data.webhooks[index]}
+        isActive={data.activeWebhookId === data.webhooks[index].id}
+        isSelected={data.selectedWebhookIds.includes(
+          data.webhooks[index].id,
+        )}
+        handleClick={data.handleWebhookClick}
+        ensureVisible={data.ensureVisible}
+      />
+    </div>
+  );
+};
 
 const Webhooks = ({
   ensureVisible,
@@ -175,17 +196,27 @@ const Webhooks = ({
   );
 
   return (
-    <div className="webhooks">
-      {webhooks.map(webhook => (
-        <Item
-          key={webhook.id}
-          webhook={webhook}
-          isActive={activeWebhookId === webhook.id}
-          isSelected={selectedWebhookIds.includes(webhook.id)}
-          handleClick={handleWebhookClick}
-          ensureVisible={ensureVisible}
-        />
-      ))}
+    <>
+      <Autosizer>
+        {({ height, width }) => (
+          <List
+            height={height}
+            width={width}
+            itemCount={webhooks.length}
+            itemSize={36}
+            itemData={{
+              webhooks,
+              activeWebhookId,
+              selectedWebhookIds,
+              handleWebhookClick,
+              ensureVisible,
+            }}
+            itemKey={(index, data) => data.webhooks[index].id}
+          >
+            {Row}
+          </List>
+        )}
+      </Autosizer>
       {loading ? (
         <Loading />
       ) : (
@@ -197,7 +228,7 @@ const Webhooks = ({
           </Error>
         )
       )}
-    </div>
+    </>
   );
 };
 
