@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   useParams,
   matchPath,
@@ -52,6 +52,12 @@ const Webhooks = () => {
   const [activeWebhookId, setActiveWebhookId] = useState<
     string | undefined
   >();
+
+  const listRef = useRef<List>(null);
+
+  const ensureVisible = (index: number) => {
+    listRef.current?.scrollToItem(index);
+  };
 
   const match = matchPath<{
     webhookIds: string | undefined;
@@ -135,6 +141,7 @@ const Webhooks = () => {
       if (start > 0) {
         setActiveWebhookId(webhooks[start - 1].id);
         setSingleSelection(webhooks[start - 1]);
+        ensureVisible(start - 1);
       }
     },
     undefined,
@@ -150,6 +157,7 @@ const Webhooks = () => {
         if (webhooks.length) {
           setActiveWebhookId(webhooks[0].id);
           setSingleSelection(webhooks[0]);
+          ensureVisible(0);
         }
         return;
       }
@@ -157,6 +165,7 @@ const Webhooks = () => {
       if (webhooks.length > start + 1) {
         setActiveWebhookId(webhooks[start + 1].id);
         setSingleSelection(webhooks[start + 1]);
+        ensureVisible(start + 1);
       }
     },
     undefined,
@@ -171,6 +180,7 @@ const Webhooks = () => {
         setSelection(
           selectedWebhookIds.concat(webhooks[start - 1].id),
         );
+        ensureVisible(start - 1);
       }
     },
     undefined,
@@ -183,6 +193,7 @@ const Webhooks = () => {
       if (end > -1 && end < webhooks.length + 1) {
         setActiveWebhookId(webhooks[end + 1].id);
         setSelection(selectedWebhookIds.concat(webhooks[end + 1].id));
+        ensureVisible(end + 1);
       }
     },
     undefined,
@@ -194,6 +205,7 @@ const Webhooks = () => {
       <Autosizer>
         {({ height, width }) => (
           <List
+            ref={listRef}
             height={height}
             width={width}
             itemCount={webhooks.length}
