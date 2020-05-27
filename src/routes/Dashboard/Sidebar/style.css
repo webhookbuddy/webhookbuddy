@@ -10,7 +10,3 @@
   min-width: 200px;
   max-width: 50vw;
 }
-
-.sidebar__content {
-  position: relative; /* required to measure offsetTop on .webhooks__item */
-}

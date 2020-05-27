@@ -24,22 +24,16 @@ const Row = ({ index, style, data }: ListChildComponentProps) => {
     <div style={style} key={index}>
       <Item
         webhook={data.webhooks[index]}
-        isActive={data.activeWebhookId === data.webhooks[index].id}
         isSelected={data.selectedWebhookIds.includes(
           data.webhooks[index].id,
         )}
         handleClick={data.handleWebhookClick}
-        ensureVisible={data.ensureVisible}
       />
     </div>
   );
 };
 
-const Webhooks = ({
-  ensureVisible,
-}: {
-  ensureVisible: (element: HTMLElement) => void;
-}) => {
+const Webhooks = () => {
   const {
     endpointId,
   }: {
@@ -206,10 +200,8 @@ const Webhooks = ({
             itemSize={36}
             itemData={{
               webhooks,
-              activeWebhookId,
               selectedWebhookIds,
               handleWebhookClick,
-              ensureVisible,
             }}
             itemKey={(index, data) => data.webhooks[index].id}
           >
