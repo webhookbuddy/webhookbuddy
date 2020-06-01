@@ -17,6 +17,7 @@ import {
   PersistedData,
   PersistentStorage,
 } from 'apollo-cache-persist/types';
+import localForage from 'localforage';
 import { getMainDefinition } from 'apollo-utilities';
 
 import { typeDefs, resolvers } from 'schema/resolvers';
@@ -39,7 +40,7 @@ cache.writeData({
 
 const waitOnCache = persistCache({
   cache,
-  storage: window.localStorage as PersistentStorage<
+  storage: localForage as PersistentStorage<
     PersistedData<NormalizedCacheObject>
   >,
 });
