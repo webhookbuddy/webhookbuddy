@@ -9,8 +9,8 @@ import { useHotkeys } from 'react-hotkeys-hook';
 import useFetchWebhooks from 'hooks/useFetchWebhooks';
 import useReadWebhook from 'hooks/useReadWebhook';
 import { Webhook } from 'schema/types';
-import Loading from 'components/Loading';
-import Error from 'components/Error';
+import Loading from './Loading';
+import Error from './Error';
 import Item from './Item';
 import { sort, sortDistinct } from 'services/ids';
 import {
@@ -22,13 +22,23 @@ import Autosizer from 'react-virtualized-auto-sizer';
 const Row = ({ index, style, data }: ListChildComponentProps) => {
   return (
     <div style={style} key={index}>
-      <Item
-        webhook={data.webhooks[index]}
-        isSelected={data.selectedWebhookIds.includes(
-          data.webhooks[index].id,
-        )}
-        handleClick={data.handleWebhookClick}
-      />
+      {index > data.webhooks.length - 1 ? (
+        data.loading ? (
+          <Loading />
+        ) : (
+          data.error && (
+            <Error error={data.error} retry={data.retry} />
+          )
+        )
+      ) : (
+        <Item
+          webhook={data.webhooks[index]}
+          isSelected={data.selectedWebhookIds.includes(
+            data.webhooks[index].id,
+          )}
+          handleClick={data.handleWebhookClick}
+        />
+      )}
     </div>
   );
 };
@@ -201,38 +211,32 @@ const Webhooks = () => {
   );
 
   return (
-    <>
-      <Autosizer>
-        {({ height, width }) => (
-          <List
-            ref={listRef}
-            height={height}
-            width={width}
-            itemCount={webhooks.length}
-            itemSize={36}
-            itemData={{
-              webhooks,
-              selectedWebhookIds,
-              handleWebhookClick,
-            }}
-            itemKey={(index, data) => data.webhooks[index].id}
-          >
-            {Row}
-          </List>
-        )}
-      </Autosizer>
-      {loading ? (
-        <Loading />
-      ) : (
-        error && (
-          <Error error={error}>
-            <button className="btn btn-primary" onClick={retry}>
-              Try again!
-            </button>
-          </Error>
-        )
+    <Autosizer>
+      {({ height, width }) => (
+        <List
+          ref={listRef}
+          height={height}
+          width={width}
+          itemCount={webhooks.length + (loading || error ? 1 : 0)}
+          itemSize={36}
+          itemData={{
+            webhooks,
+            selectedWebhookIds,
+            handleWebhookClick,
+            loading,
+            error,
+            retry,
+          }}
+          itemKey={(index, data) =>
+            index > data.webhooks.length - 1
+              ? 'extra'
+              : data.webhooks[index].id
+          }
+        >
+          {Row}
+        </List>
       )}
-    </>
+    </Autosizer>
   );
 };
 

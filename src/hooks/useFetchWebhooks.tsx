@@ -30,7 +30,7 @@ const WEBHOOK_CREATED = gql`
   ${WEBHOOK_FRAGMENT}
 `;
 
-interface WebhooksPayload {
+export interface WebhooksPayload {
   webhooks: WebhookConnection;
 }
 
