@@ -17,18 +17,17 @@ import {
   FixedSizeList as List,
   ListChildComponentProps,
 } from 'react-window';
+import InfiniteLoader from 'react-window-infinite-loader';
 import Autosizer from 'react-virtualized-auto-sizer';
 
 const Row = ({ index, style, data }: ListChildComponentProps) => {
   return (
     <div style={style} key={index}>
-      {index > data.webhooks.length - 1 ? (
-        data.loading ? (
-          <Loading />
+      {!data.webhooks[index] ? (
+        data.error ? (
+          <Error error={data.error} retry={data.retry} />
         ) : (
-          data.error && (
-            <Error error={data.error} retry={data.retry} />
-          )
+          <Loading />
         )
       ) : (
         <Item
@@ -52,9 +51,13 @@ const Webhooks = () => {
 
   const retry = () => refetch().catch(() => {}); // Unless we catch, a network error will cause an unhandled rejection: https://github.com/apollographql/apollo-client/issues/3963
 
-  const { webhooks, loading, error, refetch } = useFetchWebhooks(
-    endpointId,
-  );
+  const {
+    webhooks,
+    hasNextPage,
+    error,
+    refetch,
+    loadMore,
+  } = useFetchWebhooks(endpointId);
   const { readWebhook } = useReadWebhook();
   const history = useHistory();
   const location = useLocation();
@@ -63,10 +66,11 @@ const Webhooks = () => {
     string | undefined
   >();
 
-  const listRef = useRef<List>(null);
+  const infiniteLoaderRef = useRef<InfiniteLoader>(null);
 
   const ensureVisible = (index: number) => {
-    listRef.current?.scrollToItem(index);
+    // @ts-ignore: _listRef is not officially supported: https://github.com/bvaughn/react-window/issues/463#issuecomment-626031477
+    infiniteLoaderRef.current?._listRef?.scrollToItem(index);
   };
 
   const match = matchPath<{
@@ -210,31 +214,49 @@ const Webhooks = () => {
     [selectedWebhookIds],
   );
 
+  // If there are more items to be loaded, add an extra row to hold a loading indicator
+  const itemCount = hasNextPage
+    ? webhooks.length + 1
+    : webhooks.length;
+
+  // Every row is loaded except for loading indicator row
+  const isItemLoaded = (index: number) =>
+    !hasNextPage || index < webhooks.length;
+
   return (
     <Autosizer>
       {({ height, width }) => (
-        <List
-          ref={listRef}
-          height={height}
-          width={width}
-          itemCount={webhooks.length + (loading || error ? 1 : 0)}
-          itemSize={36}
-          itemData={{
-            webhooks,
-            selectedWebhookIds,
-            handleWebhookClick,
-            loading,
-            error,
-            retry,
-          }}
-          itemKey={(index, data) =>
-            index > data.webhooks.length - 1
-              ? 'extra'
-              : data.webhooks[index].id
-          }
+        <InfiniteLoader
+          ref={infiniteLoaderRef}
+          itemCount={itemCount}
+          isItemLoaded={isItemLoaded}
+          loadMoreItems={loadMore}
         >
-          {Row}
-        </List>
+          {({ onItemsRendered, ref }) => (
+            <List
+              ref={ref}
+              height={height}
+              width={width}
+              itemCount={itemCount}
+              itemSize={36}
+              itemData={{
+                webhooks,
+                selectedWebhookIds,
+                handleWebhookClick,
+                error,
+                retry,
+              }}
+              itemKey={(index, data) =>
+                index > data.webhooks.length - 1
+                  ? `x-${Date.now()}`
+                  : data.webhooks[index].id
+              }
+              onItemsRendered={onItemsRendered}
+            >
+              {Row}
+            </List>
+          )}
+        </InfiniteLoader>
       )}
     </Autosizer>
   );
