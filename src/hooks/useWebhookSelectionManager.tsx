@@ -37,7 +37,7 @@ const useWebhookSelectionManager = ({
 
   const [activeWebhookId, setActiveWebhookId] = useState<
     string | undefined
-  >();
+  >(selectedWebhookIds.length ? selectedWebhookIds[0] : undefined);
 
   const handleWebhookClick = (
     webhook: Webhook,
