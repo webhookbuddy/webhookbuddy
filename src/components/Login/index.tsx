@@ -34,7 +34,7 @@ const Login = () => {
     LoginPayload,
     LoginVariables
   >(LOGIN_USER, {
-    onCompleted({ login }) {
+    onCompleted: ({ login }) => {
       localStorage.setItem('x-token', login.token);
       client
         .resetStore()
