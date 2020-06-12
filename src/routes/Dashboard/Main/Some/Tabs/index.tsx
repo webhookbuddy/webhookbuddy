@@ -15,7 +15,7 @@ const Tabs = () => {
         <li className="nav-item">
           <NavLink
             exact
-            to={`/endpoints/${endpointId}/webhooks/${webhookIds}`}
+            to={`/dashboard/${endpointId}/webhooks/${webhookIds}`}
             className="nav-link"
           >
             Request
@@ -23,7 +23,7 @@ const Tabs = () => {
         </li>
         <li className="nav-item">
           <NavLink
-            to={`/endpoints/${endpointId}/webhooks/${webhookIds}/forwards`}
+            to={`/dashboard/${endpointId}/webhooks/${webhookIds}/forwards`}
             className="nav-link"
           >
             Forwards{' '}

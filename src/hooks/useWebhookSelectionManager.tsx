@@ -21,7 +21,7 @@ const useWebhookSelectionManager = ({
   const match = matchPath<{
     webhookIds: string | undefined;
   }>(location.pathname, {
-    path: '/endpoints/:endpointId/webhooks/:webhookIds',
+    path: '/dashboard/:endpointId/webhooks/:webhookIds',
   });
 
   const selectedWebhookIds =
@@ -29,8 +29,8 @@ const useWebhookSelectionManager = ({
 
   const setSelection = (ids: string[]) => {
     const path = location.pathname.includes('/forwards')
-      ? `/endpoints/${endpointId}/webhooks/${ids.join(',')}/forwards`
-      : `/endpoints/${endpointId}/webhooks/${ids.join(',')}`;
+      ? `/dashboard/${endpointId}/webhooks/${ids.join(',')}/forwards`
+      : `/dashboard/${endpointId}/webhooks/${ids.join(',')}`;
 
     if (location.pathname !== path) history.push(path);
   };

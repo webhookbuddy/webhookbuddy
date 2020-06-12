@@ -15,7 +15,7 @@ const List = ({ endpoint }: { endpoint: Endpoint }) => {
     <div className="list-group-item list-group-item-action list-group-item-secondary">
       <div className="d-flex w-100 justify-content-between">
         <h5 className="mb-1">
-          <Link to={`/endpoints/${endpoint.id}`}>
+          <Link to={`/dashboard/${endpoint.id}`}>
             {endpoint.name}
           </Link>
         </h5>

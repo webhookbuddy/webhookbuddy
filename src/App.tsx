@@ -33,7 +33,7 @@ function App() {
         <>
           <Route exact path="/" component={Endpoints} />
           <Route
-            path="/endpoints/:endpointId"
+            path="/dashboard/:endpointId"
             component={Dashboard}
           />
         </>
