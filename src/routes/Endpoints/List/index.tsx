@@ -6,6 +6,7 @@ import { Endpoint } from 'schema/types';
 import EndpointComponent from './Endpoint';
 import Loading from 'components/Loading';
 import Error from 'components/Error';
+import { Link } from 'react-router-dom';
 
 export const GET_ENDPOINTS = gql`
   query getEndpoints {
@@ -48,12 +49,14 @@ const Endpoints = () => {
           <EndpointComponent key={endpoint.id} endpoint={endpoint} />
         ))}
       </div>
-      <button
-        type="button"
-        className="btn btn-primary btn-lg btn-block mt-4"
-      >
-        Create New Endpoint
-      </button>
+      <Link to="/endpoints/create">
+        <button
+          type="button"
+          className="btn btn-primary btn-lg btn-block mt-4"
+        >
+          Create New Endpoint
+        </button>
+      </Link>
     </>
   );
 };
