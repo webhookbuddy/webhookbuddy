@@ -1,5 +1,9 @@
 import React from 'react';
-import { HashRouter as Router, Route } from 'react-router-dom';
+import {
+  HashRouter as Router,
+  Route,
+  Switch,
+} from 'react-router-dom';
 import gql from 'graphql-tag';
 import { useQuery } from '@apollo/react-hooks';
 import { useMe } from 'context/user-context';
@@ -30,13 +34,13 @@ function App() {
       {!data || !data.isLoggedIn ? (
         <Login />
       ) : me ? (
-        <>
-          <Route exact path="/" component={Endpoints} />
+        <Switch>
           <Route
             path="/dashboard/:endpointId"
             component={Dashboard}
           />
-        </>
+          <Route path="/" component={Endpoints} />
+        </Switch>
       ) : (
         <Session />
       )}
