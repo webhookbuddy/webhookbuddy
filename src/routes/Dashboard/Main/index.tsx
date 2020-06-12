@@ -8,9 +8,9 @@ import './style.css';
 const Main = () => {
   return (
     <div className="main">
-      <Route exact path="/endpoints/:endpointId" component={None} />
+      <Route exact path="/dashboard/:endpointId" component={None} />
       <Route
-        path="/endpoints/:endpointId/webhooks/:webhookIds"
+        path="/dashboard/:endpointId/webhooks/:webhookIds"
         component={Some}
       />
     </div>

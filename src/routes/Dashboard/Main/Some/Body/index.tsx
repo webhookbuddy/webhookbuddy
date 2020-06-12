@@ -12,11 +12,11 @@ const Body = ({ webhook }: { webhook: Webhook }) => {
       <div className="main__body__container">
         <Route
           exact
-          path={`/endpoints/:endpointId/webhooks/:webhookIds`}
+          path={`/dashboard/:endpointId/webhooks/:webhookIds`}
           render={props => <Request {...props} webhook={webhook} />}
         />
         <Route
-          path={`/endpoints/:endpointId/webhooks/:webhookIds/forwards`}
+          path={`/dashboard/:endpointId/webhooks/:webhookIds/forwards`}
           render={props => <Forwards {...props} webhook={webhook} />}
         />
       </div>

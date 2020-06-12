@@ -1,11 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Endpoint as EndpointType } from 'schema/types';
+import { Endpoint } from 'schema/types';
 import moment from 'moment';
 
 import './style.css';
 
-const Endpoint = ({ endpoint }: { endpoint: EndpointType }) => {
+const List = ({ endpoint }: { endpoint: Endpoint }) => {
   const handleCopyClick = (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
     navigator.clipboard.writeText(endpoint.url);
@@ -15,7 +15,7 @@ const Endpoint = ({ endpoint }: { endpoint: EndpointType }) => {
     <div className="list-group-item list-group-item-action list-group-item-secondary">
       <div className="d-flex w-100 justify-content-between">
         <h5 className="mb-1">
-          <Link to={`/endpoints/${endpoint.id}`}>
+          <Link to={`/dashboard/${endpoint.id}`}>
             {endpoint.name}
           </Link>
         </h5>
@@ -41,4 +41,4 @@ const Endpoint = ({ endpoint }: { endpoint: EndpointType }) => {
   );
 };
 
-export default Endpoint;
+export default List;
