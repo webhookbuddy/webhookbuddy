@@ -1,25 +1,11 @@
 import React from 'react';
-import gql from 'graphql-tag';
-import { ENDPOINT_FRAGMENT } from 'schema/fragments';
 import { useQuery } from '@apollo/react-hooks';
-import { Endpoint } from 'schema/types';
+import { EndpointsPayload } from 'schema/types';
 import EndpointComponent from './Endpoint';
 import Loading from 'components/Loading';
 import Error from 'components/Error';
 import { Link } from 'react-router-dom';
-
-export const GET_ENDPOINTS = gql`
-  query getEndpoints {
-    endpoints {
-      ...endpoint
-    }
-  }
-  ${ENDPOINT_FRAGMENT}
-`;
-
-export interface EndpointsPayload {
-  endpoints: Endpoint[];
-}
+import { GET_ENDPOINTS } from 'schema/queries';
 
 const Endpoints = () => {
   const { data, error, loading, refetch } = useQuery<
