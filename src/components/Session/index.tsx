@@ -7,7 +7,7 @@ import Error from 'components/Error';
 import Loading from 'components/Loading';
 import { User } from 'schema/types';
 
-export const GET_ME = gql`
+const GET_ME = gql`
   query getMe {
     me {
       ...user
