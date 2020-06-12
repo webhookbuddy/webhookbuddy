@@ -42,6 +42,10 @@ export interface User {
   email: string;
 }
 
+export interface EndpointsPayload {
+  endpoints: Endpoint[];
+}
+
 export interface Endpoint {
   id: string;
   createdAt: Date;

@@ -2,12 +2,12 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Endpoint } from 'schema/types';
 import moment from 'moment';
+import Delete from './Delete';
 
 import './style.css';
 
 const List = ({ endpoint }: { endpoint: Endpoint }) => {
   const handleCopyClick = (e: React.MouseEvent<HTMLElement>) => {
-    e.preventDefault();
     navigator.clipboard.writeText(endpoint.url);
   };
 
@@ -36,6 +36,7 @@ const List = ({ endpoint }: { endpoint: Endpoint }) => {
           className="fa fa-clipboard pointer endpoint-url__icon"
           onClick={handleCopyClick}
         ></i>
+        <Delete endpoint={endpoint} />
       </div>
     </div>
   );
