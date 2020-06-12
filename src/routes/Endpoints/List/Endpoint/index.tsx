@@ -1,11 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Endpoint as EndpointType } from 'schema/types';
+import { Endpoint } from 'schema/types';
 import moment from 'moment';
 
 import './style.css';
 
-const Endpoint = ({ endpoint }: { endpoint: EndpointType }) => {
+const List = ({ endpoint }: { endpoint: Endpoint }) => {
   const handleCopyClick = (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
     navigator.clipboard.writeText(endpoint.url);
@@ -41,4 +41,4 @@ const Endpoint = ({ endpoint }: { endpoint: EndpointType }) => {
   );
 };
 
-export default Endpoint;
+export default List;
