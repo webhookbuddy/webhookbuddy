@@ -5,6 +5,8 @@ import { useMutation } from '@apollo/react-hooks';
 import Error from 'components/Error';
 import Loading from 'components/Loading';
 import { useHistory } from 'react-router-dom';
+import { EndpointsPayload } from 'schema/types';
+import { GET_ENDPOINTS } from 'schema/queries';
 
 const CREATE_ENDPOINT = gql`
   mutation createEndpoint($input: CreateEndpointInput!) {
@@ -22,6 +24,26 @@ const Create = () => {
   const [createEndpoint, { loading, error }] = useMutation(
     CREATE_ENDPOINT,
     {
+      update: (
+        cache,
+        {
+          data: {
+            createEndpoint: { endpoint },
+          },
+        },
+      ) => {
+        const data = cache.readQuery<EndpointsPayload>({
+          query: GET_ENDPOINTS,
+        });
+
+        cache.writeQuery({
+          query: GET_ENDPOINTS,
+          data: {
+            ...data,
+            endpoints: [...(data?.endpoints ?? []), endpoint],
+          },
+        });
+      },
       onCompleted: () => history.push('/'),
     },
   );
