@@ -83,7 +83,7 @@ const Webhooks = () => {
           ref={infiniteLoaderRef}
           itemCount={itemCount}
           isItemLoaded={isItemLoaded}
-          loadMoreItems={loadMore}
+          loadMoreItems={() => loadMore() || null}
         >
           {({ onItemsRendered, ref }) => (
             <List
