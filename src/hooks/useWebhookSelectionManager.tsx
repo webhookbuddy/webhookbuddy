@@ -101,16 +101,46 @@ const useWebhookSelectionManager = ({
     if (!webhook.read) readWebhook(webhook);
   };
 
+  const selectIndex = (index: number, concat: boolean) => {
+    setActiveWebhookId(webhooks[index].id);
+
+    if (concat)
+      setSelection(selectedWebhookIds.concat(webhooks[index].id));
+    else setSingleSelection(webhooks[index]);
+
+    ensureIndexVisible(index);
+  };
+
+  const selectPrevious = (concat: boolean) => {
+    let selectedIndex = webhooks.findIndex(
+      w => w.id === activeWebhookId,
+    );
+
+    if (selectedIndex < 1) return;
+
+    selectIndex(selectedIndex - 1, concat);
+  };
+
+  const selectNext = (concat: boolean) => {
+    let selectedIndex = webhooks.findIndex(
+      w => w.id === activeWebhookId,
+    );
+
+    if (selectedIndex < 0) {
+      if (webhooks.length) selectIndex(0, false);
+
+      return;
+    }
+
+    if (webhooks.length > selectedIndex + 1)
+      selectIndex(selectedIndex + 1, concat);
+  };
+
   useHotkeys(
     'up',
     e => {
       e.preventDefault();
-      let start = webhooks.findIndex(w => w.id === activeWebhookId);
-      if (start > 0) {
-        setActiveWebhookId(webhooks[start - 1].id);
-        setSingleSelection(webhooks[start - 1]);
-        ensureIndexVisible(start - 1);
-      }
+      selectPrevious(false);
     },
     undefined,
     [selectedWebhookIds],
@@ -120,21 +150,7 @@ const useWebhookSelectionManager = ({
     'down',
     e => {
       e.preventDefault();
-      const start = webhooks.findIndex(w => w.id === activeWebhookId);
-      if (start < 0) {
-        if (webhooks.length) {
-          setActiveWebhookId(webhooks[0].id);
-          setSingleSelection(webhooks[0]);
-          ensureIndexVisible(0);
-        }
-        return;
-      }
-
-      if (webhooks.length > start + 1) {
-        setActiveWebhookId(webhooks[start + 1].id);
-        setSingleSelection(webhooks[start + 1]);
-        ensureIndexVisible(start + 1);
-      }
+      selectNext(false);
     },
     undefined,
     [selectedWebhookIds],
@@ -143,14 +159,7 @@ const useWebhookSelectionManager = ({
   useHotkeys(
     'shift+up',
     () => {
-      const start = webhooks.findIndex(w => w.id === activeWebhookId);
-      if (start > 0) {
-        setActiveWebhookId(webhooks[start - 1].id);
-        setSelection(
-          selectedWebhookIds.concat(webhooks[start - 1].id),
-        );
-        ensureIndexVisible(start - 1);
-      }
+      selectPrevious(true);
     },
     undefined,
     [selectedWebhookIds],
@@ -159,12 +168,7 @@ const useWebhookSelectionManager = ({
   useHotkeys(
     'shift+down',
     () => {
-      const end = webhooks.findIndex(w => w.id === activeWebhookId);
-      if (end > -1 && end < webhooks.length + 1) {
-        setActiveWebhookId(webhooks[end + 1].id);
-        setSelection(selectedWebhookIds.concat(webhooks[end + 1].id));
-        ensureIndexVisible(end + 1);
-      }
+      selectNext(true);
     },
     undefined,
     [selectedWebhookIds],
