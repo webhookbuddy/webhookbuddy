@@ -28,6 +28,7 @@ const Row = ({ index, style, data }: ListChildComponentProps) => {
             data.webhooks[index].id,
           )}
           handleClick={data.handleWebhookClick}
+          handleDelete={data.handleWebhookDelete}
         />
       )}
     </div>
@@ -59,8 +60,9 @@ const Webhooks = () => {
   };
 
   const {
-    handleWebhookClick,
     selectedWebhookIds,
+    handleWebhookClick,
+    handleWebhookDelete,
   } = useWebhookSelectionManager({
     endpointId,
     webhooks,
@@ -96,6 +98,7 @@ const Webhooks = () => {
                 webhooks,
                 selectedWebhookIds,
                 handleWebhookClick,
+                handleWebhookDelete,
                 error,
                 retry,
               }}

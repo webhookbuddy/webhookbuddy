@@ -4,6 +4,7 @@ import { useHotkeys } from 'react-hotkeys-hook';
 import { Webhook } from 'schema/types';
 import { sortDistinct, sort } from 'services/ids';
 import useReadWebhook from './useReadWebhook';
+import useDeleteWebhooks from './useDeleteWebhooks';
 
 const useWebhookSelectionManager = ({
   endpointId,
@@ -17,6 +18,7 @@ const useWebhookSelectionManager = ({
   const history = useHistory();
   const location = useLocation();
   const { readWebhook } = useReadWebhook();
+  const { deleteWebhooks } = useDeleteWebhooks(endpointId);
 
   const match = matchPath<{
     webhookIds: string | undefined;
@@ -28,7 +30,9 @@ const useWebhookSelectionManager = ({
     match?.params.webhookIds?.split(',') ?? [];
 
   const setSelection = (ids: string[]) => {
-    const path = location.pathname.includes('/forwards')
+    const path = !ids.length
+      ? `/dashboard/${endpointId}`
+      : location.pathname.includes('/forwards')
       ? `/dashboard/${endpointId}/webhooks/${ids.join(',')}/forwards`
       : `/dashboard/${endpointId}/webhooks/${ids.join(',')}`;
 
@@ -97,16 +101,46 @@ const useWebhookSelectionManager = ({
     if (!webhook.read) readWebhook(webhook);
   };
 
+  const selectIndex = (index: number, concat: boolean) => {
+    setActiveWebhookId(webhooks[index].id);
+
+    if (concat)
+      setSelection(selectedWebhookIds.concat(webhooks[index].id));
+    else setSingleSelection(webhooks[index]);
+
+    ensureIndexVisible(index);
+  };
+
+  const selectPrevious = (concat: boolean) => {
+    let selectedIndex = webhooks.findIndex(
+      w => w.id === activeWebhookId,
+    );
+
+    if (selectedIndex < 1) return;
+
+    selectIndex(selectedIndex - 1, concat);
+  };
+
+  const selectNext = (concat: boolean) => {
+    let selectedIndex = webhooks.findIndex(
+      w => w.id === activeWebhookId,
+    );
+
+    if (selectedIndex < 0) {
+      if (webhooks.length) selectIndex(0, false);
+
+      return;
+    }
+
+    if (webhooks.length > selectedIndex + 1)
+      selectIndex(selectedIndex + 1, concat);
+  };
+
   useHotkeys(
     'up',
     e => {
       e.preventDefault();
-      let start = webhooks.findIndex(w => w.id === activeWebhookId);
-      if (start > 0) {
-        setActiveWebhookId(webhooks[start - 1].id);
-        setSingleSelection(webhooks[start - 1]);
-        ensureIndexVisible(start - 1);
-      }
+      selectPrevious(false);
     },
     undefined,
     [selectedWebhookIds],
@@ -116,21 +150,7 @@ const useWebhookSelectionManager = ({
     'down',
     e => {
       e.preventDefault();
-      const start = webhooks.findIndex(w => w.id === activeWebhookId);
-      if (start < 0) {
-        if (webhooks.length) {
-          setActiveWebhookId(webhooks[0].id);
-          setSingleSelection(webhooks[0]);
-          ensureIndexVisible(0);
-        }
-        return;
-      }
-
-      if (webhooks.length > start + 1) {
-        setActiveWebhookId(webhooks[start + 1].id);
-        setSingleSelection(webhooks[start + 1]);
-        ensureIndexVisible(start + 1);
-      }
+      selectNext(false);
     },
     undefined,
     [selectedWebhookIds],
@@ -139,14 +159,7 @@ const useWebhookSelectionManager = ({
   useHotkeys(
     'shift+up',
     () => {
-      const start = webhooks.findIndex(w => w.id === activeWebhookId);
-      if (start > 0) {
-        setActiveWebhookId(webhooks[start - 1].id);
-        setSelection(
-          selectedWebhookIds.concat(webhooks[start - 1].id),
-        );
-        ensureIndexVisible(start - 1);
-      }
+      selectPrevious(true);
     },
     undefined,
     [selectedWebhookIds],
@@ -155,13 +168,61 @@ const useWebhookSelectionManager = ({
   useHotkeys(
     'shift+down',
     () => {
-      const end = webhooks.findIndex(w => w.id === activeWebhookId);
-      if (end > -1 && end < webhooks.length + 1) {
-        setActiveWebhookId(webhooks[end + 1].id);
-        setSelection(selectedWebhookIds.concat(webhooks[end + 1].id));
-        ensureIndexVisible(end + 1);
-      }
+      selectNext(true);
     },
+    undefined,
+    [selectedWebhookIds],
+  );
+
+  const handleWebhookDelete = (
+    webhookId: string | string[],
+    selectAfterDelete: boolean = false,
+  ) => {
+    const ids = Array.isArray(webhookId) ? webhookId : [webhookId];
+    const lowestIndex = ids.reduce(
+      (acc, curr) =>
+        Math.min(
+          acc,
+          webhooks.findIndex(w => w.id === curr),
+        ),
+      webhooks.length - 1,
+    );
+    deleteWebhooks(ids);
+
+    const remainingSelections = selectedWebhookIds.filter(
+      i => !ids.includes(i),
+    );
+    const remainingWebhooks = webhooks.filter(
+      w => !ids.includes(w.id),
+    );
+    if (selectAfterDelete && !remainingSelections.length) {
+      if (remainingWebhooks.length) {
+        if (remainingWebhooks.length > lowestIndex)
+          selectIndex(
+            webhooks.findIndex(
+              w => w.id === remainingWebhooks[lowestIndex].id,
+            ),
+            false,
+          );
+        else
+          selectIndex(
+            webhooks.findIndex(
+              w =>
+                w.id ===
+                remainingWebhooks[remainingWebhooks.length - 1].id,
+            ),
+            false,
+          );
+        return;
+      }
+    }
+
+    setSelection(remainingSelections);
+  };
+
+  useHotkeys(
+    'del',
+    () => handleWebhookDelete(selectedWebhookIds, true),
     undefined,
     [selectedWebhookIds],
   );
@@ -169,6 +230,7 @@ const useWebhookSelectionManager = ({
   return {
     selectedWebhookIds,
     handleWebhookClick,
+    handleWebhookDelete,
   };
 };
 

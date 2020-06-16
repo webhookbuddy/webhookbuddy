@@ -68,6 +68,10 @@ export interface WebhookConnection {
   pageInfo: PageInfo;
 }
 
+export interface WebhooksPayload {
+  webhooks: WebhookConnection;
+}
+
 export interface HttpMessage {
   id: string;
   createdAt: Date;

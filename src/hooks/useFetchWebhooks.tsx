@@ -1,23 +1,8 @@
 import gql from 'graphql-tag';
+import { GET_WEBHOOKS } from 'schema/queries';
 import { WEBHOOK_FRAGMENT } from 'schema/fragments';
-import { WebhookConnection, Webhook } from 'schema/types';
+import { Webhook, WebhooksPayload } from 'schema/types';
 import { useQuery } from '@apollo/react-hooks';
-
-const GET_WEBHOOKS = gql`
-  query getWebhooks($endpointId: ID!, $after: Int) {
-    webhooks(endpointId: $endpointId, after: $after)
-      @connection(key: "webhooks", filter: ["endpointId"]) {
-      nodes {
-        ...webhook
-      }
-      pageInfo {
-        endCursor
-        hasNextPage
-      }
-    }
-  }
-  ${WEBHOOK_FRAGMENT}
-`;
 
 const WEBHOOK_CREATED = gql`
   subscription webhookCreated($endpointId: ID!) {
@@ -29,10 +14,6 @@ const WEBHOOK_CREATED = gql`
   }
   ${WEBHOOK_FRAGMENT}
 `;
-
-export interface WebhooksPayload {
-  webhooks: WebhookConnection;
-}
 
 const useFetchWebhooks = (endpointId: string) => {
   const {

@@ -12,6 +12,7 @@ const Item = ({
   webhook,
   isSelected,
   handleClick,
+  handleDelete,
 }: {
   webhook: Webhook;
   isSelected: boolean;
@@ -20,6 +21,7 @@ const Item = ({
     ctrlKey: boolean,
     shiftKey: boolean,
   ) => void;
+  handleDelete: (webhookId: string | string[]) => void;
 }) => {
   const { forwardingIds } = useForwardingIds();
 
@@ -48,6 +50,7 @@ const Item = ({
             forwardErrorCount={
               webhook.forwards.filter(f => !f.success).length
             }
+            handleDelete={() => handleDelete(webhook.id)}
           />
         )}
       </div>
@@ -62,9 +65,11 @@ const ForwardingBadges = () => {
 const IdleBadges = ({
   forwardSuccessCount,
   forwardErrorCount,
+  handleDelete,
 }: {
   forwardSuccessCount: number;
   forwardErrorCount: number;
+  handleDelete: () => void;
 }) => {
   return (
     <>
@@ -78,7 +83,13 @@ const IdleBadges = ({
           {formatCount(forwardErrorCount)}
         </span>
       )}{' '}
-      <i className="fa fa-times-circle"></i>
+      <i
+        className="fa fa-times-circle"
+        onClick={e => {
+          e.stopPropagation();
+          handleDelete();
+        }}
+      ></i>
     </>
   );
 };
