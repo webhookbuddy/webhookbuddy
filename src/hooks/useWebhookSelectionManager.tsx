@@ -174,15 +174,55 @@ const useWebhookSelectionManager = ({
     [selectedWebhookIds],
   );
 
-  const handleWebhookDelete = (webhookId: string | string[]) => {
+  const handleWebhookDelete = (
+    webhookId: string | string[],
+    selectAfterDelete: boolean = false,
+  ) => {
     const ids = Array.isArray(webhookId) ? webhookId : [webhookId];
+    const lowestIndex = ids.reduce(
+      (acc, curr) =>
+        Math.min(
+          acc,
+          webhooks.findIndex(w => w.id === curr),
+        ),
+      webhooks.length - 1,
+    );
     deleteWebhooks(ids);
-    setSelection(selectedWebhookIds.filter(i => !ids.includes(i)));
+
+    const remainingSelections = selectedWebhookIds.filter(
+      i => !ids.includes(i),
+    );
+    const remainingWebhooks = webhooks.filter(
+      w => !ids.includes(w.id),
+    );
+    if (selectAfterDelete && !remainingSelections.length) {
+      if (remainingWebhooks.length) {
+        if (remainingWebhooks.length > lowestIndex)
+          selectIndex(
+            webhooks.findIndex(
+              w => w.id === remainingWebhooks[lowestIndex].id,
+            ),
+            false,
+          );
+        else
+          selectIndex(
+            webhooks.findIndex(
+              w =>
+                w.id ===
+                remainingWebhooks[remainingWebhooks.length - 1].id,
+            ),
+            false,
+          );
+        return;
+      }
+    }
+
+    setSelection(remainingSelections);
   };
 
   useHotkeys(
     'del',
-    () => handleWebhookDelete(selectedWebhookIds),
+    () => handleWebhookDelete(selectedWebhookIds, true),
     undefined,
     [selectedWebhookIds],
   );
