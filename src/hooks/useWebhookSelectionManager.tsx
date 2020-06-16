@@ -30,7 +30,9 @@ const useWebhookSelectionManager = ({
     match?.params.webhookIds?.split(',') ?? [];
 
   const setSelection = (ids: string[]) => {
-    const path = location.pathname.includes('/forwards')
+    const path = !ids.length
+      ? `/dashboard/${endpointId}`
+      : location.pathname.includes('/forwards')
       ? `/dashboard/${endpointId}/webhooks/${ids.join(',')}/forwards`
       : `/dashboard/${endpointId}/webhooks/${ids.join(',')}`;
 
@@ -168,10 +170,11 @@ const useWebhookSelectionManager = ({
     [selectedWebhookIds],
   );
 
-  const handleWebhookDelete = (webhookId: string | string[]) =>
-    deleteWebhooks(
-      Array.isArray(webhookId) ? webhookId : [webhookId],
-    );
+  const handleWebhookDelete = (webhookId: string | string[]) => {
+    const ids = Array.isArray(webhookId) ? webhookId : [webhookId];
+    deleteWebhooks(ids);
+    setSelection(selectedWebhookIds.filter(i => !ids.includes(i)));
+  };
 
   useHotkeys(
     'del',
