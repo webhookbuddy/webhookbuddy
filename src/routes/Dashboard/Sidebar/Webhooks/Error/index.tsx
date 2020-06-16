@@ -1,6 +1,6 @@
 import React from 'react';
 import { ApolloQueryResult } from 'apollo-client';
-import { WebhooksPayload } from 'hooks/useFetchWebhooks';
+import { WebhooksPayload } from 'schema/types';
 
 import './style.css';
 
