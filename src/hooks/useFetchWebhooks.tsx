@@ -28,6 +28,7 @@ const useFetchWebhooks = (endpointId: string) => {
       endpointId,
     },
     notifyOnNetworkStatusChange: true,
+    fetchPolicy: 'cache-and-network',
   });
 
   const loadMore = () => {
