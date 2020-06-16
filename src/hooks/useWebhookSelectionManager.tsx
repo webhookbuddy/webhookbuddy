@@ -4,6 +4,7 @@ import { useHotkeys } from 'react-hotkeys-hook';
 import { Webhook } from 'schema/types';
 import { sortDistinct, sort } from 'services/ids';
 import useReadWebhook from './useReadWebhook';
+import useDeleteWebhooks from './useDeleteWebhooks';
 
 const useWebhookSelectionManager = ({
   endpointId,
@@ -17,6 +18,7 @@ const useWebhookSelectionManager = ({
   const history = useHistory();
   const location = useLocation();
   const { readWebhook } = useReadWebhook();
+  const { deleteWebhooks } = useDeleteWebhooks(endpointId);
 
   const match = matchPath<{
     webhookIds: string | undefined;
@@ -166,9 +168,22 @@ const useWebhookSelectionManager = ({
     [selectedWebhookIds],
   );
 
+  const handleWebhookDelete = (webhookId: string | string[]) =>
+    deleteWebhooks(
+      Array.isArray(webhookId) ? webhookId : [webhookId],
+    );
+
+  useHotkeys(
+    'del',
+    () => handleWebhookDelete(selectedWebhookIds),
+    undefined,
+    [selectedWebhookIds],
+  );
+
   return {
     selectedWebhookIds,
     handleWebhookClick,
+    handleWebhookDelete,
   };
 };
 
