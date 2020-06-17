@@ -11,7 +11,12 @@ import None from '../None';
 import useForwarder from 'hooks/useForwarder';
 
 const Some = () => {
-  const { forwardWebhook } = useForwarder();
+  const {
+    endpointId,
+  }: {
+    endpointId: string;
+  } = useParams();
+  const { forwardWebhook } = useForwarder(endpointId);
 
   const { webhookIds } = useParams<{ webhookIds: string }>();
   const ids = webhookIds.split(',');
@@ -39,13 +44,13 @@ const Some = () => {
         <None />
       ) : webhooks.length === 1 ? (
         <>
-          <Forwarder forwardTo={forwardTo} />
+          <Forwarder endpointId={endpointId} forwardTo={forwardTo} />
           <Tabs />
           <Body webhook={webhooks[0]} />
         </>
       ) : (
         <>
-          <Forwarder forwardTo={forwardTo} />
+          <Forwarder endpointId={endpointId} forwardTo={forwardTo} />
           <Jumbotron>
             <div className="text-center">
               Multiple webhooks selected. Forward them all using the{' '}

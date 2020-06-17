@@ -5,11 +5,13 @@ import Autosuggest from 'components/Autosuggest';
 import './style.css';
 
 const Forwarder = ({
+  endpointId,
   forwardTo,
 }: {
+  endpointId: string;
   forwardTo: (url: string) => void;
 }) => {
-  const { forwardUrls } = useForwardUrls();
+  const { forwardUrls } = useForwardUrls(endpointId);
   const [url, setUrl] = useState<string>('');
   const buttonRef = useRef<HTMLButtonElement>(null);
 

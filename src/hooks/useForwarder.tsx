@@ -49,9 +49,9 @@ const extractContentType = (headers: KeyValue[]) =>
   headers.find(header => header.key.toLowerCase() === 'content-type')
     ?.value ?? null;
 
-const useForwarder = () => {
+const useForwarder = (endpointId: string) => {
   const { addForwardingIds, removeForwardingId } = useForwardingIds();
-  const { addForwardUrl } = useForwardUrls();
+  const { addForwardUrl } = useForwardUrls(endpointId);
   const [addForward] = useMutation(ADD_FORWARD);
   const { readWebhook } = useReadWebhook();
 
