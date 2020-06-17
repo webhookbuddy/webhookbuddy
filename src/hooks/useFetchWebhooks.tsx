@@ -98,7 +98,7 @@ const useFetchWebhooks = (endpointId: string) => {
 
   return {
     webhooks: data?.webhooks.nodes ?? [],
-    hasNextPage: !!data?.webhooks.pageInfo.hasNextPage,
+    hasNextPage: data?.webhooks.pageInfo.hasNextPage ?? true,
     loading,
     error,
     refetch,
