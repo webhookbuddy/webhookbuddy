@@ -10,3 +10,7 @@
   min-width: 200px;
   max-width: 50vw;
 }
+
+.sidebar__content {
+  user-select: none;
+}
