@@ -35,7 +35,7 @@ const appendQuery = (url: string, query: KeyValue[]) =>
 
 const mapHeaders = (rawHeaders: string[]) => {
   const headers = [];
-  for (let i = 0; i < rawHeaders.length; i = i + 2)
+  for (let i = 0; i < rawHeaders?.length ?? []; i = i + 2)
     headers.push({
       __typename: 'KeyValue',
       key: rawHeaders[i],
@@ -63,25 +63,27 @@ const useForwarder = (endpointId: string) => {
         rawHeaders,
         statusCode,
         data,
+        error,
       }: {
         metadata: { url: string; webhook: Webhook };
         statusCode: number;
         rawHeaders: string[];
         data: string;
+        error: any;
       },
     ) => {
       const forward = {
         __typename: 'Forward',
         id: '_' + Math.round(Math.random() * 1000000),
         url: metadata.url,
-        statusCode,
+        statusCode: error ? 502 : statusCode,
         success: statusCode >= 200 && statusCode < 300,
         createdAt: new Date(),
         method: metadata.webhook.method,
         headers: mapHeaders(rawHeaders),
         query: metadata.webhook.query,
         contentType: extractContentType(mapHeaders(rawHeaders)),
-        body: data,
+        body: data ?? '',
       } as Forward;
 
       removeForwardingId(metadata.webhook.id);

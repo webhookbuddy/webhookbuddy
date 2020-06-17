@@ -23,9 +23,10 @@ ipcMain.on(
       (error, response, data) => {
         event.sender.send('http-request-completed', {
           metadata,
-          statusCode: response.statusCode,
-          rawHeaders: response.rawHeaders,
+          statusCode: response ? response.statusCode : null,
+          rawHeaders: response ? response.rawHeaders : null,
           data,
+          error,
         });
       },
     );
