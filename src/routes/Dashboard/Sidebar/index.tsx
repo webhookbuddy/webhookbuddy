@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Filter from './Filter';
 import Webhooks from './Webhooks';
 
@@ -14,9 +14,11 @@ export enum FilterEnum {
 }
 
 const Sidebar = () => {
+  const [filter, setFilter] = useState(FilterEnum.All);
+
   return (
     <div className="sidebar">
-      <Filter />
+      <Filter filter={filter} setFilter={setFilter} />
       <div className="sidebar__content">
         <Webhooks />
       </div>
