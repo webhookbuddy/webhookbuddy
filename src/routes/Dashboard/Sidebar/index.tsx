@@ -20,7 +20,7 @@ const Sidebar = () => {
     <div className="sidebar">
       <Filter filter={filter} setFilter={setFilter} />
       <div className="sidebar__content">
-        <Webhooks />
+        <Webhooks filter={filter} />
       </div>
     </div>
   );
