@@ -11,6 +11,7 @@ import {
 import InfiniteLoader from 'react-window-infinite-loader';
 import Autosizer from 'react-virtualized-auto-sizer';
 import useWebhookSelectionManager from 'hooks/useWebhookSelectionManager';
+import { FilterEnum } from '../';
 
 const Row = ({ index, style, data }: ListChildComponentProps) => {
   return (
@@ -35,7 +36,7 @@ const Row = ({ index, style, data }: ListChildComponentProps) => {
   );
 };
 
-const Webhooks = () => {
+const Webhooks = ({ filter }: { filter: FilterEnum }) => {
   const {
     endpointId,
   }: {
@@ -59,24 +60,42 @@ const Webhooks = () => {
     infiniteLoaderRef.current?._listRef?.scrollToItem(index);
   };
 
+  const dayAgo = new Date();
+  dayAgo.setDate(dayAgo.getDate() - 1);
+
+  const filterValue = FilterEnum[filter as keyof typeof FilterEnum];
+
+  const filteredWebhooks =
+    filterValue === FilterEnum.Unread
+      ? webhooks.filter(w => !w.read)
+      : filterValue === FilterEnum.Read
+      ? webhooks.filter(w => w.read)
+      : filterValue === FilterEnum.Unforwarded
+      ? webhooks.filter(w => !w.forwards.length)
+      : filterValue === FilterEnum.Forwarded
+      ? webhooks.filter(w => w.forwards.length)
+      : filterValue === FilterEnum.Last24Hours
+      ? webhooks.filter(w => new Date(w.createdAt) > dayAgo)
+      : webhooks;
+
   const {
     selectedWebhookIds,
     handleWebhookClick,
     handleWebhookDelete,
   } = useWebhookSelectionManager({
     endpointId,
-    webhooks,
+    webhooks: filteredWebhooks,
     ensureIndexVisible,
   });
 
   // If there are more items to be loaded, add an extra row to hold a loading indicator
   const itemCount = hasNextPage
-    ? webhooks.length + 1
-    : webhooks.length;
+    ? filteredWebhooks.length + 1
+    : filteredWebhooks.length;
 
   // Every row is loaded except for loading indicator row
   const isItemLoaded = (index: number) =>
-    !hasNextPage || index < webhooks.length;
+    !hasNextPage || index < filteredWebhooks.length;
 
   return (
     <Autosizer>
@@ -95,7 +114,7 @@ const Webhooks = () => {
               itemCount={itemCount}
               itemSize={36}
               itemData={{
-                webhooks,
+                webhooks: filteredWebhooks,
                 selectedWebhookIds,
                 handleWebhookClick,
                 handleWebhookDelete,
