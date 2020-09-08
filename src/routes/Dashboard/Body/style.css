@@ -1,6 +1,4 @@
 .body {
-  grid-template-areas:
-  "sidebar main";
   grid-area: body;
   display: grid;
   grid-template-columns: auto 1fr;
