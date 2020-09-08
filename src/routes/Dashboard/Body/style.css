@@ -1,6 +1,5 @@
 .body {
   grid-area: body;
-  display: grid;
-  grid-template-columns: auto 1fr;
+  display: flex; /* need flex-grow and flex-basis in child elements for panel initial size to work as desired: https://css-tricks.com/flex-grow-is-weird/ */
   overflow-y: hidden; /* to properly position scroll bar while keeping 100% height */
 }
