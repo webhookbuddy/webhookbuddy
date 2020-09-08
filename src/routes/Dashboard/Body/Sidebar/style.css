@@ -1,14 +1,8 @@
 .sidebar {
-  grid-area: sidebar;
   display: grid;
   grid-template-rows: auto 1fr;
   border-right: 1px solid #bbb;
-
-  /* resize handler */
-  resize: horizontal;
-  overflow-x: hidden;
-  min-width: 200px;
-  max-width: 50vw;
+  width: 100%;
 }
 
 .sidebar__content {

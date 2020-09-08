@@ -6,7 +6,7 @@ import { WEBHOOK_FRAGMENT } from 'schema/fragments';
 import { Webhook } from 'schema/types';
 import Forwarder from './Forwarder';
 import Tabs from './Tabs';
-import Body from './Body';
+import Content from './Content';
 import None from '../None';
 import useForwarder from 'hooks/useForwarder';
 
@@ -46,7 +46,7 @@ const Some = () => {
         <>
           <Forwarder endpointId={endpointId} forwardTo={forwardTo} />
           <Tabs />
-          <Body webhook={webhooks[0]} />
+          <Content webhook={webhooks[0]} />
         </>
       ) : (
         <>
