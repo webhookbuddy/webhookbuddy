@@ -1,20 +1,20 @@
-.dash-header__auto-forward {
+.autoForward {
   display: grid;
   grid-template-columns: auto 1fr;
   align-items: center;
 }
 
-.dash-header__auto-forward__icon {
+.icon {
   margin-right: 10px;
 }
 
-.dash-header__auto-forward__icon__button {
+.button {
   color: hsl(354, 70%, 54%);
 }
 
 /* TODO: nested sass */
-.dash-header__auto-forward__icon--on
-  .dash-header__auto-forward__icon__button {
+.iconOn
+  .button {
   animation: autoForwardButtonOn 1.6s infinite;
 }
 
