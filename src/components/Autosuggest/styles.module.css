@@ -1,6 +1,6 @@
 /* override bootstrap's dropdown hover/focus */
-.dropdown-item-forwarder:hover,
-.dropdown-item-forwarder:focus {
+.dropdownItemAutosuggest:hover,
+.dropdownItemAutosuggest:focus {
   color: #fff;
   text-decoration: none;
   background-color: #007bff;

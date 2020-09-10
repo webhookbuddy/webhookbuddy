@@ -2,7 +2,7 @@ import React from 'react';
 import HttpMessage from 'components/HttpMessage';
 import { Webhook, KeyValue } from 'schema/types';
 
-import './style.css';
+import styles from './styles.module.css';
 
 const Request = ({ webhook }: { webhook: Webhook }) => {
   const headings = [
@@ -10,7 +10,7 @@ const Request = ({ webhook }: { webhook: Webhook }) => {
     { key: 'Host', value: webhook.ipAddress },
   ] as KeyValue[];
   return (
-    <div className="main_body__request">
+    <div className={styles.request}>
       <HttpMessage
         type="Request"
         headings={headings}

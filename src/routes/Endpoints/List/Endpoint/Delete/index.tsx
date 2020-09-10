@@ -14,7 +14,13 @@ const DELETE_ENDPOINT = gql`
   }
 `;
 
-const Delete = ({ endpoint }: { endpoint: Endpoint }) => {
+const Delete = ({
+  endpoint,
+  iconStyle,
+}: {
+  endpoint: Endpoint;
+  iconStyle: String;
+}) => {
   const [deleteEndpoint] = useMutation(DELETE_ENDPOINT, {
     variables: {
       input: {
@@ -58,7 +64,7 @@ const Delete = ({ endpoint }: { endpoint: Endpoint }) => {
     <>
       <i
         onClick={handleClick}
-        className="fa fa-trash pointer endpoint-url__icon"
+        className={`fa fa-trash pointer ${iconStyle}`}
       ></i>
       {/*
       // @ts-ignore: Legacy JSX error in ConfirmModal */}

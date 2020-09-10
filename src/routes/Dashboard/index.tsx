@@ -2,11 +2,11 @@ import React from 'react';
 import Header from './Header';
 import Body from './Body';
 
-import './style.css';
+import styles from './styles.module.css';
 
 const Dashboard = () => {
   return (
-    <div className="viewport viewport--dashboard">
+    <div className={styles.viewport}>
       <Header />
       <Body />
     </div>

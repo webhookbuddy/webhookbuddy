@@ -1,17 +1,17 @@
-.ep-header {
+.header {
   grid-area: header;
   padding: 10px;
   border-bottom: 1px solid #bbb;
 }
 
-.ep-header__content {
+.content {
   color: #007bff;
 }
 
-.ep-header__icon {
+.icon {
   margin-right: 10px;
 }
 
-.ep-header__title {
+.title {
   font-size: 30px;
 }

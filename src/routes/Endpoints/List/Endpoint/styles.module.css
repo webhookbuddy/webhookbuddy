@@ -1,13 +1,13 @@
-.endpoint-url {
+.url {
   display: grid;
   grid-template-columns: 1fr auto auto;
 }
 
-.endpoint-url__input {
+.input {
   width: 100%;
 }
 
-.endpoint-url__icon {
+.icon {
   display: flex;
   align-items: center;
   font-size: 1.2rem;

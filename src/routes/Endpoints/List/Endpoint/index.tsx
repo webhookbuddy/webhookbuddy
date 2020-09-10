@@ -4,7 +4,7 @@ import { Endpoint } from 'schema/types';
 import moment from 'moment';
 import Delete from './Delete';
 
-import './style.css';
+import styles from './styles.module.css';
 
 const List = ({ endpoint }: { endpoint: Endpoint }) => {
   const handleCopyClick = (e: React.MouseEvent<HTMLElement>) => {
@@ -22,21 +22,21 @@ const List = ({ endpoint }: { endpoint: Endpoint }) => {
         <small>Created {moment(endpoint.createdAt).fromNow()}</small>
       </div>
       <div className="mb-1">Send your webhooks to this URL:</div>
-      <div className="mb-1 endpoint-url">
+      <div className={`mb-1 ${styles.url}`}>
         <div>
           <input
             type="text"
             value={endpoint.url}
             onFocus={e => e.target.select()}
             readOnly
-            className="endpoint-url__input"
+            className={styles.input}
           />
         </div>
         <i
-          className="fa fa-clipboard pointer endpoint-url__icon"
+          className={`fa fa-clipboard pointer ${styles.icon}`}
           onClick={handleCopyClick}
         ></i>
-        <Delete endpoint={endpoint} />
+        <Delete endpoint={endpoint} iconStyle={styles.icon} />
       </div>
     </div>
   );

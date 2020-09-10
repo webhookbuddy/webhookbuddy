@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Filter from './Filter';
 import Webhooks from './Webhooks';
 
-import './style.css';
+import styles from './styles.module.css';
 
 export enum FilterEnum {
   All = 'All',
@@ -17,9 +17,9 @@ const Sidebar = () => {
   const [filter, setFilter] = useState(FilterEnum.All);
 
   return (
-    <div className="sidebar">
+    <div className={styles.sidebar}>
       <Filter filter={filter} setFilter={setFilter} />
-      <div className="sidebar__content">
+      <div className={styles.list}>
         <Webhooks filter={filter} />
       </div>
     </div>
