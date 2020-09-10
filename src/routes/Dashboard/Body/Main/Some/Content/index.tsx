@@ -4,11 +4,11 @@ import Request from './Request';
 import Forwards from './Forwards';
 import { Webhook } from 'schema/types';
 
-import './style.css';
+import styles from './styles.module.css';
 
 const Content = ({ webhook }: { webhook: Webhook }) => {
   return (
-    <div className="main__content">
+    <div className={styles.content}>
       <Route
         exact
         path={`/dashboard/:endpointId/webhooks/:webhookIds`}
