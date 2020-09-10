@@ -12,8 +12,6 @@ import Session from 'components/Session';
 import Endpoints from 'routes/Endpoints';
 import Dashboard from 'routes/Dashboard';
 
-import './App.css';
-
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 toast.configure({
