@@ -1,8 +1,8 @@
-.webhooks__loading {
+.loading {
   text-align: center;
   height: 36px;
 }
 
-.webhooks__loading__icon {
+.icon {
   line-height: 36px;
 }
