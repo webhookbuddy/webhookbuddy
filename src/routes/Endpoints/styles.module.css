@@ -1,4 +1,6 @@
-.viewport--endpoints {
+.viewport {
+  display: grid;
+  height: 100vh;
   grid-template-areas:
     "header"
     "endpoints";
@@ -12,12 +14,12 @@
   overflow-y: hidden;
 }
 
-.endpoints__container {
+.endpointsFullHeight {
   height: 100%;
   overflow-y: auto;
 }
 
-.endpoints__container__pad {
+.endpointsPadding {
   margin-top: 40px;
   margin-bottom: 40px;
 }
