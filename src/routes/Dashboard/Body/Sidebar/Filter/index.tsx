@@ -1,7 +1,7 @@
 import React from 'react';
 import { FilterEnum } from '../';
 
-import './style.css';
+import styles from './styles.module.css';
 
 const Filter = ({
   filter,
@@ -11,7 +11,7 @@ const Filter = ({
   setFilter: React.Dispatch<React.SetStateAction<FilterEnum>>;
 }) => {
   return (
-    <div className="sidebar__filter">
+    <div className={styles.filter}>
       <select
         className="custom-select custom-select-sm"
         onChange={e => setFilter(e.target.value as FilterEnum)}
