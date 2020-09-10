@@ -3,7 +3,7 @@ import ResizePanel from 'react-resize-panel';
 import Sidebar from './Sidebar';
 import Main from './Main';
 
-import './style.css';
+import styles from './styles.module.css';
 
 const Body = () => {
   const bodyRef = useRef<HTMLDivElement>(null);
@@ -16,7 +16,7 @@ const Body = () => {
   }, []);
 
   return (
-    <div className="body" ref={bodyRef}>
+    <div className={styles.body} ref={bodyRef}>
       <ResizePanel
         direction="e"
         style={{ flexGrow: 1, flexBasis: '33.3333%' }}
