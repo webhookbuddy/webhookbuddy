@@ -3,7 +3,7 @@ import HttpMessage from 'components/HttpMessage';
 import { KeyValue, Forward as ForwardType } from 'schema/types';
 import moment from 'moment';
 
-import './style.css';
+import styles from './styles.module.css';
 
 const Forward = ({ forward }: { forward: ForwardType }) => {
   const [isActive, setIsActive] = useState(false);
@@ -15,27 +15,27 @@ const Forward = ({ forward }: { forward: ForwardType }) => {
   return (
     <>
       <div
-        className={`forward ${isActive ? 'forward--active' : ''}`}
+        className={isActive ? styles.active : ''}
         onClick={() => setIsActive(!isActive)}
       >
-        <div className="forward__header">
-          <div className="forward__header__label">
+        <div className={styles.header}>
+          <div className={styles.label}>
             [{moment(forward.createdAt).format('MMM DD, YYYY HH:mm')}]{' '}
             {forward.method} {forward.url}`}
           </div>
-          <div className="forward__header__badges">
+          <div className={styles.badges}>
             <i
               className={`fa ${
                 forward.success
-                  ? 'fa-check forward__header__badges__icon--success'
-                  : 'fa-exclamation forward__header__badges__icon--error'
+                  ? `fa-check ${styles.successIcon}`
+                  : `fa-exclamation ${styles.errorIcon}`
               }`}
             ></i>
           </div>
         </div>
       </div>
       {isActive && (
-        <div className="forward__details">
+        <div className={styles.details}>
           <HttpMessage
             type="Response"
             headings={headings}
