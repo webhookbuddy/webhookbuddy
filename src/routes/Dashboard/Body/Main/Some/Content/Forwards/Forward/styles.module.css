@@ -1,7 +1,7 @@
 .header {
   padding: 6px 10px;
   display: grid;
-  grid-template-columns: 1fr 24px;
+  grid-template-columns: 1fr auto;
 }
 
 .header:hover {
@@ -21,6 +21,7 @@
 }
 
 .badges {
+  padding-left: 4px;
   text-align: right;
 }
 
