@@ -1,4 +1,6 @@
-.viewport--dashboard {
+.viewport {
+  display: grid;
+  height: 100vh;
   grid-template-areas:
     'header'
     'body';
