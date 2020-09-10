@@ -1,9 +1,9 @@
-.webhooks__error {
+.error {
   text-align: center;
   height: 36px;
 }
 
-.webhooks__error__alert {
+.alert {
   line-height: 36px;
   padding: 0;
   border: 0;
