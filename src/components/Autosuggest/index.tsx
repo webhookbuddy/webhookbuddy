@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import './style.css';
+import styles from './styles.module.css';
 
 const SuggestionsList = ({
   activeIndex,
@@ -16,9 +16,9 @@ const SuggestionsList = ({
       <div className="dropdown-menu" style={{ display: 'block' }}>
         {filteredSuggestions.map((suggestion, index) => (
           <button
-            className={`dropdown-item dropdown-item-forwarder ${
-              index === activeIndex ? 'active' : ''
-            }`}
+            className={`dropdown-item ${
+              styles.dropdownItemAutosuggest
+            } ${index === activeIndex ? 'active' : ''}`}
             key={suggestion}
             onMouseDown={onMouseDown}
           >
