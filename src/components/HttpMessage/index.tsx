@@ -5,7 +5,7 @@ import {
 } from 'schema/types';
 import moment from 'moment';
 
-import './style.css';
+import styles from './styles.module.css';
 
 const isJSON = (json: string | undefined) => {
   try {
@@ -36,8 +36,8 @@ const HttpMessage = ({
 }) => {
   const [formatBody, setFormatBody] = useState(true);
   return (
-    <div className="http">
-      <div className="http__summary">
+    <div>
+      <div className={styles.summary}>
         <div>
           <table className="table table-striped table-sm">
             <thead>
@@ -129,8 +129,8 @@ const HttpMessage = ({
             Format
           </label>
         </div>
-        <div className="http__content__title">Body</div>
-        <pre className="http__content__raw">
+        <div className={styles.title}>Body</div>
+        <pre className={styles.raw}>
           {formatJson(message.body, formatBody)}
         </pre>
       </div>
