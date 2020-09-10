@@ -1,37 +1,37 @@
-.webhooks__item {
+.item {
   padding: 6px 10px;
   display: grid;
   grid-template-columns: 1fr 78px;
 }
 
-.webhooks__item:hover {
+.item:hover {
   background: #ededed;
   cursor: pointer;
 }
 
-.webhooks__item--selected,
-.webhooks__item--selected:hover {
+.selected,
+.selected:hover {
   background: #f09e22;
   color: white;
 }
 
-.webhooks__item__label {
+.label {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
 
 /* SASS nest */
-.webhooks__item--unread .webhooks__item__label {
+.unread .label {
   font-weight: bold;
 }
 
-.webhooks__item__badges {
+.badges {
   text-align: right;
 }
 
-.webhooks__item__badges > .badge {
-  /* A little hack to verticall center the bootstrap badges */
+.badges > .badge {
+  /* A little hack to vertical center the bootstrap badges */
   margin-top: -4px;
   vertical-align: middle;
 }

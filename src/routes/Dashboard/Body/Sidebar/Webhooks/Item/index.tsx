@@ -3,7 +3,7 @@ import useForwardingIds from 'hooks/useForwardingIds';
 import { Webhook } from 'schema/types';
 import moment from 'moment';
 
-import './style.css';
+import styles from './styles.module.css';
 
 const formatCount = (n: number) =>
   n === 0 ? '' : n > 9 ? '9+' : n.toString();
@@ -31,15 +31,15 @@ const Item = ({
 
   return (
     <div
-      className={`webhooks__item ${
-        isSelected ? 'webhooks__item--selected' : ''
-      } ${webhook.read ? '' : 'webhooks__item--unread'}`}
+      className={`${styles.item} ${
+        isSelected ? styles.selected : ''
+      } ${webhook.read ? '' : styles.unread}`}
       onClick={e => {
         handleClick(webhook, e.ctrlKey, e.shiftKey);
       }}
     >
-      <div className="webhooks__item__label">{label}</div>
-      <div className="webhooks__item__badges">
+      <div className={styles.label}>{label}</div>
+      <div className={styles.badges}>
         {forwardingIds.includes(webhook.id) ? (
           <ForwardingBadges />
         ) : (
