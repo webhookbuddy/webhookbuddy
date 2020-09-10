@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import useForwardUrls from 'hooks/useForwardUrls';
 import Autosuggest from 'components/Autosuggest';
 
-import './style.css';
+import styles from './styles.module.css';
 
 const Forwarder = ({
   endpointId,
@@ -27,9 +27,9 @@ const Forwarder = ({
   };
 
   return (
-    <form className="forwarder" onSubmit={onSubmit}>
+    <form className={styles.forwarder} onSubmit={onSubmit}>
       <i
-        className="forwarder__icon fa fa-play fa-lg pointer"
+        className={`fa fa-play fa-lg pointer ${styles.icon}`}
         onClick={handlePlayClick}
       ></i>
       <Autosuggest
