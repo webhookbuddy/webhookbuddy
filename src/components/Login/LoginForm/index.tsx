@@ -6,7 +6,7 @@ import { LoginPayload, LoginVariables } from '../';
 import Loading from 'components/Loading';
 import Error from 'components/Error';
 
-import './style.css';
+import styles from './styles.module.css';
 
 const LoginForm = ({
   loginUser,
@@ -37,9 +37,9 @@ const LoginForm = ({
   };
 
   return (
-    <div className="login-container">
+    <div className={styles.container}>
       <div className="gutter" />
-      <div className="login-main">
+      <div className={styles.main}>
         {error && <Error error={error} />}
         {loading ? (
           <Loading />
