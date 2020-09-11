@@ -4,8 +4,11 @@ import { KeyValue, Forward as ForwardType } from 'schema/types';
 import moment from 'moment';
 
 import styles from './styles.module.css';
+import { useMe } from 'context/user-context';
+import PeopleIcon from 'components/PeopleIcon';
 
 const Forward = ({ forward }: { forward: ForwardType }) => {
+  const me = useMe();
   const [isActive, setIsActive] = useState(false);
 
   const headings = [
@@ -24,6 +27,14 @@ const Forward = ({ forward }: { forward: ForwardType }) => {
             {forward.method} {forward.url}
           </div>
           <div className={styles.badges}>
+            {forward.user.id !== me?.id && (
+              <>
+                <PeopleIcon />{' '}
+                <strong>
+                  {forward.user.firstName} {forward.user.lastName}
+                </strong>{' '}
+              </>
+            )}
             <i
               className={`fa ${
                 forward.success

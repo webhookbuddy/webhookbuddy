@@ -7,6 +7,7 @@ import { useMutation } from '@apollo/react-hooks';
 import { toast } from 'react-toastify';
 import useForwardUrls from './useForwardUrls';
 import useReadWebhook from './useReadWebhook';
+import { useMe } from 'context/user-context';
 
 const { ipcRenderer } = window.require('electron');
 
@@ -50,6 +51,7 @@ const extractContentType = (headers: KeyValue[]) =>
     ?.value ?? null;
 
 const useForwarder = (endpointId: string) => {
+  const me = useMe();
   const { addForwardingIds, removeForwardingId } = useForwardingIds();
   const { addForwardUrl } = useForwardUrls(endpointId);
   const [addForward] = useMutation(ADD_FORWARD);
@@ -84,6 +86,7 @@ const useForwarder = (endpointId: string) => {
         query: metadata.webhook.query,
         contentType: extractContentType(mapHeaders(rawHeaders)),
         body: data ?? '',
+        user: me,
       } as Forward;
 
       removeForwardingId(metadata.webhook.id);
@@ -131,7 +134,7 @@ const useForwarder = (endpointId: string) => {
         onForwardedListener,
       );
     };
-  }, [removeForwardingId, addForward, readWebhook]);
+  }, [removeForwardingId, addForward, readWebhook, me]);
 
   const forwardWebhook = (url: string, webhooks: Webhook[]) => {
     addForwardUrl(url);

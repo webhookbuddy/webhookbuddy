@@ -93,6 +93,7 @@ export interface Forward extends HttpMessage {
   url: string;
   statusCode: number;
   success: boolean;
+  user: User;
 }
 
 export interface ForwardUrl {
