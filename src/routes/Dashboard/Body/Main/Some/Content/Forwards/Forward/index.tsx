@@ -30,6 +30,9 @@ const Forward = ({ forward }: { forward: ForwardType }) => {
             {forward.user.id !== me?.id && (
               <>
                 <PeopleIcon />{' '}
+                <strong>
+                  {forward.user.firstName} {forward.user.lastName}
+                </strong>{' '}
               </>
             )}
             <i
