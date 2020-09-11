@@ -1,7 +1,9 @@
 import React from 'react';
 import useForwardingIds from 'hooks/useForwardingIds';
+import { useMe } from 'context/user-context';
 import { Webhook } from 'schema/types';
 import moment from 'moment';
+import PeopleIcon from 'components/PeopleIcon';
 
 import styles from './styles.module.css';
 
@@ -23,6 +25,8 @@ const Item = ({
   ) => void;
   handleDelete: (webhookId: string | string[]) => void;
 }) => {
+  const me = useMe();
+
   const { forwardingIds } = useForwardingIds();
 
   const label = `[${moment(webhook.createdAt).format(
@@ -44,11 +48,25 @@ const Item = ({
           <ForwardingBadges />
         ) : (
           <IdleBadges
-            forwardSuccessCount={
-              webhook.forwards.filter(f => f.success).length
+            myForwardSuccessCount={
+              webhook.forwards.filter(
+                f => f.success && f.user.id === me?.id,
+              ).length
             }
-            forwardErrorCount={
-              webhook.forwards.filter(f => !f.success).length
+            myForwardErrorCount={
+              webhook.forwards.filter(
+                f => !f.success && f.user.id === me?.id,
+              ).length
+            }
+            otherForwardSuccessCount={
+              webhook.forwards.filter(
+                f => f.success && f.user.id !== me?.id,
+              ).length
+            }
+            otherForwardErrorCount={
+              webhook.forwards.filter(
+                f => !f.success && f.user.id !== me?.id,
+              ).length
             }
             handleDelete={() => handleDelete(webhook.id)}
           />
@@ -63,24 +81,40 @@ const ForwardingBadges = () => {
 };
 
 const IdleBadges = ({
-  forwardSuccessCount,
-  forwardErrorCount,
+  myForwardSuccessCount,
+  myForwardErrorCount,
+  otherForwardSuccessCount,
+  otherForwardErrorCount,
   handleDelete,
 }: {
-  forwardSuccessCount: number;
-  forwardErrorCount: number;
+  myForwardSuccessCount: number;
+  myForwardErrorCount: number;
+  otherForwardSuccessCount: number;
+  otherForwardErrorCount: number;
   handleDelete: () => void;
 }) => {
   return (
     <>
-      {forwardSuccessCount > 0 && (
+      {myForwardSuccessCount > 0 && (
         <span className="badge badge-success">
-          {formatCount(forwardSuccessCount)}
+          {formatCount(myForwardSuccessCount)}
         </span>
       )}{' '}
-      {forwardErrorCount > 0 && (
+      {otherForwardSuccessCount > 0 && (
+        <span className="badge badge-success">
+          <PeopleIcon />
+          {formatCount(otherForwardSuccessCount)}
+        </span>
+      )}{' '}
+      {myForwardErrorCount > 0 && (
         <span className="badge badge-danger">
-          {formatCount(forwardErrorCount)}
+          {formatCount(myForwardErrorCount)}
+        </span>
+      )}{' '}
+      {otherForwardErrorCount > 0 && (
+        <span className="badge badge-danger">
+          <PeopleIcon />
+          {formatCount(otherForwardErrorCount)}
         </span>
       )}{' '}
       <i

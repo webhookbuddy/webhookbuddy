@@ -24,6 +24,9 @@ export const FORWARD_FRAGMENT = gql`
   fragment forward on Forward {
     id
     createdAt
+    user {
+      ...user
+    }
     url
     method
     statusCode
@@ -38,6 +41,7 @@ export const FORWARD_FRAGMENT = gql`
     }
     body
   }
+  ${USER_FRAGMENT}
 `;
 
 export const WEBHOOK_FRAGMENT = gql`
