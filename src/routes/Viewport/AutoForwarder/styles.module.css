@@ -1,10 +1,18 @@
-.autoForward {
+.autoForwarder {
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: auto 1fr 3fr;
   align-items: center;
+  transition: height 0.3s;
+  height: 0;
+  border-top: 1px solid #ccc;
+  padding: 0 20px;
 }
 
-.icon {
+.docked {
+  height: 90px;
+}
+
+.recorderIcon {
   margin-right: 10px;
 }
 
@@ -12,13 +20,11 @@
   color: hsl(354, 70%, 54%);
 }
 
-/* TODO: nested sass */
-.iconOn
-  .button {
-  animation: autoForwardButtonOn 1.6s infinite;
+.recorderIconOn .button {
+  animation: recorderButtonOn 1.6s infinite;
 }
 
-@keyframes autoForwardButtonOn {
+@keyframes recorderButtonOn {
   0% {
     color: hsl(354, 70%, 54%);
   }

@@ -1,14 +1,8 @@
-import {
-  HashRouter as Router,
-  Route,
-  Switch,
-} from 'react-router-dom';
 import { gql, useQuery } from '@apollo/client';
 import { useMe } from 'context/user-context';
 import Login from 'components/Login';
 import Session from 'components/Session';
-import Endpoints from 'routes/Endpoints';
-import Dashboard from 'routes/Dashboard';
+import Viewport from 'routes/Viewport';
 import { IsUserLoggedIn } from 'types/IsUserLoggedIn';
 
 import { toast } from 'react-toastify';
@@ -26,22 +20,12 @@ const IS_LOGGED_IN = gql`
 function App() {
   const { data } = useQuery<IsUserLoggedIn>(IS_LOGGED_IN);
   const me = useMe();
-  return (
-    <Router>
-      {!data || !data.isLoggedIn ? (
-        <Login />
-      ) : me ? (
-        <Switch>
-          <Route
-            path="/dashboard/:endpointId"
-            component={Dashboard}
-          />
-          <Route path="/" component={Endpoints} />
-        </Switch>
-      ) : (
-        <Session />
-      )}
-    </Router>
+  return !data || !data.isLoggedIn ? (
+    <Login />
+  ) : me ? (
+    <Viewport />
+  ) : (
+    <Session />
   );
 }
 

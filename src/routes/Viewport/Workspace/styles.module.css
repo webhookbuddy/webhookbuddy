@@ -1,0 +1,9 @@
+.workspace {
+  position: relative;
+  transition: height 0.3s;
+  height: 100%;
+}
+
+.docked {
+  height: calc(100% - 90px);
+}
