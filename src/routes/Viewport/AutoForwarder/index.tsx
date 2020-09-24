@@ -2,9 +2,13 @@ import React from 'react';
 
 import styles from './styles.module.css';
 
-const AutoForwarder = () => {
+const AutoForwarder = ({ docked }: { docked: Boolean }) => {
   return (
-    <div className={`${styles.autoForwarder} ${styles.docked}`}>
+    <div
+      className={`${styles.autoForwarder} ${
+        docked ? styles.docked : ''
+      }`}
+    >
       <div
         className={`${styles.recorderIcon} ${styles.recorderIconOn}`}
       >

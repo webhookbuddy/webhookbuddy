@@ -2,9 +2,18 @@ import React from 'react';
 
 import styles from './styles.module.css';
 
-const Docker = () => {
+const Docker = ({
+  docked,
+  setDocked,
+}: {
+  docked: Boolean;
+  setDocked: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
   return (
-    <button className={styles.docker}>
+    <button
+      className={styles.docker}
+      onClick={() => setDocked(!docked)}
+    >
       Auto-forward
       <svg
         width="1em"

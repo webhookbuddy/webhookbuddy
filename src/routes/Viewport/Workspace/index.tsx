@@ -10,10 +10,20 @@ import Docker from './Docker';
 
 import styles from './styles.module.css';
 
-const Workspace = () => {
+const Workspace = ({
+  docked,
+  setDocked,
+}: {
+  docked: Boolean;
+  setDocked: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
   return (
     <Router>
-      <div className={`${styles.workspace} ${styles.docked}`}>
+      <div
+        className={`${styles.workspace} ${
+          docked ? styles.docked : ''
+        }`}
+      >
         <Switch>
           <Route
             path="/dashboard/:endpointId"
@@ -21,7 +31,7 @@ const Workspace = () => {
           />
           <Route path="/" component={Endpoints} />
         </Switch>
-        <Docker />
+        <Docker docked={docked} setDocked={setDocked} />
       </div>
     </Router>
   );
