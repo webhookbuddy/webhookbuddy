@@ -3,6 +3,8 @@ import { useQuery } from '@apollo/client';
 import { GET_ENDPOINTS } from 'schema/queries';
 import { GetEndpoints } from 'schema/types/GetEndpoints';
 import Error from 'components/Error';
+import useForwardUrls from 'hooks/useForwardUrls';
+import Autosuggest from 'components/Autosuggest';
 
 import styles from './styles.module.css';
 
@@ -15,6 +17,8 @@ const AutoForwarder = ({ docked }: { docked: Boolean }) => {
   );
 
   const [endpointId, setEndpointId] = useState('');
+  const { forwardUrls } = useForwardUrls(endpointId);
+  const [url, setUrl] = useState('');
 
   const retry = () => refetch().catch(() => {}); // Unless we catch, a network error will cause an unhandled rejection: https://github.com/apollographql/apollo-client/issues/3963
 
@@ -60,7 +64,13 @@ const AutoForwarder = ({ docked }: { docked: Boolean }) => {
       </div>
       <div className="form-group">
         <label>Auto-forward to</label>
-        <select className="custom-select custom-select-sm"></select>
+        <Autosuggest
+          type="url"
+          placeholder="Forward to URL (e.g. http://localhost:8000/send-webhook-here)"
+          userInput={url}
+          setUserInput={setUrl}
+          suggestions={forwardUrls}
+        />
       </div>
     </div>
   );
