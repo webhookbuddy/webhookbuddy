@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 
 import styles from './styles.module.css';
 
+// Inspired by: https://www.digitalocean.com/community/tutorials/react-react-autocomplete
+
 const SuggestionsList = ({
   activeIndex,
   filteredSuggestions,
