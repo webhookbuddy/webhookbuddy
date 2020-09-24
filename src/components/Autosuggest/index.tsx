@@ -3,6 +3,11 @@ import { useState } from 'react';
 
 import styles from './styles.module.css';
 
+export enum AutosuggestPositionEnum {
+  Up = 'Up',
+  Down = 'Down',
+}
+
 // Inspired by: https://www.digitalocean.com/community/tutorials/react-react-autocomplete
 
 const SuggestionsList = ({
@@ -39,12 +44,14 @@ const Autosuggest = ({
   suggestions,
   userInput,
   setUserInput,
+  position = AutosuggestPositionEnum.Down,
 }: {
   type: string;
   placeholder: string;
   suggestions: string[];
   userInput: string;
   setUserInput: React.Dispatch<React.SetStateAction<string>>;
+  position?: AutosuggestPositionEnum;
 }) => {
   const [state, setState] = useState<{
     activeIndex: number;
@@ -133,7 +140,11 @@ const Autosuggest = ({
   };
 
   return (
-    <div className="d-flex dropdown">
+    <div
+      className={`d-flex dropdown ${
+        position === AutosuggestPositionEnum.Up ? 'dropup' : ''
+      }`}
+    >
       <input
         type={type}
         className="form-control form-control-sm"

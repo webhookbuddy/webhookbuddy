@@ -4,7 +4,9 @@ import { GET_ENDPOINTS } from 'schema/queries';
 import { GetEndpoints } from 'schema/types/GetEndpoints';
 import Error from 'components/Error';
 import useForwardUrls from 'hooks/useForwardUrls';
-import Autosuggest from 'components/Autosuggest';
+import Autosuggest, {
+  AutosuggestPositionEnum,
+} from 'components/Autosuggest';
 
 import styles from './styles.module.css';
 
@@ -70,6 +72,7 @@ const AutoForwarder = ({ docked }: { docked: Boolean }) => {
           userInput={url}
           setUserInput={setUrl}
           suggestions={forwardUrls}
+          position={AutosuggestPositionEnum.Up}
         />
       </div>
     </div>
