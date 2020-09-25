@@ -62,6 +62,7 @@ const AutoForwarder = ({ docked }: { docked: Boolean }) => {
             className="custom-select custom-select-sm"
             onChange={e => setEndpointId(e.target.value)}
             value={endpointId}
+            disabled={running}
           >
             {data &&
               !loading &&
@@ -82,6 +83,7 @@ const AutoForwarder = ({ docked }: { docked: Boolean }) => {
           setUserInput={setUrl}
           suggestions={forwardUrls}
           position={AutosuggestPositionEnum.Up}
+          disabled={running}
         />
       </div>
     </div>

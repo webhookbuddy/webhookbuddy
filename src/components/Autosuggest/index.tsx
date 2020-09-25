@@ -45,6 +45,7 @@ const Autosuggest = ({
   userInput,
   setUserInput,
   position = AutosuggestPositionEnum.Down,
+  disabled = false,
 }: {
   type: string;
   placeholder: string;
@@ -52,6 +53,7 @@ const Autosuggest = ({
   userInput: string;
   setUserInput: React.Dispatch<React.SetStateAction<string>>;
   position?: AutosuggestPositionEnum;
+  disabled?: boolean;
 }) => {
   const [state, setState] = useState<{
     activeIndex: number;
@@ -154,6 +156,7 @@ const Autosuggest = ({
         onKeyDown={onKeyDown}
         value={userInput}
         placeholder={placeholder}
+        disabled={disabled}
         required
       />
       <SuggestionsList
