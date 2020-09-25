@@ -12,15 +12,16 @@
   height: 90px;
 }
 
-.recorderIcon {
+.iconWrapper {
   margin-right: 10px;
 }
 
-.button {
-  color: hsl(354, 70%, 54%);
+.idleIcon {
+  color: #28a745;
 }
 
-.recorderIconOn .button {
+.runningIcon {
+  color: hsl(354, 70%, 54%);
   animation: recorderButtonOn 1.6s infinite;
 }
 

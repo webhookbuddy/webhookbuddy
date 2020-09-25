@@ -19,6 +19,7 @@ const AutoForwarder = ({ docked }: { docked: Boolean }) => {
   );
 
   const [endpointId, setEndpointId] = useState('');
+  const [running, setRunning] = useState(false);
   const { forwardUrls } = useForwardUrls(endpointId);
   const [url, setUrl] = useState('');
 
@@ -30,10 +31,18 @@ const AutoForwarder = ({ docked }: { docked: Boolean }) => {
         docked ? styles.docked : ''
       }`}
     >
-      <div
-        className={`${styles.recorderIcon} ${styles.recorderIconOn}`}
-      >
-        <i className={`fa fa-circle fa-2x ${styles.button}`}></i>
+      <div className={`${styles.iconWrapper}`}>
+        {running ? (
+          <i
+            className={`fa fa-circle fa-2x pointer ${styles.runningIcon}`}
+            onClick={() => setRunning(false)}
+          ></i>
+        ) : (
+          <i
+            className={`fa fa-play fa-lg pointer ${styles.idleIcon}`}
+            onClick={() => setRunning(true)}
+          ></i>
+        )}
       </div>
       <div className="form-group">
         <label>Endpoint</label>
