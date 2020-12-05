@@ -11,10 +11,11 @@ Distribution setup inspired by:
 * `npm install`
 
 # Run
+* Get server running with `Quick Start` instructions for [webhook-buddy-server](https://github.com/webhook-buddy/webhook-buddy-server)
 * `npm start` (Runs both Electron and React app)
 * `npm run electron` (Runs only Electon. Useful if you want to see console.log() output.)
 * `npm run react-start` (Runs only React app. Needed if you use `npm run electron`.)
 
 # Distribution
 * `npm run dist`
-* Distrubtion package for current environment will be in `dist` folder
+* Distribution package for current environment will be in `dist` folder
