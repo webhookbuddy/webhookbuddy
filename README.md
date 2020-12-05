@@ -8,6 +8,7 @@ Distribution setup inspired by:
 * https://medium.com/@kitze/%EF%B8%8F-from-react-to-an-electron-app-ready-for-production-a0468ecb1da3
 
 # Setup
+* Use Node version 12+ (e.g. 12.16.1)
 * `npm install`
 
 # Run
