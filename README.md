@@ -11,12 +11,18 @@ Distribution setup inspired by:
 
 # Setup
 
+## VS Code
+
+Install `Prettier - Code formatter` extension. Prettier will automatically format files on save.
+
+## Environment
+
 - Use Node version 12+ (e.g. 12.16.1)
-- `npm install`
+  - `npm install`
 
 # Run
 
-- Get server running with `Quick Start` instructions for [webhook-buddy-server](https://github.com/webhook-buddy/webhook-buddy-server)
+- Get server running with `Quick Start` instructions here: [webhook-buddy-server](https://github.com/webhook-buddy/webhook-buddy-server)
 - `npm start` (Runs both Electron and React app)
 - `npm run electron` (Runs only Electon. Useful if you want to see console.log() output.)
 - `npm run react-start` (Runs only React app. Needed if you use `npm run electron`.)
