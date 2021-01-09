@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useApolloClient } from '@apollo/react-hooks';
 import { Endpoint as EndpointType } from 'schema/types';

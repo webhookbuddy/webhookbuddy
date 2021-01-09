@@ -1,4 +1,3 @@
-import React from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import { EndpointsPayload } from 'schema/types';
 import EndpointComponent from './Endpoint';

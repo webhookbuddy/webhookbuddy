@@ -1,4 +1,3 @@
-import React from 'react';
 import { useParams } from 'react-router-dom';
 import Jumbotron from 'components/Jumbotron';
 import { useApolloClient } from '@apollo/react-hooks';

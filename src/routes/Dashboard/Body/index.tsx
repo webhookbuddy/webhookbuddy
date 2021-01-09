@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import ResizePanel from 'react-resize-panel';
 import Sidebar from './Sidebar';
 import Main from './Main';

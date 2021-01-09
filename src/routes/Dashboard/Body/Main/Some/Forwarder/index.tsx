@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import { FormEvent, MouseEvent, useState, useRef } from 'react';
 import useForwardUrls from 'hooks/useForwardUrls';
 import Autosuggest from 'components/Autosuggest';
 
@@ -15,13 +15,11 @@ const Forwarder = ({
   const [url, setUrl] = useState<string>('');
   const buttonRef = useRef<HTMLButtonElement>(null);
 
-  const handlePlayClick = (e: React.MouseEvent<HTMLElement>) => {
+  const handlePlayClick = (e: MouseEvent<HTMLElement>) => {
     buttonRef.current?.click();
   };
 
-  const onSubmit = (
-    e: React.FormEvent<HTMLFormElement> | undefined,
-  ) => {
+  const onSubmit = (e: FormEvent<HTMLFormElement> | undefined) => {
     e?.preventDefault();
     forwardTo(url);
   };

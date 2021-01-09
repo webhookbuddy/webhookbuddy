@@ -1,4 +1,5 @@
-import React, {
+import {
+  createContext,
   useContext,
   useState,
   ReactNode,
@@ -12,7 +13,7 @@ type Context = {
   setMe: Dispatch<SetStateAction<User | null>>;
 };
 
-const UserContext = React.createContext<Context>({
+const UserContext = createContext<Context>({
   me: null,
   setMe: () => {},
 }); // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/37023#issuecomment-568299311

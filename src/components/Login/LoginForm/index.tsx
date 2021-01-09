@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { FormEvent, useState } from 'react';
 import { ApolloError } from 'apollo-client';
 import { ExecutionResult } from 'apollo-link';
 import { MutationFunctionOptions } from 'schema/types';
@@ -24,7 +24,7 @@ const LoginForm = ({
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     loginUser({
       variables: {
