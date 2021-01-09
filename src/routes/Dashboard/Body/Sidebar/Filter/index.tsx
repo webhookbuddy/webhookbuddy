@@ -1,4 +1,4 @@
-import React from 'react';
+import { Dispatch, SetStateAction } from 'react';
 import { FilterEnum } from '../';
 
 import styles from './styles.module.css';
@@ -8,7 +8,7 @@ const Filter = ({
   setFilter,
 }: {
   filter: FilterEnum;
-  setFilter: React.Dispatch<React.SetStateAction<FilterEnum>>;
+  setFilter: Dispatch<SetStateAction<FilterEnum>>;
 }) => {
   return (
     <div className={styles.filter}>

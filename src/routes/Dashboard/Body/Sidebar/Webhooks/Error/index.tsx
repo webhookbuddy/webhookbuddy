@@ -1,4 +1,3 @@
-import React from 'react';
 import { ApolloQueryResult } from 'apollo-client';
 import { WebhooksPayload } from 'schema/types';
 

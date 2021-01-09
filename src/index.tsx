@@ -1,4 +1,4 @@
-import React from 'react';
+import { StrictMode } from 'react';
 import ReactDOM from 'react-dom';
 
 import { ApolloProvider } from '@apollo/react-hooks';
@@ -115,13 +115,13 @@ const client = new ApolloClient({
 
 waitOnCache.then(() => {
   ReactDOM.render(
-    <React.StrictMode>
+    <StrictMode>
       <ApolloProvider client={client}>
         <UserProvider>
           <App />
         </UserProvider>
       </ApolloProvider>
-    </React.StrictMode>,
+    </StrictMode>,
     document.getElementById('root'),
   );
 });

@@ -1,4 +1,4 @@
-import React from 'react';
+import { MouseEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { Endpoint } from 'schema/types';
 import moment from 'moment';
@@ -7,7 +7,7 @@ import Delete from './Delete';
 import styles from './styles.module.css';
 
 const List = ({ endpoint }: { endpoint: Endpoint }) => {
-  const handleCopyClick = (e: React.MouseEvent<HTMLElement>) => {
+  const handleCopyClick = (e: MouseEvent<HTMLElement>) => {
     navigator.clipboard.writeText(endpoint.url);
   };
 

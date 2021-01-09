@@ -1,4 +1,3 @@
-import React from 'react';
 import { Route } from 'react-router-dom';
 import Request from './Request';
 import Forwards from './Forwards';

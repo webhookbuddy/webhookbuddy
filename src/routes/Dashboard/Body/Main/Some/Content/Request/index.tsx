@@ -1,4 +1,3 @@
-import React from 'react';
 import HttpMessage from 'components/HttpMessage';
 import { Webhook, KeyValue } from 'schema/types';
 

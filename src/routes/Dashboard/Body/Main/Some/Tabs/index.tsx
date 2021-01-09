@@ -1,4 +1,3 @@
-import React from 'react';
 import { NavLink, useParams } from 'react-router-dom';
 import useForwardingIds from 'hooks/useForwardingIds';
 

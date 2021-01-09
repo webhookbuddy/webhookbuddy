@@ -1,4 +1,3 @@
-import React from 'react';
 import Forward from './Forward';
 import { Webhook } from 'schema/types';
 

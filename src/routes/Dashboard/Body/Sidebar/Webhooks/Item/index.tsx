@@ -1,4 +1,3 @@
-import React from 'react';
 import useForwardingIds from 'hooks/useForwardingIds';
 import { useMe } from 'context/user-context';
 import { Webhook } from 'schema/types';

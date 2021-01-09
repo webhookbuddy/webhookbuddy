@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { FormEvent, useState } from 'react';
 import gql from 'graphql-tag';
 import { ENDPOINT_FRAGMENT } from 'schema/fragments';
 import { useMutation } from '@apollo/react-hooks';
@@ -49,7 +49,7 @@ const Create = () => {
   );
   const [name, setName] = useState('');
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     createEndpoint({
       variables: {

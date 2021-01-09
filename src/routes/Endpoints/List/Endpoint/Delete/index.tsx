@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { MouseEvent, useState } from 'react';
 import { ConfirmModal } from 'react-bootstrap4-modal';
 import { Endpoint, EndpointsPayload } from 'schema/types';
 import gql from 'graphql-tag';
@@ -52,7 +52,7 @@ const Delete = ({
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
-  const handleClick = (e: React.MouseEvent<HTMLElement>) =>
+  const handleClick = (e: MouseEvent<HTMLElement>) =>
     setModalIsOpen(true);
 
   const handleCloseModal = () => setModalIsOpen(false);

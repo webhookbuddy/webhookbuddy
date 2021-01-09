@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import HttpMessage from 'components/HttpMessage';
 import { KeyValue, Forward as ForwardType } from 'schema/types';
 import moment from 'moment';

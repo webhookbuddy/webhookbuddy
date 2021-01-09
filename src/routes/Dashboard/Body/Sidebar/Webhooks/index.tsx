@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import useFetchWebhooks from 'hooks/useFetchWebhooks';
 import Loading from './Loading';
