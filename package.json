@@ -33,7 +33,7 @@
     "react": "^17.0.1",
     "react-bootstrap4-modal": "^1.7.5",
     "react-dom": "^17.0.1",
-    "react-hotkeys-hook": "^2.4.1",
+    "react-hotkeys-hook": "^3.0.3",
     "react-resize-panel": "^0.3.5",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.1",
