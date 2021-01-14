@@ -1,24 +1,25 @@
 import { StrictMode } from 'react';
 import ReactDOM from 'react-dom';
 
-import { ApolloProvider } from '@apollo/react-hooks';
-import { ApolloClient } from 'apollo-client';
-import { ApolloLink, split } from 'apollo-link';
-import { HttpLink } from 'apollo-link-http';
-import { WebSocketLink } from 'apollo-link-ws';
-import { setContext } from 'apollo-link-context';
-import { onError } from 'apollo-link-error';
 import {
+  ApolloProvider,
+  ApolloClient,
+  ApolloLink,
+  createHttpLink,
+  split,
   InMemoryCache,
   NormalizedCacheObject,
-} from 'apollo-cache-inmemory';
+} from '@apollo/client';
+import { onError } from '@apollo/client/link/error';
+import { setContext } from '@apollo/client/link/context';
+import { WebSocketLink } from '@apollo/client/link/ws';
+import { getMainDefinition } from '@apollo/client/utilities';
 import { persistCache } from 'apollo-cache-persist';
 import {
   PersistedData,
   PersistentStorage,
 } from 'apollo-cache-persist/types';
 import localForage from 'localforage';
-import { getMainDefinition } from 'apollo-utilities';
 
 import { typeDefs, resolvers } from 'schema/resolvers';
 
@@ -45,7 +46,7 @@ const waitOnCache = persistCache({
   >,
 });
 
-const httpLink = new HttpLink({
+const httpLink = createHttpLink({
   uri: `${process.env.REACT_APP_API_ORIGIN}/graphql`,
 });
 
