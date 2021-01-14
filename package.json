@@ -8,11 +8,11 @@
   "homepage": "./",
   "dependencies": {
     "@apollo/react-hooks": "^3.1.5",
-    "@testing-library/jest-dom": "^5.11.8",
+    "@testing-library/jest-dom": "^5.11.9",
     "@testing-library/react": "^11.2.3",
     "@testing-library/user-event": "^12.6.0",
     "@types/jest": "^26.0.20",
-    "@types/node": "^12.19.12",
+    "@types/node": "^12.19.13",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
     "apollo-cache-inmemory": "^1.6.6",
@@ -101,7 +101,7 @@
     "@types/react-virtualized-auto-sizer": "^1.0.0",
     "@types/react-window": "^1.8.2",
     "@types/react-window-infinite-loader": "^1.0.3",
-    "electron": "^11.1.1",
+    "electron": "^11.2.0",
     "electron-builder": "^22.9.1",
     "foreman": "^3.0.1",
     "nodemon": "^2.0.7"
