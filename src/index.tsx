@@ -73,8 +73,7 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
     for (const err of graphQLErrors) {
       if (
         err.extensions &&
-        (err.extensions.code === 'UNAUTHENTICATED' ||
-          err.extensions.code === 'FORBIDDEN')
+        err.extensions.code === 'UNAUTHENTICATED'
       ) {
         localStorage.removeItem('x-token');
         changeLoginState(client, persistor, false);
