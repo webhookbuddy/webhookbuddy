@@ -7,9 +7,12 @@ import { Link } from 'react-router-dom';
 import { GET_ENDPOINTS } from 'schema/queries';
 
 const Endpoints = () => {
-  const { data, error, loading, refetch } = useQuery<
-    EndpointsPayload
-  >(GET_ENDPOINTS, {
+  const {
+    data,
+    error,
+    loading,
+    refetch,
+  } = useQuery<EndpointsPayload>(GET_ENDPOINTS, {
     fetchPolicy: 'cache-and-network',
   });
 
