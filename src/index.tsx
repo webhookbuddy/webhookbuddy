@@ -15,14 +15,19 @@ import { WebSocketLink } from '@apollo/client/link/ws';
 import { getMainDefinition } from '@apollo/client/utilities';
 
 import {
-  persistCache,
+  CachePersistor,
   PersistentStorage,
 } from 'apollo3-cache-persist';
 import localForage from 'localforage';
 
+import { PersistorContextProvider } from 'context/persistor-context';
+import { changeLoginState } from 'services/login-state';
+
 import { typeDefs, resolvers } from 'schema/resolvers';
 
 import { UserProvider } from 'context/user-context';
+
+import { isLoggedInVar } from 'cache';
 
 import 'bootstrap/dist/css/bootstrap.css';
 import 'font-awesome/css/font-awesome.min.css';
@@ -36,7 +41,7 @@ const cache = new InMemoryCache({
     Query: {
       fields: {
         isLoggedIn: {
-          read: () => !!localStorage.getItem('x-token'),
+          read: () => isLoggedInVar(),
         },
         endpoints: {
           // Without this, we get a `Cache data may be lost when replacing the endpoints field of a Query object.` warning. More info: https://www.apollographql.com/docs/react/caching/cache-field-behavior/#merging-non-normalized-objects
@@ -47,7 +52,7 @@ const cache = new InMemoryCache({
   },
 });
 
-const waitOnCache = persistCache({
+const persistor = new CachePersistor({
   cache,
   storage: localForage as PersistentStorage,
 });
@@ -68,22 +73,10 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
     for (const err of graphQLErrors) {
       if (
         err.extensions &&
-        (err.extensions.code === 'UNAUTHENTICATED' ||
-          err.extensions.code === 'FORBIDDEN')
+        err.extensions.code === 'UNAUTHENTICATED'
       ) {
         localStorage.removeItem('x-token');
-        // https://stackoverflow.com/a/53844411/188740
-        // Calling resetStore without calling clearStore first will result in all queries being refetched without an x-token header.
-        // We need resetStore b/c calling cache.modify from clearStore's promise resolver doesn't broadcast changes to re-query isLoggedIn in App.tsx
-        client.clearStore().then(() => {
-          client.resetStore().then(() => {
-            client.cache.modify({
-              fields: {
-                isLoggedIn: () => false,
-              },
-            });
-          });
-        });
+        changeLoginState(client, persistor, false);
       } else if (err.extensions)
         console.log(`${err.extensions?.code} error`);
     }
@@ -127,13 +120,15 @@ const client = new ApolloClient({
   resolvers,
 });
 
-waitOnCache.then(() => {
+persistor.restore().then(() => {
   ReactDOM.render(
     <StrictMode>
       <ApolloProvider client={client}>
-        <UserProvider>
-          <App />
-        </UserProvider>
+        <PersistorContextProvider value={persistor}>
+          <UserProvider>
+            <App />
+          </UserProvider>
+        </PersistorContextProvider>
       </ApolloProvider>
     </StrictMode>,
     document.getElementById('root'),

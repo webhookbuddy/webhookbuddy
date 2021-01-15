@@ -1,4 +1,6 @@
 import { gql, useApolloClient, useMutation } from '@apollo/client';
+import { usePersistorContext } from 'context/persistor-context';
+import { changeLoginState } from 'services/login-state';
 import LoginForm from './LoginForm';
 
 const LOGIN_USER = gql`
@@ -28,24 +30,14 @@ export interface LoginInput {
 
 const Login = () => {
   const client = useApolloClient();
+  const persistor = usePersistorContext();
   const [loginUser, { loading, error }] = useMutation<
     LoginPayload,
     LoginVariables
   >(LOGIN_USER, {
     onCompleted: ({ login }) => {
       localStorage.setItem('x-token', login.token);
-      // https://stackoverflow.com/a/53844411/188740
-      // Calling resetStore without calling clearStore first will result in all queries being refetched without an x-token header.
-      // We need resetStore b/c calling cache.modify from clearStore's promise resolver doesn't broadcast changes to re-query isLoggedIn in App.tsx
-      client.clearStore().then(() => {
-        client.resetStore().then(() => {
-          client.cache.modify({
-            fields: {
-              isLoggedIn: () => true,
-            },
-          });
-        });
-      });
+      changeLoginState(client, persistor, true);
     },
     onError: () => {}, // Handle error to avoid unhandled rejection: https://github.com/apollographql/apollo-client/issues/6070
   });
