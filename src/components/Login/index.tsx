@@ -35,14 +35,7 @@ const Login = () => {
   >(LOGIN_USER, {
     onCompleted: ({ login }) => {
       localStorage.setItem('x-token', login.token);
-      // https://stackoverflow.com/a/53844411/188740
-      // Calling resetStore without calling clearStore first will result in all queries being refetched without an x-token header.
-      // We need resetStore b/c calling isLoggedInVar from clearStore's promise resolver doesn't broadcast changes to re-query isLoggedIn in App.tsx
-      client.clearStore().then(() => {
-        client.resetStore().then(() => {
-          isLoggedInVar(true);
-        });
-      });
+      client.clearStore().then(() => isLoggedInVar(true));
     },
     onError: () => {}, // Handle error to avoid unhandled rejection: https://github.com/apollographql/apollo-client/issues/6070
   });
