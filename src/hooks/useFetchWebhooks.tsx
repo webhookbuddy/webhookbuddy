@@ -58,7 +58,7 @@ const useFetchWebhooks = (endpointId: string) => {
           ],
         },
       }),
-    }).catch(() => {}); // Unless we catch, a network error will cause an unhandled rejection: https://github.com/apollographql/apollo-client/issues/3963;
+    }).catch(() => {}); // Handle error to avoid unhandled rejection: https://github.com/apollographql/apollo-client/issues/6070
   };
 
   subscribeToMore({

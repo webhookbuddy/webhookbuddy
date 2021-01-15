@@ -35,7 +35,9 @@ const useForwardUrls = (endpointId: string) => {
     },
   });
 
-  const [mutate] = useMutation(ADD_FORWARD_URL);
+  const [mutate] = useMutation(ADD_FORWARD_URL, {
+    onError: () => {}, // Handle error to avoid unhandled rejection: https://github.com/apollographql/apollo-client/issues/6070
+  });
 
   const addForwardUrl = (url: string) =>
     mutate({
@@ -77,7 +79,7 @@ const useForwardUrls = (endpointId: string) => {
           forwardUrl: { url, __typename: 'ForwardUrl' },
         },
       },
-    }).catch(() => {});
+    });
 
   return {
     forwardUrls: distinct(data?.forwardUrls.map(f => f.url) || []),

@@ -33,7 +33,7 @@ const LoginForm = ({
           password,
         },
       },
-    }).catch(() => {}); // Unless we catch, a network error will cause an unhandled rejection: https://github.com/apollographql/apollo-client/issues/3963
+    });
   };
 
   return (

@@ -12,7 +12,9 @@ const DELETE_WEBHOOKS = gql`
 `;
 
 const useDeleteWebhooks = (endpointId: string) => {
-  const [mutate] = useMutation(DELETE_WEBHOOKS);
+  const [mutate] = useMutation(DELETE_WEBHOOKS, {
+    onError: error => toast.error(error.message), // Handle error to avoid unhandled rejection: https://github.com/apollographql/apollo-client/issues/6070
+  });
 
   const deleteWebhooks = (ids: string[]) => {
     mutate({
@@ -51,7 +53,7 @@ const useDeleteWebhooks = (endpointId: string) => {
           affectedRows: ids.length,
         },
       },
-    }).catch(error => toast.error(error.message));
+    });
   };
 
   return {
