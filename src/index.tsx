@@ -8,18 +8,16 @@ import {
   createHttpLink,
   split,
   InMemoryCache,
-  NormalizedCacheObject,
 } from '@apollo/client';
 import { onError } from '@apollo/client/link/error';
 import { setContext } from '@apollo/client/link/context';
 import { WebSocketLink } from '@apollo/client/link/ws';
 import { getMainDefinition } from '@apollo/client/utilities';
 
-import { persistCache } from 'apollo-cache-persist';
 import {
-  PersistedData,
+  persistCache,
   PersistentStorage,
-} from 'apollo-cache-persist/types';
+} from 'apollo3-cache-persist';
 import localForage from 'localforage';
 
 import { typeDefs, resolvers } from 'schema/resolvers';
@@ -51,9 +49,7 @@ const cache = new InMemoryCache({
 
 const waitOnCache = persistCache({
   cache,
-  storage: localForage as PersistentStorage<
-    PersistedData<NormalizedCacheObject>
-  >,
+  storage: localForage as PersistentStorage,
 });
 
 const httpLink = createHttpLink({
