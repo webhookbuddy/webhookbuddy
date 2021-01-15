@@ -1,5 +1,4 @@
-import gql from 'graphql-tag';
-import { useMutation } from '@apollo/react-hooks';
+import { gql, useMutation } from '@apollo/client';
 import { GET_WEBHOOKS } from 'schema/queries';
 import { WebhooksPayload } from 'schema/types';
 import { toast } from 'react-toastify';

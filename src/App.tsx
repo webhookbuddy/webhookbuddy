@@ -3,8 +3,7 @@ import {
   Route,
   Switch,
 } from 'react-router-dom';
-import gql from 'graphql-tag';
-import { useQuery } from '@apollo/react-hooks';
+import { gql, useQuery } from '@apollo/client';
 import { useMe } from 'context/user-context';
 import Login from 'components/Login';
 import Session from 'components/Session';

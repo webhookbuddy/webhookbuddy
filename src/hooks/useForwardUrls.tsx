@@ -1,5 +1,4 @@
-import gql from 'graphql-tag';
-import { useQuery, useMutation } from '@apollo/react-hooks';
+import { gql, useQuery, useMutation } from '@apollo/client';
 import { ForwardUrlPayload } from 'schema/types';
 import { distinct } from 'services/ids';
 

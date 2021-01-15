@@ -1,5 +1,4 @@
-import gql from 'graphql-tag';
-import { useQuery } from '@apollo/react-hooks';
+import { gql, useQuery } from '@apollo/client';
 import { useSetMe } from 'context/user-context';
 import { USER_FRAGMENT } from 'schema/fragments';
 import Error from 'components/Error';

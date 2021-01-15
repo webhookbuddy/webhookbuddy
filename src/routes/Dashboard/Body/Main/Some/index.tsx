@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
 import Jumbotron from 'components/Jumbotron';
-import { useApolloClient } from '@apollo/react-hooks';
+import { useApolloClient } from '@apollo/client';
 import { WEBHOOK_FRAGMENT } from 'schema/fragments';
 import { Webhook } from 'schema/types';
 import Forwarder from './Forwarder';

@@ -1,4 +1,4 @@
-import gql from 'graphql-tag';
+import { gql } from '@apollo/client';
 import { ENDPOINT_FRAGMENT, WEBHOOK_FRAGMENT } from './fragments';
 
 export const GET_ENDPOINTS = gql`

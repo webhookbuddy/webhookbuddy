@@ -1,5 +1,4 @@
-import { useApolloClient, useMutation } from '@apollo/react-hooks';
-import gql from 'graphql-tag';
+import { gql, useApolloClient, useMutation } from '@apollo/client';
 import LoginForm from './LoginForm';
 
 const LOGIN_USER = gql`

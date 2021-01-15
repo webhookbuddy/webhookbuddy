@@ -1,4 +1,4 @@
-import { useQuery } from '@apollo/react-hooks';
+import { useQuery } from '@apollo/client';
 import { EndpointsPayload } from 'schema/types';
 import EndpointComponent from './Endpoint';
 import Loading from 'components/Loading';

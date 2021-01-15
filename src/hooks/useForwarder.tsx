@@ -1,9 +1,8 @@
 import { Webhook, KeyValue, Forward } from 'schema/types';
-import gql from 'graphql-tag';
 import { WEBHOOK_FRAGMENT } from 'schema/fragments';
 import { useEffect } from 'react';
 import useForwardingIds from './useForwardingIds';
-import { useMutation } from '@apollo/react-hooks';
+import { gql, useMutation } from '@apollo/client';
 import { toast } from 'react-toastify';
 import useForwardUrls from './useForwardUrls';
 import useReadWebhook from './useReadWebhook';

@@ -1,4 +1,4 @@
-import { ApolloQueryResult } from 'apollo-client';
+import { ApolloQueryResult } from '@apollo/client';
 import { WebhooksPayload } from 'schema/types';
 
 import styles from './styles.module.css';
