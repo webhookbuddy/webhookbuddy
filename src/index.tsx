@@ -24,6 +24,8 @@ import { typeDefs, resolvers } from 'schema/resolvers';
 
 import { UserProvider } from 'context/user-context';
 
+import { isLoggedInVar } from 'cache';
+
 import 'bootstrap/dist/css/bootstrap.css';
 import 'font-awesome/css/font-awesome.min.css';
 import './index.css';
@@ -36,7 +38,7 @@ const cache = new InMemoryCache({
     Query: {
       fields: {
         isLoggedIn: {
-          read: () => !!localStorage.getItem('x-token'),
+          read: () => isLoggedInVar(),
         },
         endpoints: {
           // Without this, we get a `Cache data may be lost when replacing the endpoints field of a Query object.` warning. More info: https://www.apollographql.com/docs/react/caching/cache-field-behavior/#merging-non-normalized-objects
@@ -74,14 +76,10 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
         localStorage.removeItem('x-token');
         // https://stackoverflow.com/a/53844411/188740
         // Calling resetStore without calling clearStore first will result in all queries being refetched without an x-token header.
-        // We need resetStore b/c calling cache.modify from clearStore's promise resolver doesn't broadcast changes to re-query isLoggedIn in App.tsx
+        // We need resetStore b/c calling isLoggedInVar from clearStore's promise resolver doesn't broadcast changes to re-query isLoggedIn in App.tsx
         client.clearStore().then(() => {
           client.resetStore().then(() => {
-            client.cache.modify({
-              fields: {
-                isLoggedIn: () => false,
-              },
-            });
+            isLoggedInVar(false);
           });
         });
       } else if (err.extensions)
