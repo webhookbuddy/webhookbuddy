@@ -1,41 +1,23 @@
-import { gql, useQuery, useApolloClient } from '@apollo/client';
-
-const GET_FORWARDING_IDS = gql`
-  query getForwardingIds {
-    forwardingIds @client
-  }
-`;
+import { useReactiveVar } from '@apollo/client';
+import { forwardingIdsVar } from 'cache';
 
 const useForwardingIds = (): {
   forwardingIds: string[];
   addForwardingIds: (ids: string[]) => void;
   removeForwardingId: (id: string) => void;
 } => {
-  const client = useApolloClient();
-
-  const { data } = useQuery<{
-    forwardingIds: string[];
-  }>(GET_FORWARDING_IDS);
+  const forwardingIds = useReactiveVar(forwardingIdsVar);
 
   const addForwardingIds = (ids: string[]) =>
-    client.writeData({
-      data: {
-        forwardingIds: data?.forwardingIds.concat(ids) ?? ids,
-      },
-    });
+    forwardingIdsVar(forwardingIdsVar().concat(ids));
 
   const removeForwardingId = (id: string) =>
-    client.writeData({
-      data: {
-        forwardingIds:
-          data?.forwardingIds.filter(
-            forwardingId => forwardingId !== id,
-          ) ?? [],
-      },
-    });
+    forwardingIdsVar(
+      forwardingIdsVar().filter(forwardingId => forwardingId !== id),
+    );
 
   return {
-    forwardingIds: data?.forwardingIds || [],
+    forwardingIds,
     addForwardingIds,
     removeForwardingId,
   };
