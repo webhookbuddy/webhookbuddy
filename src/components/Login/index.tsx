@@ -1,5 +1,6 @@
 import { gql, useApolloClient, useMutation } from '@apollo/client';
-import { isLoggedInVar } from 'cache';
+import { usePersistorContext } from 'context/persistor-context';
+import { changeLoginState } from 'services/login-state';
 import LoginForm from './LoginForm';
 
 const LOGIN_USER = gql`
@@ -29,13 +30,14 @@ export interface LoginInput {
 
 const Login = () => {
   const client = useApolloClient();
+  const persistor = usePersistorContext();
   const [loginUser, { loading, error }] = useMutation<
     LoginPayload,
     LoginVariables
   >(LOGIN_USER, {
     onCompleted: ({ login }) => {
       localStorage.setItem('x-token', login.token);
-      client.clearStore().then(() => isLoggedInVar(true));
+      changeLoginState(client, persistor, true);
     },
     onError: () => {}, // Handle error to avoid unhandled rejection: https://github.com/apollographql/apollo-client/issues/6070
   });

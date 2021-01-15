@@ -20,6 +20,9 @@ import {
 } from 'apollo3-cache-persist';
 import localForage from 'localforage';
 
+import { PersistorContextProvider } from 'context/persistor-context';
+import { changeLoginState } from 'services/login-state';
+
 import { typeDefs, resolvers } from 'schema/resolvers';
 
 import { UserProvider } from 'context/user-context';
@@ -74,7 +77,7 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
           err.extensions.code === 'FORBIDDEN')
       ) {
         localStorage.removeItem('x-token');
-        client.clearStore().then(() => isLoggedInVar(false));
+        changeLoginState(client, persistor, false);
       } else if (err.extensions)
         console.log(`${err.extensions?.code} error`);
     }
@@ -122,9 +125,11 @@ persistor.restore().then(() => {
   ReactDOM.render(
     <StrictMode>
       <ApolloProvider client={client}>
-        <UserProvider>
-          <App />
-        </UserProvider>
+        <PersistorContextProvider value={persistor}>
+          <UserProvider>
+            <App />
+          </UserProvider>
+        </PersistorContextProvider>
       </ApolloProvider>
     </StrictMode>,
     document.getElementById('root'),
