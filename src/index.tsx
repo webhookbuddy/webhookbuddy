@@ -14,6 +14,7 @@ import { onError } from '@apollo/client/link/error';
 import { setContext } from '@apollo/client/link/context';
 import { WebSocketLink } from '@apollo/client/link/ws';
 import { getMainDefinition } from '@apollo/client/utilities';
+
 import { persistCache } from 'apollo-cache-persist';
 import {
   PersistedData,
@@ -28,14 +29,19 @@ import { UserProvider } from 'context/user-context';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'font-awesome/css/font-awesome.min.css';
 import './index.css';
+
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
-const cache = new InMemoryCache();
-cache.writeData({
-  data: {
-    isLoggedIn: !!localStorage.getItem('x-token'),
-    forwardingIds: [],
+const cache = new InMemoryCache({
+  typePolicies: {
+    Query: {
+      fields: {
+        isLoggedIn: {
+          read: () => !!localStorage.getItem('x-token'),
+        },
+      },
+    },
   },
 });
 
@@ -66,10 +72,17 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
           err.extensions.code === 'FORBIDDEN')
       ) {
         localStorage.removeItem('x-token');
-        cache.writeData({
-          data: {
-            isLoggedIn: false,
-          },
+        // https://stackoverflow.com/a/53844411/188740
+        // Calling resetStore without calling clearStore first will result in all queries being refetched without an x-token header.
+        // We need resetStore b/c calling cache.modify from clearStore's promise resolver doesn't broadcast changes to re-query isLoggedIn in App.tsx
+        client.clearStore().then(() => {
+          client.resetStore().then(() => {
+            client.cache.modify({
+              fields: {
+                isLoggedIn: () => false,
+              },
+            });
+          });
         });
       } else if (err.extensions)
         console.log(`${err.extensions?.code} error`);

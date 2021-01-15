@@ -34,9 +34,18 @@ const Login = () => {
   >(LOGIN_USER, {
     onCompleted: ({ login }) => {
       localStorage.setItem('x-token', login.token);
-      client
-        .resetStore()
-        .then(() => client.writeData({ data: { isLoggedIn: true } }));
+      // https://stackoverflow.com/a/53844411/188740
+      // Calling resetStore without calling clearStore first will result in all queries being refetched without an x-token header.
+      // We need resetStore b/c calling cache.modify from clearStore's promise resolver doesn't broadcast changes to re-query isLoggedIn in App.tsx
+      client.clearStore().then(() => {
+        client.resetStore().then(() => {
+          client.cache.modify({
+            fields: {
+              isLoggedIn: () => true,
+            },
+          });
+        });
+      });
     },
   });
 
