@@ -15,7 +15,7 @@ import { WebSocketLink } from '@apollo/client/link/ws';
 import { getMainDefinition } from '@apollo/client/utilities';
 
 import {
-  persistCache,
+  CachePersistor,
   PersistentStorage,
 } from 'apollo3-cache-persist';
 import localForage from 'localforage';
@@ -49,7 +49,7 @@ const cache = new InMemoryCache({
   },
 });
 
-const waitOnCache = persistCache({
+const persistor = new CachePersistor({
   cache,
   storage: localForage as PersistentStorage,
 });
@@ -118,7 +118,7 @@ const client = new ApolloClient({
   resolvers,
 });
 
-waitOnCache.then(() => {
+persistor.restore().then(() => {
   ReactDOM.render(
     <StrictMode>
       <ApolloProvider client={client}>
