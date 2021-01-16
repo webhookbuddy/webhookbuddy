@@ -1,7 +1,6 @@
 import { FormEvent, useState } from 'react';
-import { ApolloError } from '@apollo/client';
+import { ApolloError, MutationFunctionOptions } from '@apollo/client';
 import { ExecutionResult } from 'graphql';
-import { MutationFunctionOptions } from 'schema/types';
 import {
   Login as LoginPayload,
   LoginVariables,
