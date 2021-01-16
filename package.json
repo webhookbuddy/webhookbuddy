@@ -46,7 +46,9 @@
     "electron-start": "node src/electron-wait-react",
     "react-start": "react-scripts start",
     "dist": "npm run build && electron-builder",
-    "postinstall": "electron-builder install-app-deps"
+    "postinstall": "electron-builder install-app-deps",
+    "types-download": "npx apollo schema:download --endpoint=http://localhost:8000/graphql schema.json",
+    "types-generate": "npx apollo codegen:generate --localSchemaFile=schema.json --target=typescript --includes=src/**/*.tsx,src/schema/[!resolvers]*.ts --tagName=gql --addTypename --globalTypesFile=src/types/global-types.ts types"
   },
   "build": {
     "appId": "com.webhookbuddy.client",

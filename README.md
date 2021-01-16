@@ -27,6 +27,13 @@ Install `Prettier - Code formatter` extension. Prettier will automatically forma
 - `npm run electron` (Runs only Electon. Useful if you want to see console.log() output.)
 - `npm run react-start` (Runs only React app. Needed if you use `npm run electron`.)
 
+# Automatically Generate Typescript Types
+
+```
+npm run types-download
+npm run types-generate
+```
+
 # Distribution
 
 - `npm run dist`
