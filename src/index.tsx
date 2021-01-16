@@ -40,6 +40,10 @@ const cache = new InMemoryCache({
         isLoggedIn: {
           read: () => !!localStorage.getItem('x-token'),
         },
+        endpoints: {
+          // Without this, we get a `Cache data may be lost when replacing the endpoints field of a Query object.` warning. More info: https://www.apollographql.com/docs/react/caching/cache-field-behavior/#merging-non-normalized-objects
+          merge: (_, incoming) => incoming,
+        },
       },
     },
   },
