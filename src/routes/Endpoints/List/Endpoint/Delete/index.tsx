@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import { GET_ENDPOINTS } from 'schema/queries';
 
 const DELETE_ENDPOINT = gql`
-  mutation deleteEndpoint($input: DeleteEndpointInput!) {
+  mutation DeleteEndpoint($input: DeleteEndpointInput!) {
     deleteEndpoint(input: $input) {
       affectedRows
     }

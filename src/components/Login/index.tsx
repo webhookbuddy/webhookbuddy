@@ -4,7 +4,7 @@ import { changeLoginState } from 'services/login-state';
 import LoginForm from './LoginForm';
 
 const LOGIN_USER = gql`
-  mutation login($input: LoginInput!) {
+  mutation Login($input: LoginInput!) {
     login(input: $input) {
       token
     }

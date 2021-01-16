@@ -11,10 +11,10 @@ import { useMe } from 'context/user-context';
 const { ipcRenderer } = window.require('electron');
 
 const ADD_FORWARD = gql`
-  mutation addForward($input: AddForwardInput!) {
+  mutation AddForward($input: AddForwardInput!) {
     addForward(input: $input) {
       webhook {
-        ...webhook
+        ...Webhook
       }
     }
   }

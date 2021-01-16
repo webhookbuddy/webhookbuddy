@@ -3,10 +3,10 @@ import { gql, useMutation } from '@apollo/client';
 import { Webhook } from 'schema/types';
 
 const READ_WEBHOOK = gql`
-  mutation readWebhook($input: ReadWebhookInput!) {
+  mutation ReadWebhook($input: ReadWebhookInput!) {
     readWebhook(input: $input) {
       webhook {
-        ...webhook
+        ...Webhook
       }
     }
   }

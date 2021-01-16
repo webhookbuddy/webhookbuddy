@@ -3,25 +3,25 @@ import { ForwardUrlPayload } from 'schema/types';
 import { distinct } from 'services/ids';
 
 const FORWARD_URL_FRAGMENT = gql`
-  fragment forwardUrl on ForwardUrl {
+  fragment ForwardUrl on ForwardUrl {
     url
   }
 `;
 
 const GET_FORWARD_URLS = gql`
-  query getForwardUrls($endpointId: ID!) {
+  query GetForwardUrls($endpointId: ID!) {
     forwardUrls(endpointId: $endpointId) {
-      ...forwardUrl
+      ...ForwardUrl
     }
   }
   ${FORWARD_URL_FRAGMENT}
 `;
 
 const ADD_FORWARD_URL = gql`
-  mutation addForwardUrl($input: AddForwardUrlInput!) {
+  mutation AddForwardUrl($input: AddForwardUrlInput!) {
     addForwardUrl(input: $input) {
       forwardUrl {
-        ...forwardUrl
+        ...ForwardUrl
       }
     }
   }

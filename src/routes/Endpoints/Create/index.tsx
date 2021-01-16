@@ -8,10 +8,10 @@ import { EndpointsPayload } from 'schema/types';
 import { GET_ENDPOINTS } from 'schema/queries';
 
 const CREATE_ENDPOINT = gql`
-  mutation createEndpoint($input: CreateEndpointInput!) {
+  mutation CreateEndpoint($input: CreateEndpointInput!) {
     createEndpoint(input: $input) {
       endpoint {
-        ...endpoint
+        ...Endpoint
       }
     }
   }

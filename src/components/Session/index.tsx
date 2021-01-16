@@ -6,9 +6,9 @@ import Loading from 'components/Loading';
 import { User } from 'schema/types';
 
 const GET_ME = gql`
-  query getMe {
+  query GetMe {
     me {
-      ...user
+      ...User
     }
   }
   ${USER_FRAGMENT}

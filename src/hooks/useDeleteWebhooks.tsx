@@ -4,7 +4,7 @@ import { WebhooksPayload } from 'schema/types';
 import { toast } from 'react-toastify';
 
 const DELETE_WEBHOOKS = gql`
-  mutation deleteWebhooks($input: DeleteWebhooksInput!) {
+  mutation DeleteWebhooks($input: DeleteWebhooksInput!) {
     deleteWebhooks(input: $input) {
       affectedRows
     }

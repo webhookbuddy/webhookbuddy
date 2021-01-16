@@ -4,10 +4,10 @@ import { Webhook, WebhooksPayload } from 'schema/types';
 import { gql, useQuery } from '@apollo/client';
 
 const WEBHOOK_CREATED = gql`
-  subscription webhookCreated($endpointId: ID!) {
+  subscription WebhookCreated($endpointId: ID!) {
     webhookCreated(endpointId: $endpointId) {
       webhook {
-        ...webhook
+        ...Webhook
       }
     }
   }

@@ -17,7 +17,7 @@ toast.configure({
 });
 
 const IS_LOGGED_IN = gql`
-  query isUserLoggedIn {
+  query IsUserLoggedIn {
     isLoggedIn @client
   }
 `;
