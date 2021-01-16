@@ -1,6 +1,13 @@
 import { gql, useQuery, useMutation } from '@apollo/client';
-import { ForwardUrlPayload } from 'schema/types';
 import { distinct } from 'services/ids';
+import {
+  AddForwardUrl,
+  AddForwardUrlVariables,
+} from './types/AddForwardUrl';
+import {
+  GetForwardUrls,
+  GetForwardUrlsVariables,
+} from './types/GetForwardUrls';
 
 const FORWARD_URL_FRAGMENT = gql`
   fragment ForwardUrl on ForwardUrl {
@@ -29,15 +36,21 @@ const ADD_FORWARD_URL = gql`
 `;
 
 const useForwardUrls = (endpointId: string) => {
-  const { data } = useQuery<ForwardUrlPayload>(GET_FORWARD_URLS, {
-    variables: {
-      endpointId,
+  const { data } = useQuery<GetForwardUrls, GetForwardUrlsVariables>(
+    GET_FORWARD_URLS,
+    {
+      variables: {
+        endpointId,
+      },
     },
-  });
+  );
 
-  const [mutate] = useMutation(ADD_FORWARD_URL, {
-    onError: () => {}, // Handle error to avoid unhandled rejection: https://github.com/apollographql/apollo-client/issues/6070
-  });
+  const [mutate] = useMutation<AddForwardUrl, AddForwardUrlVariables>(
+    ADD_FORWARD_URL,
+    {
+      onError: () => {}, // Handle error to avoid unhandled rejection: https://github.com/apollographql/apollo-client/issues/6070
+    },
+  );
 
   const addForwardUrl = (url: string) =>
     mutate({
@@ -47,15 +60,14 @@ const useForwardUrls = (endpointId: string) => {
           url,
         },
       },
-      update: (
-        cache,
-        {
-          data: {
-            addForwardUrl: { forwardUrl },
-          },
-        },
-      ) => {
-        const data = cache.readQuery<ForwardUrlPayload>({
+      update: (cache, { data }) => {
+        const forwardUrl = data?.addForwardUrl.forwardUrl;
+        if (!forwardUrl) return;
+
+        const forwardUrlsData = cache.readQuery<
+          GetForwardUrls,
+          GetForwardUrlsVariables
+        >({
           query: GET_FORWARD_URLS,
           variables: {
             endpointId,
@@ -68,8 +80,11 @@ const useForwardUrls = (endpointId: string) => {
             endpointId,
           },
           data: {
-            ...data,
-            forwardUrls: [forwardUrl, ...(data?.forwardUrls ?? [])],
+            ...forwardUrlsData,
+            forwardUrls: [
+              forwardUrl,
+              ...(forwardUrlsData?.forwardUrls ?? []),
+            ],
           },
         });
       },

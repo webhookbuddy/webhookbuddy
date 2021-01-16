@@ -1,5 +1,5 @@
 import { ApolloQueryResult } from '@apollo/client';
-import { WebhooksPayload } from 'schema/types';
+import { GetWebhooks } from 'schema/types/GetWebhooks';
 
 import styles from './styles.module.css';
 
@@ -8,7 +8,7 @@ const Error = ({
   retry,
 }: {
   error: any;
-  retry: () => Promise<void | ApolloQueryResult<WebhooksPayload>>;
+  retry: () => Promise<void | ApolloQueryResult<GetWebhooks>>;
 }) => {
   const message =
     error.graphQLErrors?.find(() => true)?.message ?? error.message;

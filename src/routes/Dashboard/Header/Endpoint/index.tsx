@@ -1,6 +1,6 @@
 import { Link, useParams } from 'react-router-dom';
 import { useApolloClient } from '@apollo/client';
-import { Endpoint as EndpointType } from 'schema/types';
+import { Endpoint as EndpointType } from 'schema/types/Endpoint';
 
 import styles from './styles.module.css';
 import { ENDPOINT_FRAGMENT } from 'schema/fragments';
@@ -17,7 +17,7 @@ const Endpoint = () => {
     {
       id: `Endpoint:${endpointId}`,
       fragment: ENDPOINT_FRAGMENT,
-      fragmentName: 'endpoint',
+      fragmentName: 'Endpoint',
     },
     true,
   );

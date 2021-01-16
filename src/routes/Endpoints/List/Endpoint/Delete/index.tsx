@@ -1,9 +1,16 @@
 import { MouseEvent, useState } from 'react';
 import { ConfirmModal } from 'react-bootstrap4-modal';
-import { Endpoint, EndpointsPayload } from 'schema/types';
 import { gql, useMutation } from '@apollo/client';
 import { toast } from 'react-toastify';
 import { GET_ENDPOINTS } from 'schema/queries';
+import {
+  DeleteEndpoint,
+  DeleteEndpointVariables,
+} from './types/DeleteEndpoint';
+import {
+  GetEndpoints,
+  GetEndpoints_endpoints,
+} from 'schema/types/GetEndpoints';
 
 const DELETE_ENDPOINT = gql`
   mutation DeleteEndpoint($input: DeleteEndpointInput!) {
@@ -17,17 +24,20 @@ const Delete = ({
   endpoint,
   iconStyle,
 }: {
-  endpoint: Endpoint;
+  endpoint: GetEndpoints_endpoints;
   iconStyle: String;
 }) => {
-  const [deleteEndpoint] = useMutation(DELETE_ENDPOINT, {
+  const [deleteEndpoint] = useMutation<
+    DeleteEndpoint,
+    DeleteEndpointVariables
+  >(DELETE_ENDPOINT, {
     variables: {
       input: {
         id: endpoint.id,
       },
     },
     update: cache => {
-      const data = cache.readQuery<EndpointsPayload>({
+      const data = cache.readQuery<GetEndpoints>({
         query: GET_ENDPOINTS,
       });
 

@@ -26,7 +26,7 @@ const Some = () => {
         {
           id: `Webhook:${id}`,
           fragment: WEBHOOK_FRAGMENT,
-          fragmentName: 'webhook',
+          fragmentName: 'Webhook',
         },
         true,
       ),

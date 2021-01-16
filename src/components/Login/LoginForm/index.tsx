@@ -2,7 +2,10 @@ import { FormEvent, useState } from 'react';
 import { ApolloError } from '@apollo/client';
 import { ExecutionResult } from 'graphql';
 import { MutationFunctionOptions } from 'schema/types';
-import { LoginPayload, LoginVariables } from '../';
+import {
+  Login as LoginPayload,
+  LoginVariables,
+} from '../types/Login';
 import Loading from 'components/Loading';
 import Error from 'components/Error';
 

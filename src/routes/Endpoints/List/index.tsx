@@ -1,20 +1,18 @@
 import { useQuery } from '@apollo/client';
-import { EndpointsPayload } from 'schema/types';
 import EndpointComponent from './Endpoint';
 import Loading from 'components/Loading';
 import Error from 'components/Error';
 import { Link } from 'react-router-dom';
 import { GET_ENDPOINTS } from 'schema/queries';
+import { GetEndpoints } from 'schema/types/GetEndpoints';
 
-const Endpoints = () => {
-  const {
-    data,
-    error,
-    loading,
-    refetch,
-  } = useQuery<EndpointsPayload>(GET_ENDPOINTS, {
-    fetchPolicy: 'cache-and-network',
-  });
+const List = () => {
+  const { data, error, loading, refetch } = useQuery<GetEndpoints>(
+    GET_ENDPOINTS,
+    {
+      fetchPolicy: 'cache-and-network',
+    },
+  );
 
   const retry = () => refetch().catch(() => {}); // Unless we catch, a network error will cause an unhandled rejection: https://github.com/apollographql/apollo-client/issues/3963
 
@@ -49,4 +47,4 @@ const Endpoints = () => {
   );
 };
 
-export default Endpoints;
+export default List;

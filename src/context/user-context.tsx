@@ -6,7 +6,7 @@ import {
   Dispatch,
   SetStateAction,
 } from 'react';
-import { User } from 'schema/types';
+import { User } from 'schema/types/User';
 
 type Context = {
   me: User | null;

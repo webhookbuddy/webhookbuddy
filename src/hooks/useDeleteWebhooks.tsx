@@ -1,7 +1,11 @@
 import { gql, useMutation } from '@apollo/client';
 import { GET_WEBHOOKS } from 'schema/queries';
-import { WebhooksPayload } from 'schema/types';
 import { toast } from 'react-toastify';
+import {
+  DeleteWebhooks,
+  DeleteWebhooksVariables,
+} from './types/DeleteWebhooks';
+import { GetWebhooks } from 'schema/types/GetWebhooks';
 
 const DELETE_WEBHOOKS = gql`
   mutation DeleteWebhooks($input: DeleteWebhooksInput!) {
@@ -12,7 +16,10 @@ const DELETE_WEBHOOKS = gql`
 `;
 
 const useDeleteWebhooks = (endpointId: string) => {
-  const [mutate] = useMutation(DELETE_WEBHOOKS, {
+  const [mutate] = useMutation<
+    DeleteWebhooks,
+    DeleteWebhooksVariables
+  >(DELETE_WEBHOOKS, {
     onError: error => toast.error(error.message), // Handle error to avoid unhandled rejection: https://github.com/apollographql/apollo-client/issues/6070
   });
 
@@ -24,7 +31,7 @@ const useDeleteWebhooks = (endpointId: string) => {
         },
       },
       update: cache => {
-        const data = cache.readQuery<WebhooksPayload>({
+        const data = cache.readQuery<GetWebhooks>({
           query: GET_WEBHOOKS,
           variables: {
             endpointId,
