@@ -1,7 +1,6 @@
 import { FormEvent, useState } from 'react';
-import gql from 'graphql-tag';
 import { ENDPOINT_FRAGMENT } from 'schema/fragments';
-import { useMutation } from '@apollo/react-hooks';
+import { gql, useMutation } from '@apollo/client';
 import Error from 'components/Error';
 import Loading from 'components/Loading';
 import { useHistory } from 'react-router-dom';
@@ -45,8 +44,10 @@ const Create = () => {
         });
       },
       onCompleted: () => history.push('/'),
+      onError: () => {}, // Handle error to avoid unhandled rejection: https://github.com/apollographql/apollo-client/issues/6070
     },
   );
+
   const [name, setName] = useState('');
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {

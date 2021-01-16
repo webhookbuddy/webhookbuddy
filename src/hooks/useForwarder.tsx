@@ -1,9 +1,8 @@
 import { Webhook, KeyValue, Forward } from 'schema/types';
-import gql from 'graphql-tag';
 import { WEBHOOK_FRAGMENT } from 'schema/fragments';
 import { useEffect } from 'react';
 import useForwardingIds from './useForwardingIds';
-import { useMutation } from '@apollo/react-hooks';
+import { gql, useMutation } from '@apollo/client';
 import { toast } from 'react-toastify';
 import useForwardUrls from './useForwardUrls';
 import useReadWebhook from './useReadWebhook';
@@ -54,7 +53,9 @@ const useForwarder = (endpointId: string) => {
   const me = useMe();
   const { addForwardingIds, removeForwardingId } = useForwardingIds();
   const { addForwardUrl } = useForwardUrls(endpointId);
-  const [addForward] = useMutation(ADD_FORWARD);
+  const [addForward] = useMutation(ADD_FORWARD, {
+    onError: error => toast.error(error.message), // Handle error to avoid unhandled rejection: https://github.com/apollographql/apollo-client/issues/6070
+  });
   const { readWebhook } = useReadWebhook();
 
   useEffect(() => {
@@ -123,7 +124,7 @@ const useForwarder = (endpointId: string) => {
             },
           },
         },
-      }).catch(error => toast.error(error.message));
+      });
     };
 
     ipcRenderer.on('http-request-completed', onForwardedListener);

@@ -1,5 +1,4 @@
-import gql from 'graphql-tag';
-import { useMutation } from '@apollo/react-hooks';
+import { gql, useMutation } from '@apollo/client';
 import { GET_WEBHOOKS } from 'schema/queries';
 import { WebhooksPayload } from 'schema/types';
 import { toast } from 'react-toastify';
@@ -13,7 +12,9 @@ const DELETE_WEBHOOKS = gql`
 `;
 
 const useDeleteWebhooks = (endpointId: string) => {
-  const [mutate] = useMutation(DELETE_WEBHOOKS);
+  const [mutate] = useMutation(DELETE_WEBHOOKS, {
+    onError: error => toast.error(error.message), // Handle error to avoid unhandled rejection: https://github.com/apollographql/apollo-client/issues/6070
+  });
 
   const deleteWebhooks = (ids: string[]) => {
     mutate({
@@ -52,7 +53,7 @@ const useDeleteWebhooks = (endpointId: string) => {
           affectedRows: ids.length,
         },
       },
-    }).catch(error => toast.error(error.message));
+    });
   };
 
   return {

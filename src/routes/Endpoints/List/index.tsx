@@ -1,4 +1,4 @@
-import { useQuery } from '@apollo/react-hooks';
+import { useQuery } from '@apollo/client';
 import { EndpointsPayload } from 'schema/types';
 import EndpointComponent from './Endpoint';
 import Loading from 'components/Loading';
@@ -7,9 +7,12 @@ import { Link } from 'react-router-dom';
 import { GET_ENDPOINTS } from 'schema/queries';
 
 const Endpoints = () => {
-  const { data, error, loading, refetch } = useQuery<
-    EndpointsPayload
-  >(GET_ENDPOINTS, {
+  const {
+    data,
+    error,
+    loading,
+    refetch,
+  } = useQuery<EndpointsPayload>(GET_ENDPOINTS, {
     fetchPolicy: 'cache-and-network',
   });
 

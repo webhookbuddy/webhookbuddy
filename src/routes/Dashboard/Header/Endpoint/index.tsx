@@ -1,5 +1,5 @@
 import { Link, useParams } from 'react-router-dom';
-import { useApolloClient } from '@apollo/react-hooks';
+import { useApolloClient } from '@apollo/client';
 import { Endpoint as EndpointType } from 'schema/types';
 
 import styles from './styles.module.css';

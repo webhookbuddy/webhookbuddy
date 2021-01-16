@@ -7,7 +7,7 @@ import {
   OperationVariables,
   MutationUpdaterFn,
   WatchQueryFetchPolicy,
-} from 'apollo-client';
+} from '@apollo/client';
 
 export declare type Context = Record<string, any>;
 export declare type RefetchQueriesFunction = (

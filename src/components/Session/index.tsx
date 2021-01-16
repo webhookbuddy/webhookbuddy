@@ -1,5 +1,4 @@
-import gql from 'graphql-tag';
-import { useQuery } from '@apollo/react-hooks';
+import { gql, useQuery } from '@apollo/client';
 import { useSetMe } from 'context/user-context';
 import { USER_FRAGMENT } from 'schema/fragments';
 import Error from 'components/Error';
@@ -32,9 +31,10 @@ const Session = () => {
       // component gets rendered by useState triggers inside useQuery. By the time that happens though, this component has unmounted due to setMe().
       setMe(me);
     },
+    onError: () => {}, // Handle error to avoid unhandled rejection: https://github.com/apollographql/apollo-client/issues/6070
   });
 
-  const retry = () => refetch().catch(() => {}); // Unless we catch, a network error will cause an unhandled rejection: https://github.com/apollographql/apollo-client/issues/3963
+  const retry = () => refetch();
 
   if (error)
     return (

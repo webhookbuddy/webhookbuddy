@@ -1,51 +1,63 @@
 import { StrictMode } from 'react';
 import ReactDOM from 'react-dom';
 
-import { ApolloProvider } from '@apollo/react-hooks';
-import { ApolloClient } from 'apollo-client';
-import { ApolloLink, split } from 'apollo-link';
-import { HttpLink } from 'apollo-link-http';
-import { WebSocketLink } from 'apollo-link-ws';
-import { setContext } from 'apollo-link-context';
-import { onError } from 'apollo-link-error';
 import {
+  ApolloProvider,
+  ApolloClient,
+  ApolloLink,
+  createHttpLink,
+  split,
   InMemoryCache,
-  NormalizedCacheObject,
-} from 'apollo-cache-inmemory';
-import { persistCache } from 'apollo-cache-persist';
+} from '@apollo/client';
+import { onError } from '@apollo/client/link/error';
+import { setContext } from '@apollo/client/link/context';
+import { WebSocketLink } from '@apollo/client/link/ws';
+import { getMainDefinition } from '@apollo/client/utilities';
+
 import {
-  PersistedData,
+  CachePersistor,
   PersistentStorage,
-} from 'apollo-cache-persist/types';
+} from 'apollo3-cache-persist';
 import localForage from 'localforage';
-import { getMainDefinition } from 'apollo-utilities';
+
+import { PersistorContextProvider } from 'context/persistor-context';
+import { changeLoginState } from 'services/login-state';
 
 import { typeDefs, resolvers } from 'schema/resolvers';
 
 import { UserProvider } from 'context/user-context';
 
+import { isLoggedInVar } from 'cache';
+
 import 'bootstrap/dist/css/bootstrap.css';
 import 'font-awesome/css/font-awesome.min.css';
 import './index.css';
+
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
-const cache = new InMemoryCache();
-cache.writeData({
-  data: {
-    isLoggedIn: !!localStorage.getItem('x-token'),
-    forwardingIds: [],
+const cache = new InMemoryCache({
+  typePolicies: {
+    Query: {
+      fields: {
+        isLoggedIn: {
+          read: () => isLoggedInVar(),
+        },
+        endpoints: {
+          // Without this, we get a `Cache data may be lost when replacing the endpoints field of a Query object.` warning. More info: https://www.apollographql.com/docs/react/caching/cache-field-behavior/#merging-non-normalized-objects
+          merge: (_, incoming) => incoming,
+        },
+      },
+    },
   },
 });
 
-const waitOnCache = persistCache({
+const persistor = new CachePersistor({
   cache,
-  storage: localForage as PersistentStorage<
-    PersistedData<NormalizedCacheObject>
-  >,
+  storage: localForage as PersistentStorage,
 });
 
-const httpLink = new HttpLink({
+const httpLink = createHttpLink({
   uri: `${process.env.REACT_APP_API_ORIGIN}/graphql`,
 });
 
@@ -61,15 +73,10 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
     for (const err of graphQLErrors) {
       if (
         err.extensions &&
-        (err.extensions.code === 'UNAUTHENTICATED' ||
-          err.extensions.code === 'FORBIDDEN')
+        err.extensions.code === 'UNAUTHENTICATED'
       ) {
         localStorage.removeItem('x-token');
-        cache.writeData({
-          data: {
-            isLoggedIn: false,
-          },
-        });
+        changeLoginState(client, persistor, false);
       } else if (err.extensions)
         console.log(`${err.extensions?.code} error`);
     }
@@ -113,13 +120,15 @@ const client = new ApolloClient({
   resolvers,
 });
 
-waitOnCache.then(() => {
+persistor.restore().then(() => {
   ReactDOM.render(
     <StrictMode>
       <ApolloProvider client={client}>
-        <UserProvider>
-          <App />
-        </UserProvider>
+        <PersistorContextProvider value={persistor}>
+          <UserProvider>
+            <App />
+          </UserProvider>
+        </PersistorContextProvider>
       </ApolloProvider>
     </StrictMode>,
     document.getElementById('root'),

@@ -1,6 +1,5 @@
 import { WEBHOOK_FRAGMENT } from 'schema/fragments';
-import gql from 'graphql-tag';
-import { useMutation } from '@apollo/react-hooks';
+import { gql, useMutation } from '@apollo/client';
 import { Webhook } from 'schema/types';
 
 const READ_WEBHOOK = gql`

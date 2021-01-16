@@ -1,8 +1,7 @@
 import { MouseEvent, useState } from 'react';
 import { ConfirmModal } from 'react-bootstrap4-modal';
 import { Endpoint, EndpointsPayload } from 'schema/types';
-import gql from 'graphql-tag';
-import { useMutation } from '@apollo/react-hooks/lib/useMutation';
+import { gql, useMutation } from '@apollo/client';
 import { toast } from 'react-toastify';
 import { GET_ENDPOINTS } from 'schema/queries';
 

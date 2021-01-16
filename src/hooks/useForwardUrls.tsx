@@ -1,5 +1,4 @@
-import gql from 'graphql-tag';
-import { useQuery, useMutation } from '@apollo/react-hooks';
+import { gql, useQuery, useMutation } from '@apollo/client';
 import { ForwardUrlPayload } from 'schema/types';
 import { distinct } from 'services/ids';
 
@@ -36,7 +35,9 @@ const useForwardUrls = (endpointId: string) => {
     },
   });
 
-  const [mutate] = useMutation(ADD_FORWARD_URL);
+  const [mutate] = useMutation(ADD_FORWARD_URL, {
+    onError: () => {}, // Handle error to avoid unhandled rejection: https://github.com/apollographql/apollo-client/issues/6070
+  });
 
   const addForwardUrl = (url: string) =>
     mutate({
@@ -78,7 +79,7 @@ const useForwardUrls = (endpointId: string) => {
           forwardUrl: { url, __typename: 'ForwardUrl' },
         },
       },
-    }).catch(() => {});
+    });
 
   return {
     forwardUrls: distinct(data?.forwardUrls.map(f => f.url) || []),

@@ -1,8 +1,7 @@
-import gql from 'graphql-tag';
 import { GET_WEBHOOKS } from 'schema/queries';
 import { WEBHOOK_FRAGMENT } from 'schema/fragments';
 import { Webhook, WebhooksPayload } from 'schema/types';
-import { useQuery } from '@apollo/react-hooks';
+import { gql, useQuery } from '@apollo/client';
 
 const WEBHOOK_CREATED = gql`
   subscription webhookCreated($endpointId: ID!) {
@@ -59,7 +58,7 @@ const useFetchWebhooks = (endpointId: string) => {
           ],
         },
       }),
-    }).catch(() => {}); // Unless we catch, a network error will cause an unhandled rejection: https://github.com/apollographql/apollo-client/issues/3963;
+    }).catch(() => {}); // Handle error to avoid unhandled rejection: https://github.com/apollographql/apollo-client/issues/6070
   };
 
   subscribeToMore({
