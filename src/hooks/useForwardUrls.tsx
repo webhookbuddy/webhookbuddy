@@ -18,7 +18,7 @@ const GET_FORWARD_URLS = gql`
 `;
 
 const ADD_FORWARD_URL = gql`
-  mutation($input: AddForwardUrlInput!) {
+  mutation addForwardUrl($input: AddForwardUrlInput!) {
     addForwardUrl(input: $input) {
       forwardUrl {
         ...forwardUrl
