@@ -1,40 +1,9 @@
-export interface User {
-  id: string;
-  createdAt: Date;
-  updatedAt: Date;
-  firstName: string;
-  lastName: string;
-  email: string;
-}
-
-export interface EndpointsPayload {
-  endpoints: Endpoint[];
-}
-
-export interface Endpoint {
-  id: string;
-  createdAt: Date;
-  url: string;
-  name: string;
-}
-
-export interface PageInfo {
-  endCursor: number;
-  hasNextPage: boolean;
-}
+import { User } from './types/User';
 
 export interface KeyValue {
+  __typename: 'KeyValue';
   key: string;
   value: string;
-}
-
-export interface WebhookConnection {
-  nodes: Webhook[];
-  pageInfo: PageInfo;
-}
-
-export interface WebhooksPayload {
-  webhooks: WebhookConnection;
 }
 
 export interface HttpMessage {
@@ -48,6 +17,7 @@ export interface HttpMessage {
 }
 
 export interface Webhook extends HttpMessage {
+  __typename: 'Webhook';
   description: string;
   ipAddress: string;
   read: boolean;
@@ -55,16 +25,9 @@ export interface Webhook extends HttpMessage {
 }
 
 export interface Forward extends HttpMessage {
+  __typename: 'Forward';
   url: string;
   statusCode: number;
   success: boolean;
   user: User;
-}
-
-export interface ForwardUrl {
-  url: string;
-}
-
-export interface ForwardUrlPayload {
-  forwardUrls: ForwardUrl[];
 }
