@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { DeleteEndpointInput } from "./../../../../../../types/global-types";
+import { DeleteEndpointInput } from "./../../../../../../../../types/global-types";
 
 // ====================================================
 // GraphQL mutation operation: DeleteEndpoint
