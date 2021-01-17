@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
 export const USER_FRAGMENT = gql`
-  fragment user on User {
+  fragment User on User {
     id
     createdAt
     updatedAt
@@ -12,7 +12,7 @@ export const USER_FRAGMENT = gql`
 `;
 
 export const ENDPOINT_FRAGMENT = gql`
-  fragment endpoint on Endpoint {
+  fragment Endpoint on Endpoint {
     id
     createdAt
     url
@@ -21,11 +21,11 @@ export const ENDPOINT_FRAGMENT = gql`
 `;
 
 export const FORWARD_FRAGMENT = gql`
-  fragment forward on Forward {
+  fragment Forward on Forward {
     id
     createdAt
     user {
-      ...user
+      ...User
     }
     url
     method
@@ -45,7 +45,7 @@ export const FORWARD_FRAGMENT = gql`
 `;
 
 export const WEBHOOK_FRAGMENT = gql`
-  fragment webhook on Webhook {
+  fragment Webhook on Webhook {
     id
     createdAt
     description
@@ -63,7 +63,7 @@ export const WEBHOOK_FRAGMENT = gql`
     body
     read
     forwards {
-      ...forward
+      ...Forward
     }
   }
   ${FORWARD_FRAGMENT}

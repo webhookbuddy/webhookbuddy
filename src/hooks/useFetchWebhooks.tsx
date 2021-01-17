@@ -1,13 +1,18 @@
 import { GET_WEBHOOKS } from 'schema/queries';
 import { WEBHOOK_FRAGMENT } from 'schema/fragments';
-import { Webhook, WebhooksPayload } from 'schema/types';
 import { gql, useQuery } from '@apollo/client';
+import {
+  WebhookCreated,
+  WebhookCreatedVariables,
+  WebhookCreated_webhookCreated_webhook,
+} from './types/WebhookCreated';
+import { GetWebhooks } from 'schema/types/GetWebhooks';
 
 const WEBHOOK_CREATED = gql`
-  subscription webhookCreated($endpointId: ID!) {
+  subscription WebhookCreated($endpointId: ID!) {
     webhookCreated(endpointId: $endpointId) {
       webhook {
-        ...webhook
+        ...Webhook
       }
     }
   }
@@ -22,7 +27,7 @@ const useFetchWebhooks = (endpointId: string) => {
     refetch,
     fetchMore,
     subscribeToMore,
-  } = useQuery<WebhooksPayload>(GET_WEBHOOKS, {
+  } = useQuery<GetWebhooks>(GET_WEBHOOKS, {
     variables: {
       endpointId,
     },
@@ -41,7 +46,7 @@ const useFetchWebhooks = (endpointId: string) => {
       // @ts-ignore: No overload matches this call error. Can't seem to to get around this error: https://github.com/apollographql/react-apollo/issues/2443#issuecomment-624971593
       updateQuery: (
         previousResult,
-        { fetchMoreResult }: { fetchMoreResult: WebhooksPayload },
+        { fetchMoreResult }: { fetchMoreResult: GetWebhooks },
       ) => ({
         ...previousResult,
         webhooks: {
@@ -61,7 +66,7 @@ const useFetchWebhooks = (endpointId: string) => {
     }).catch(() => {}); // Handle error to avoid unhandled rejection: https://github.com/apollographql/apollo-client/issues/6070
   };
 
-  subscribeToMore({
+  subscribeToMore<WebhookCreated, WebhookCreatedVariables>({
     document: WEBHOOK_CREATED,
     variables: {
       endpointId,
@@ -72,7 +77,11 @@ const useFetchWebhooks = (endpointId: string) => {
         subscriptionData,
       }: {
         subscriptionData: {
-          data: { webhookCreated: { webhook: Webhook } };
+          data: {
+            webhookCreated: {
+              webhook: WebhookCreated_webhookCreated_webhook;
+            };
+          };
         };
       },
     ) => {

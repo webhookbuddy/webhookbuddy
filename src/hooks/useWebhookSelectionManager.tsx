@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { matchPath, useHistory, useLocation } from 'react-router-dom';
 import { useHotkeys } from 'react-hotkeys-hook';
-import { Webhook } from 'schema/types';
 import { sortDistinct, sort } from 'services/ids';
 import useReadWebhook from './useReadWebhook';
 import useDeleteWebhooks from './useDeleteWebhooks';
+import { GetWebhooks_webhooks_nodes } from 'schema/types/GetWebhooks';
 
 const useWebhookSelectionManager = ({
   endpointId,
@@ -12,7 +12,7 @@ const useWebhookSelectionManager = ({
   ensureIndexVisible,
 }: {
   endpointId: string;
-  webhooks: Webhook[];
+  webhooks: GetWebhooks_webhooks_nodes[];
   ensureIndexVisible: (index: number) => void;
 }) => {
   const history = useHistory();
@@ -44,7 +44,7 @@ const useWebhookSelectionManager = ({
   >(selectedWebhookIds.length ? selectedWebhookIds[0] : undefined);
 
   const handleWebhookClick = (
-    webhook: Webhook,
+    webhook: GetWebhooks_webhooks_nodes,
     ctrlKey: boolean,
     shiftKey: boolean,
   ) => {
@@ -96,7 +96,9 @@ const useWebhookSelectionManager = ({
     setSingleSelection(webhook);
   };
 
-  const setSingleSelection = (webhook: Webhook) => {
+  const setSingleSelection = (
+    webhook: GetWebhooks_webhooks_nodes,
+  ) => {
     setSelection([webhook.id]);
     if (!webhook.read) readWebhook(webhook);
   };

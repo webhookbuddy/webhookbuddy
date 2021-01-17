@@ -1,4 +1,4 @@
-import { Webhook, KeyValue, Forward } from 'schema/types';
+import { Webhook, KeyValue } from 'schema/types';
 import { WEBHOOK_FRAGMENT } from 'schema/fragments';
 import { useEffect } from 'react';
 import useForwardingIds from './useForwardingIds';
@@ -7,14 +7,20 @@ import { toast } from 'react-toastify';
 import useForwardUrls from './useForwardUrls';
 import useReadWebhook from './useReadWebhook';
 import { useMe } from 'context/user-context';
+import {
+  AddForward,
+  AddForwardVariables,
+  AddForward_addForward_webhook,
+  AddForward_addForward_webhook_forwards,
+} from './types/AddForward';
 
 const { ipcRenderer } = window.require('electron');
 
 const ADD_FORWARD = gql`
-  mutation($input: AddForwardInput!) {
+  mutation AddForward($input: AddForwardInput!) {
     addForward(input: $input) {
       webhook {
-        ...webhook
+        ...Webhook
       }
     }
   }
@@ -40,7 +46,7 @@ const mapHeaders = (rawHeaders: string[]) => {
       __typename: 'KeyValue',
       key: rawHeaders[i],
       value: rawHeaders[i + 1],
-    });
+    } as KeyValue);
 
   return headers;
 };
@@ -53,9 +59,12 @@ const useForwarder = (endpointId: string) => {
   const me = useMe();
   const { addForwardingIds, removeForwardingId } = useForwardingIds();
   const { addForwardUrl } = useForwardUrls(endpointId);
-  const [addForward] = useMutation(ADD_FORWARD, {
-    onError: error => toast.error(error.message), // Handle error to avoid unhandled rejection: https://github.com/apollographql/apollo-client/issues/6070
-  });
+  const [addForward] = useMutation<AddForward, AddForwardVariables>(
+    ADD_FORWARD,
+    {
+      onError: error => toast.error(error.message), // Handle error to avoid unhandled rejection: https://github.com/apollographql/apollo-client/issues/6070
+    },
+  );
   const { readWebhook } = useReadWebhook();
 
   useEffect(() => {
@@ -68,7 +77,10 @@ const useForwarder = (endpointId: string) => {
         data,
         error,
       }: {
-        metadata: { url: string; webhook: Webhook };
+        metadata: {
+          url: string;
+          webhook: AddForward_addForward_webhook;
+        };
         statusCode: number;
         rawHeaders: string[];
         data: string;
@@ -88,7 +100,7 @@ const useForwarder = (endpointId: string) => {
         contentType: extractContentType(mapHeaders(rawHeaders)),
         body: data ?? '',
         user: me,
-      } as Forward;
+      } as AddForward_addForward_webhook_forwards;
 
       removeForwardingId(metadata.webhook.id);
 
@@ -118,7 +130,6 @@ const useForwarder = (endpointId: string) => {
           addForward: {
             __typename: 'AddForwardPayload',
             webhook: {
-              __typename: 'Webhook',
               ...metadata.webhook,
               forwards: [forward, ...metadata.webhook.forwards],
             },

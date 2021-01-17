@@ -1,12 +1,16 @@
 import { MouseEvent } from 'react';
 import { Link } from 'react-router-dom';
-import { Endpoint } from 'schema/types';
 import moment from 'moment';
 import Delete from './Delete';
+import { GetEndpoints_endpoints } from 'schema/types/GetEndpoints';
 
 import styles from './styles.module.css';
 
-const List = ({ endpoint }: { endpoint: Endpoint }) => {
+const Endpoint = ({
+  endpoint,
+}: {
+  endpoint: GetEndpoints_endpoints;
+}) => {
   const handleCopyClick = (e: MouseEvent<HTMLElement>) => {
     navigator.clipboard.writeText(endpoint.url);
   };
@@ -42,4 +46,4 @@ const List = ({ endpoint }: { endpoint: Endpoint }) => {
   );
 };
 
-export default List;
+export default Endpoint;

@@ -4,14 +4,18 @@ import { gql, useMutation } from '@apollo/client';
 import Error from 'components/Error';
 import Loading from 'components/Loading';
 import { useHistory } from 'react-router-dom';
-import { EndpointsPayload } from 'schema/types';
+import {
+  CreateEndpoint,
+  CreateEndpointVariables,
+} from './types/CreateEndpoint';
 import { GET_ENDPOINTS } from 'schema/queries';
+import { GetEndpoints } from 'schema/types/GetEndpoints';
 
 const CREATE_ENDPOINT = gql`
-  mutation createEndpoint($input: CreateEndpointInput!) {
+  mutation CreateEndpoint($input: CreateEndpointInput!) {
     createEndpoint(input: $input) {
       endpoint {
-        ...endpoint
+        ...Endpoint
       }
     }
   }
@@ -20,33 +24,29 @@ const CREATE_ENDPOINT = gql`
 
 const Create = () => {
   const history = useHistory();
-  const [createEndpoint, { loading, error }] = useMutation(
-    CREATE_ENDPOINT,
-    {
-      update: (
-        cache,
-        {
-          data: {
-            createEndpoint: { endpoint },
-          },
-        },
-      ) => {
-        const data = cache.readQuery<EndpointsPayload>({
-          query: GET_ENDPOINTS,
-        });
+  const [createEndpoint, { loading, error }] = useMutation<
+    CreateEndpoint,
+    CreateEndpointVariables
+  >(CREATE_ENDPOINT, {
+    update: (cache, { data }) => {
+      const endpoint = data?.createEndpoint.endpoint;
+      if (!endpoint) return;
 
-        cache.writeQuery({
-          query: GET_ENDPOINTS,
-          data: {
-            ...data,
-            endpoints: [...(data?.endpoints ?? []), endpoint],
-          },
-        });
-      },
-      onCompleted: () => history.push('/'),
-      onError: () => {}, // Handle error to avoid unhandled rejection: https://github.com/apollographql/apollo-client/issues/6070
+      const endpointsData = cache.readQuery<GetEndpoints>({
+        query: GET_ENDPOINTS,
+      });
+
+      cache.writeQuery({
+        query: GET_ENDPOINTS,
+        data: {
+          ...endpointsData,
+          endpoints: [...(endpointsData?.endpoints ?? []), endpoint],
+        },
+      });
     },
-  );
+    onCompleted: () => history.push('/'),
+    onError: () => {}, // Handle error to avoid unhandled rejection: https://github.com/apollographql/apollo-client/issues/6070
+  });
 
   const [name, setName] = useState('');
 

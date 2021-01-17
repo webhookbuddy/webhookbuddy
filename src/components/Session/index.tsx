@@ -3,25 +3,21 @@ import { useSetMe } from 'context/user-context';
 import { USER_FRAGMENT } from 'schema/fragments';
 import Error from 'components/Error';
 import Loading from 'components/Loading';
-import { User } from 'schema/types';
+import { GetMe } from './types/GetMe';
 
 const GET_ME = gql`
-  query getMe {
+  query GetMe {
     me {
-      ...user
+      ...User
     }
   }
   ${USER_FRAGMENT}
 `;
 
-interface MePayload {
-  me: User;
-}
-
 const Session = () => {
   const setMe = useSetMe();
 
-  const { loading, error, refetch } = useQuery<MePayload>(GET_ME, {
+  const { loading, error, refetch } = useQuery<GetMe>(GET_ME, {
     notifyOnNetworkStatusChange: true,
     onCompleted: ({ me }) => {
       // After installing apollo-cache-persist, this results in 'Can't perform a React state update on an unmounted component.' warning whenever getMe query is in persisted cache.

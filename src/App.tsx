@@ -9,6 +9,7 @@ import Login from 'components/Login';
 import Session from 'components/Session';
 import Endpoints from 'routes/Endpoints';
 import Dashboard from 'routes/Dashboard';
+import { IsUserLoggedIn } from 'types/IsUserLoggedIn';
 
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
@@ -17,13 +18,13 @@ toast.configure({
 });
 
 const IS_LOGGED_IN = gql`
-  query isUserLoggedIn {
+  query IsUserLoggedIn {
     isLoggedIn @client
   }
 `;
 
 function App() {
-  const { data } = useQuery<{ isLoggedIn: boolean }>(IS_LOGGED_IN);
+  const { data } = useQuery<IsUserLoggedIn>(IS_LOGGED_IN);
   const me = useMe();
   return (
     <Router>
