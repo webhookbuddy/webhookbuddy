@@ -1,16 +1,31 @@
 import { GET_WEBHOOKS } from 'schema/queries';
 import { WEBHOOK_FRAGMENT } from 'schema/fragments';
 import { gql, useQuery } from '@apollo/client';
+import { GetWebhooks } from 'schema/types/GetWebhooks';
 import {
   WebhookCreated,
   WebhookCreatedVariables,
   WebhookCreated_webhookCreated_webhook,
 } from './types/WebhookCreated';
-import { GetWebhooks } from 'schema/types/GetWebhooks';
+import {
+  WebhookUpdated,
+  WebhookUpdatedVariables,
+} from './types/WebhookUpdated';
 
 const WEBHOOK_CREATED = gql`
   subscription WebhookCreated($endpointId: ID!) {
     webhookCreated(endpointId: $endpointId) {
+      webhook {
+        ...Webhook
+      }
+    }
+  }
+  ${WEBHOOK_FRAGMENT}
+`;
+
+const WEBHOOK_UPDATED = gql`
+  subscription WebhookUpdated($endpointId: ID!) {
+    webhookUpdated(endpointId: $endpointId) {
       webhook {
         ...Webhook
       }
@@ -101,6 +116,13 @@ const useFetchWebhooks = (endpointId: string) => {
             nodes: [webhook, ...previousResult.webhooks.nodes],
           },
         };
+    },
+  });
+
+  subscribeToMore<WebhookUpdated, WebhookUpdatedVariables>({
+    document: WEBHOOK_UPDATED,
+    variables: {
+      endpointId,
     },
   });
 
