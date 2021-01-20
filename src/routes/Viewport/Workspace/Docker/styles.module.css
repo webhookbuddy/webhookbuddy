@@ -1,0 +1,21 @@
+.docker {
+  position: absolute;
+  bottom: -1px;
+  /* combination of left and transform will horizontally center element */
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 8px 8px 0 0;
+  border-left: 1px solid #ccc;
+  border-top: 1px solid #ccc;
+  border-right: 1px solid #ccc;
+  border-bottom: none;
+  user-select: none;
+  background: white;
+  padding: 1px 20px 2px;
+  color: #007bff;
+  z-index: 1;
+}
+
+.docker:focus {
+  outline: none;
+}

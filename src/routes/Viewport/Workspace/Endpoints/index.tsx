@@ -7,7 +7,7 @@ import styles from './styles.module.css';
 
 const Endpoints = () => {
   return (
-    <div className={styles.viewport}>
+    <div className={styles.container}>
       <Header />
       <div className={styles.endpoints}>
         <div className={styles.endpointsFullHeight}>
