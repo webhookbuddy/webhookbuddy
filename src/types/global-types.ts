@@ -31,7 +31,8 @@ export interface DeleteEndpointInput {
 }
 
 export interface DeleteWebhooksInput {
-  ids: string[];
+  webhookIds: string[];
+  endpointId: string;
 }
 
 export interface KeyValueInput {
