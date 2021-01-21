@@ -6,7 +6,7 @@ import {
 } from 'react-router-dom';
 import Endpoints from './Endpoints';
 import Dashboard from './Dashboard';
-// import Docker from './Docker';
+import Docker from './Docker';
 
 import styles from './styles.module.css';
 
