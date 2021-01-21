@@ -11,6 +11,10 @@ import {
   WebhookUpdated,
   WebhookUpdatedVariables,
 } from './types/WebhookUpdated';
+import {
+  WebhooksDeleted,
+  WebhooksDeletedVariables,
+} from './types/WebhooksDeleted';
 
 const WEBHOOK_CREATED = gql`
   subscription WebhookCreated($endpointId: ID!) {
@@ -32,6 +36,14 @@ const WEBHOOK_UPDATED = gql`
     }
   }
   ${WEBHOOK_FRAGMENT}
+`;
+
+const WEBHOOKS_DELETED = gql`
+  subscription WebhooksDeleted($endpointId: ID!) {
+    webhooksDeleted(endpointId: $endpointId) {
+      webhookIds
+    }
+  }
 `;
 
 const useFetchWebhooks = (endpointId: string) => {
@@ -123,6 +135,37 @@ const useFetchWebhooks = (endpointId: string) => {
     document: WEBHOOK_UPDATED,
     variables: {
       endpointId,
+    },
+  });
+
+  subscribeToMore<WebhooksDeleted, WebhooksDeletedVariables>({
+    document: WEBHOOKS_DELETED,
+    variables: {
+      endpointId,
+    },
+    updateQuery: (
+      previousResult,
+      {
+        subscriptionData,
+      }: {
+        subscriptionData: {
+          data: WebhooksDeleted;
+        };
+      },
+    ) => {
+      if (!previousResult || !subscriptionData.data)
+        return previousResult;
+
+      const ids = subscriptionData.data.webhooksDeleted.webhookIds;
+      return {
+        ...previousResult,
+        webhooks: {
+          ...previousResult.webhooks,
+          nodes: previousResult.webhooks.nodes.filter(
+            n => !ids.includes(n.id),
+          ),
+        },
+      };
     },
   });
 
