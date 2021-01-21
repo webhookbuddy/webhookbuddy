@@ -27,7 +27,8 @@ const useDeleteWebhooks = (endpointId: string) => {
     mutate({
       variables: {
         input: {
-          ids: ids,
+          endpointId,
+          webhookIds: ids,
         },
       },
       update: cache => {
