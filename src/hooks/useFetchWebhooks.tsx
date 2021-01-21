@@ -5,7 +5,6 @@ import { GetWebhooks } from 'schema/types/GetWebhooks';
 import {
   WebhookCreated,
   WebhookCreatedVariables,
-  WebhookCreated_webhookCreated_webhook,
 } from './types/WebhookCreated';
 import {
   WebhookUpdated,
@@ -104,11 +103,7 @@ const useFetchWebhooks = (endpointId: string) => {
         subscriptionData,
       }: {
         subscriptionData: {
-          data: {
-            webhookCreated: {
-              webhook: WebhookCreated_webhookCreated_webhook;
-            };
-          };
+          data: WebhookCreated;
         };
       },
     ) => {
