@@ -13,13 +13,14 @@ export const changeLoginState = (
     persistor.purge();
     isLoggedInVar(isLoggedIn);
 
-    // without setTimeout, can't get the App.tsx's isLoggedIn query to update
+    // Without setTimeout, App.tsx's isLoggedIn query doesn't update, so login form will temporarily display after logging in
     window.setTimeout(async function () {
       await client.clearStore();
       persistor.resume();
 
-      // Even with the setTimeout, isLoggedIn query doesn't update in App.tsx when logging out, so hack a browser reload:
-      if (!isLoggedIn) window.location.reload();
+      // Logging out: isLoggedIn query doesn't update in App.tsx, so hack a browser reload
+      // Loggin in: onCompleted hook in <Session />'s useQuery<GetMe> doesn't get called when using production api (at api.webhookbuddy.com/graphql), so hack a browser reload
+      window.location.reload();
     }, 200);
   })();
 };
