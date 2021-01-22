@@ -1,5 +1,6 @@
 import { WEBHOOK_FRAGMENT } from 'schema/fragments';
 import { gql, useMutation } from '@apollo/client';
+import { useMe } from 'context/user-context';
 import {
   ReadWebhook,
   ReadWebhookVariables,
@@ -18,6 +19,8 @@ const READ_WEBHOOK = gql`
 `;
 
 const useReadWebhook = () => {
+  const me = useMe();
+
   const [mutate] = useMutation<ReadWebhook, ReadWebhookVariables>(
     READ_WEBHOOK,
   );
@@ -34,7 +37,13 @@ const useReadWebhook = () => {
           __typename: 'ReadWebhookPayload',
           webhook: {
             ...webhook,
-            read: true,
+            reads: webhook.reads.concat({
+              __typename: 'Read',
+              reader: {
+                __typename: 'User',
+                id: me?.id ?? '0',
+              },
+            }),
           },
         },
       },
