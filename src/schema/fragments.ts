@@ -61,7 +61,11 @@ export const WEBHOOK_FRAGMENT = gql`
     }
     contentType
     body
-    read
+    reads {
+      reader {
+        id
+      }
+    }
     forwards {
       ...Forward
     }
