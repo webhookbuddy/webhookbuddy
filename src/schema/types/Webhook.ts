@@ -19,6 +19,16 @@ export interface Webhook_query {
   value: string | null;
 }
 
+export interface Webhook_reads_reader {
+  __typename: "User";
+  id: string;
+}
+
+export interface Webhook_reads {
+  __typename: "Read";
+  reader: Webhook_reads_reader;
+}
+
 export interface Webhook_forwards_user {
   __typename: "User";
   id: string;
@@ -66,6 +76,6 @@ export interface Webhook {
   query: Webhook_query[];
   contentType: string | null;
   body: string | null;
-  read: boolean;
+  reads: Webhook_reads[];
   forwards: Webhook_forwards[];
 }

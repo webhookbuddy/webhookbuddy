@@ -36,7 +36,11 @@ const Item = ({
     <div
       className={`${styles.item} ${
         isSelected ? styles.selected : ''
-      } ${webhook.read ? '' : styles.unread}`}
+      } ${
+        webhook.reads.some(r => r.reader.id === me?.id)
+          ? ''
+          : styles.unread
+      }`}
       onClick={e => {
         handleClick(webhook, e.ctrlKey, e.shiftKey);
       }}

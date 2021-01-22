@@ -104,7 +104,8 @@ const useForwarder = (endpointId: string) => {
 
       removeForwardingId(metadata.webhook.id);
 
-      if (!metadata.webhook.read) readWebhook(metadata.webhook);
+      if (!metadata.webhook.reads.some(r => r.reader.id === me?.id))
+        readWebhook(metadata.webhook);
 
       addForward({
         variables: {

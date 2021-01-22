@@ -19,6 +19,16 @@ export interface GetWebhooks_webhooks_nodes_query {
   value: string | null;
 }
 
+export interface GetWebhooks_webhooks_nodes_reads_reader {
+  __typename: "User";
+  id: string;
+}
+
+export interface GetWebhooks_webhooks_nodes_reads {
+  __typename: "Read";
+  reader: GetWebhooks_webhooks_nodes_reads_reader;
+}
+
 export interface GetWebhooks_webhooks_nodes_forwards_user {
   __typename: "User";
   id: string;
@@ -66,7 +76,7 @@ export interface GetWebhooks_webhooks_nodes {
   query: GetWebhooks_webhooks_nodes_query[];
   contentType: string | null;
   body: string | null;
-  read: boolean;
+  reads: GetWebhooks_webhooks_nodes_reads[];
   forwards: GetWebhooks_webhooks_nodes_forwards[];
 }
 

@@ -20,8 +20,8 @@ export interface Webhook extends HttpMessage {
   __typename: 'Webhook';
   description: string;
   ipAddress: string;
-  read: boolean;
   forwards: Forward[];
+  reads: [Read];
 }
 
 export interface Forward extends HttpMessage {
@@ -30,4 +30,9 @@ export interface Forward extends HttpMessage {
   statusCode: number;
   success: boolean;
   user: User;
+}
+
+export interface Read {
+  __typename: 'Read';
+  reader: User;
 }

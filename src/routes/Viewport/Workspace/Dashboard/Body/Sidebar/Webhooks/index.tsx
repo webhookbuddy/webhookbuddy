@@ -12,6 +12,7 @@ import InfiniteLoader from 'react-window-infinite-loader';
 import Autosizer from 'react-virtualized-auto-sizer';
 import useWebhookSelectionManager from 'hooks/useWebhookSelectionManager';
 import { FilterEnum } from '../';
+import { useMe } from 'context/user-context';
 
 const Row = ({ index, style, data }: ListChildComponentProps) => {
   return (
@@ -43,6 +44,7 @@ const Webhooks = ({ filter }: { filter: FilterEnum }) => {
     endpointId: string;
   } = useParams();
 
+  const me = useMe();
   const retry = () => refetch().catch(() => {}); // Unless we catch, a network error will cause an unhandled rejection: https://github.com/apollographql/apollo-client/issues/3963
 
   const {
@@ -67,9 +69,13 @@ const Webhooks = ({ filter }: { filter: FilterEnum }) => {
 
   const filteredWebhooks =
     filterValue === FilterEnum.Unread
-      ? webhooks.filter(w => !w.read)
+      ? webhooks.filter(
+          w => !w.reads.some(r => r.reader.id === me?.id),
+        )
       : filterValue === FilterEnum.Read
-      ? webhooks.filter(w => w.read)
+      ? webhooks.filter(w =>
+          w.reads.some(r => r.reader.id === me?.id),
+        )
       : filterValue === FilterEnum.Unforwarded
       ? webhooks.filter(w => !w.forwards.length)
       : filterValue === FilterEnum.Forwarded

@@ -21,6 +21,16 @@ export interface AddForward_addForward_webhook_query {
   value: string | null;
 }
 
+export interface AddForward_addForward_webhook_reads_reader {
+  __typename: "User";
+  id: string;
+}
+
+export interface AddForward_addForward_webhook_reads {
+  __typename: "Read";
+  reader: AddForward_addForward_webhook_reads_reader;
+}
+
 export interface AddForward_addForward_webhook_forwards_user {
   __typename: "User";
   id: string;
@@ -68,7 +78,7 @@ export interface AddForward_addForward_webhook {
   query: AddForward_addForward_webhook_query[];
   contentType: string | null;
   body: string | null;
-  read: boolean;
+  reads: AddForward_addForward_webhook_reads[];
   forwards: AddForward_addForward_webhook_forwards[];
 }
 

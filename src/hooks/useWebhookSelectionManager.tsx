@@ -5,6 +5,7 @@ import { sortDistinct, sort } from 'services/ids';
 import useReadWebhook from './useReadWebhook';
 import useDeleteWebhooks from './useDeleteWebhooks';
 import { GetWebhooks_webhooks_nodes } from 'schema/types/GetWebhooks';
+import { useMe } from 'context/user-context';
 
 const useWebhookSelectionManager = ({
   endpointId,
@@ -17,6 +18,7 @@ const useWebhookSelectionManager = ({
 }) => {
   const history = useHistory();
   const location = useLocation();
+  const me = useMe();
   const { readWebhook } = useReadWebhook();
   const { deleteWebhooks } = useDeleteWebhooks(endpointId);
 
@@ -100,7 +102,8 @@ const useWebhookSelectionManager = ({
     webhook: GetWebhooks_webhooks_nodes,
   ) => {
     setSelection([webhook.id]);
-    if (!webhook.read) readWebhook(webhook);
+    if (!webhook.reads.some(r => r.reader.id === me?.id))
+      readWebhook(webhook);
   };
 
   const selectIndex = (index: number, concat: boolean) => {
