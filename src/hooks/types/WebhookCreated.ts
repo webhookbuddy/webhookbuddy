@@ -19,6 +19,16 @@ export interface WebhookCreated_webhookCreated_webhook_query {
   value: string | null;
 }
 
+export interface WebhookCreated_webhookCreated_webhook_reads_reader {
+  __typename: "User";
+  id: string;
+}
+
+export interface WebhookCreated_webhookCreated_webhook_reads {
+  __typename: "Read";
+  reader: WebhookCreated_webhookCreated_webhook_reads_reader;
+}
+
 export interface WebhookCreated_webhookCreated_webhook_forwards_user {
   __typename: "User";
   id: string;
@@ -66,7 +76,7 @@ export interface WebhookCreated_webhookCreated_webhook {
   query: WebhookCreated_webhookCreated_webhook_query[];
   contentType: string | null;
   body: string | null;
-  read: boolean;
+  reads: WebhookCreated_webhookCreated_webhook_reads[];
   forwards: WebhookCreated_webhookCreated_webhook_forwards[];
 }
 
