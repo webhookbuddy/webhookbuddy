@@ -19,6 +19,7 @@ ipcMain.on(
         headers,
         body,
         followAllRedirects: true,
+        strictSSL: false,
       },
       (error, response, data) => {
         event.sender.send('http-request-completed', {
