@@ -1,7 +1,10 @@
 import { GET_WEBHOOKS } from 'schema/queries';
 import { WEBHOOK_FRAGMENT } from 'schema/fragments';
 import { gql, useQuery } from '@apollo/client';
-import { GetWebhooks } from 'schema/types/GetWebhooks';
+import {
+  GetWebhooks,
+  GetWebhooksVariables,
+} from 'schema/types/GetWebhooks';
 import {
   WebhookCreated,
   WebhookCreatedVariables,
@@ -53,7 +56,7 @@ const useFetchWebhooks = (endpointId: string) => {
     refetch,
     fetchMore,
     subscribeToMore,
-  } = useQuery<GetWebhooks>(GET_WEBHOOKS, {
+  } = useQuery<GetWebhooks, GetWebhooksVariables>(GET_WEBHOOKS, {
     variables: {
       endpointId,
     },
