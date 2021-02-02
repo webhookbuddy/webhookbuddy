@@ -9,36 +9,13 @@ import {
   AddForward_addForward_webhook_forwards,
 } from './types/AddForward';
 import useAddForward from './useAddForward';
+import {
+  appendQuery,
+  extractContentType,
+  mapHeaders,
+} from 'utils/http-fragment';
 
 const { ipcRenderer } = window.require('electron');
-
-const queryString = (query: KeyValue[]) =>
-  query
-    .map(pair => `${pair.key}=${encodeURIComponent(pair.value)}`)
-    .join('&');
-
-const appendQuery = (url: string, query: KeyValue[]) =>
-  !query.length
-    ? url
-    : url.includes('?')
-    ? `${url}&${queryString(query)}`
-    : `${url}?${queryString(query)}`;
-
-const mapHeaders = (rawHeaders: string[]) => {
-  const headers = [];
-  for (let i = 0; i < rawHeaders?.length ?? []; i = i + 2)
-    headers.push({
-      __typename: 'KeyValue',
-      key: rawHeaders[i],
-      value: rawHeaders[i + 1],
-    } as KeyValue);
-
-  return headers;
-};
-
-const extractContentType = (headers: KeyValue[]) =>
-  headers.find(header => header.key.toLowerCase() === 'content-type')
-    ?.value ?? null;
 
 const useForwarder = (endpointId: string) => {
   const me = useMe();
