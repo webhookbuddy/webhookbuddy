@@ -1,31 +1,16 @@
 import { Webhook, KeyValue } from 'schema/types';
-import { WEBHOOK_FRAGMENT } from 'schema/fragments';
 import { useEffect } from 'react';
 import useForwardingIds from './useForwardingIds';
-import { gql, useMutation } from '@apollo/client';
-import { toast } from 'react-toastify';
 import useForwardUrls from './useForwardUrls';
 import useReadWebhook from './useReadWebhook';
 import { useMe } from 'context/user-context';
 import {
-  AddForward,
-  AddForwardVariables,
   AddForward_addForward_webhook,
   AddForward_addForward_webhook_forwards,
 } from './types/AddForward';
+import useAddForward from './useAddForward';
 
 const { ipcRenderer } = window.require('electron');
-
-const ADD_FORWARD = gql`
-  mutation AddForward($input: AddForwardInput!) {
-    addForward(input: $input) {
-      webhook {
-        ...Webhook
-      }
-    }
-  }
-  ${WEBHOOK_FRAGMENT}
-`;
 
 const queryString = (query: KeyValue[]) =>
   query
@@ -59,12 +44,7 @@ const useForwarder = (endpointId: string) => {
   const me = useMe();
   const { addForwardingIds, removeForwardingId } = useForwardingIds();
   const { addForwardUrl } = useForwardUrls(endpointId);
-  const [addForward] = useMutation<AddForward, AddForwardVariables>(
-    ADD_FORWARD,
-    {
-      onError: error => toast.error(error.message), // Handle error to avoid unhandled rejection: https://github.com/apollographql/apollo-client/issues/6070
-    },
-  );
+  const { addForward } = useAddForward();
   const { readWebhook } = useReadWebhook();
 
   useEffect(() => {
