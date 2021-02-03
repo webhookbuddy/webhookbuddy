@@ -1,173 +1,67 @@
-import { Webhook, KeyValue } from 'schema/types';
-import { WEBHOOK_FRAGMENT } from 'schema/fragments';
-import { useEffect } from 'react';
+import { Webhook } from 'schema/types';
 import useForwardingIds from './useForwardingIds';
-import { gql, useMutation } from '@apollo/client';
-import { toast } from 'react-toastify';
 import useForwardUrls from './useForwardUrls';
-import useReadWebhook from './useReadWebhook';
-import { useMe } from 'context/user-context';
 import {
-  AddForward,
-  AddForwardVariables,
   AddForward_addForward_webhook,
   AddForward_addForward_webhook_forwards,
 } from './types/AddForward';
-
-const { ipcRenderer } = window.require('electron');
-
-const ADD_FORWARD = gql`
-  mutation AddForward($input: AddForwardInput!) {
-    addForward(input: $input) {
-      webhook {
-        ...Webhook
-      }
-    }
-  }
-  ${WEBHOOK_FRAGMENT}
-`;
-
-const queryString = (query: KeyValue[]) =>
-  query
-    .map(pair => `${pair.key}=${encodeURIComponent(pair.value)}`)
-    .join('&');
-
-const appendQuery = (url: string, query: KeyValue[]) =>
-  !query.length
-    ? url
-    : url.includes('?')
-    ? `${url}&${queryString(query)}`
-    : `${url}?${queryString(query)}`;
-
-const mapHeaders = (rawHeaders: string[]) => {
-  const headers = [];
-  for (let i = 0; i < rawHeaders?.length ?? []; i = i + 2)
-    headers.push({
-      __typename: 'KeyValue',
-      key: rawHeaders[i],
-      value: rawHeaders[i + 1],
-    } as KeyValue);
-
-  return headers;
-};
-
-const extractContentType = (headers: KeyValue[]) =>
-  headers.find(header => header.key.toLowerCase() === 'content-type')
-    ?.value ?? null;
+import useAddForward from './useAddForward';
+import { appendQuery } from 'utils/http-fragment';
+import useSender from './useNodeSender';
 
 const useForwarder = (endpointId: string) => {
-  const me = useMe();
   const { addForwardingIds, removeForwardingId } = useForwardingIds();
   const { addForwardUrl } = useForwardUrls(endpointId);
-  const [addForward] = useMutation<AddForward, AddForwardVariables>(
-    ADD_FORWARD,
-    {
-      onError: error => toast.error(error.message), // Handle error to avoid unhandled rejection: https://github.com/apollographql/apollo-client/issues/6070
-    },
-  );
-  const { readWebhook } = useReadWebhook();
+  const { addForward } = useAddForward();
 
-  useEffect(() => {
-    const onForwardedListener = (
-      _: any,
-      {
-        metadata,
-        rawHeaders,
-        statusCode,
-        data,
-        error,
-      }: {
-        metadata: {
-          url: string;
-          webhook: AddForward_addForward_webhook;
-        };
-        statusCode: number;
-        rawHeaders: string[];
-        data: string;
-        error: any;
+  const onForwarded = (
+    webhook: AddForward_addForward_webhook,
+    forward: AddForward_addForward_webhook_forwards,
+  ) => {
+    removeForwardingId(webhook.id);
+
+    addForward({
+      variables: {
+        input: {
+          webhookId: webhook.id,
+          url: forward.url,
+          method: forward.method,
+          statusCode: forward.statusCode,
+          // need to remap here b/c server rejects __typename property
+          headers: forward.headers.map(kv => ({
+            key: kv.key,
+            value: kv.value,
+          })),
+          // need to remap here b/c server rejects __typename property
+          query: forward.query.map(kv => ({
+            key: kv.key,
+            value: kv.value,
+          })),
+          body: forward.body,
+        },
       },
-    ) => {
-      const forward = {
-        __typename: 'Forward',
-        id: '_' + Math.round(Math.random() * 1000000),
-        url: metadata.url,
-        statusCode: error ? 502 : statusCode,
-        success: statusCode >= 200 && statusCode < 300,
-        createdAt: new Date(),
-        method: metadata.webhook.method,
-        headers: mapHeaders(rawHeaders),
-        query: metadata.webhook.query,
-        contentType: extractContentType(mapHeaders(rawHeaders)),
-        body: data ?? '',
-        user: me,
-      } as AddForward_addForward_webhook_forwards;
-
-      removeForwardingId(metadata.webhook.id);
-
-      addForward({
-        variables: {
-          input: {
-            webhookId: metadata.webhook.id,
-            url: forward.url,
-            method: forward.method,
-            statusCode: forward.statusCode,
-            // need to remap here b/c server rejects __typename property
-            headers: forward.headers.map(kv => ({
-              key: kv.key,
-              value: kv.value,
-            })),
-            // need to remap here b/c server rejects __typename property
-            query: forward.query.map(kv => ({
-              key: kv.key,
-              value: kv.value,
-            })),
-            body: forward.body,
+      optimisticResponse: {
+        addForward: {
+          __typename: 'AddForwardPayload',
+          webhook: {
+            ...webhook,
+            forwards: [forward, ...webhook.forwards],
           },
         },
-        optimisticResponse: {
-          addForward: {
-            __typename: 'AddForwardPayload',
-            webhook: {
-              ...metadata.webhook,
-              forwards: [forward, ...metadata.webhook.forwards],
-            },
-          },
-        },
-      });
-    };
+      },
+    });
+  };
 
-    ipcRenderer.on('http-request-completed', onForwardedListener);
-
-    return () => {
-      ipcRenderer.removeListener(
-        'http-request-completed',
-        onForwardedListener,
-      );
-    };
-  }, [removeForwardingId, addForward, readWebhook, me]);
+  const { send } = useSender({ onForwarded });
 
   const forwardWebhook = (url: string, webhooks: Webhook[]) => {
     addForwardUrl(url);
     addForwardingIds(webhooks.map(w => w.id));
     webhooks
       .sort((a, b) => parseInt(a.id, 10) - parseInt(b.id, 10))
-      .forEach(webhook => {
-        ipcRenderer.send('http-request', {
-          method: webhook.method,
-          url: appendQuery(url, webhook.query),
-          headers: webhook.headers
-            .filter(header => header.key.toLowerCase() !== 'host')
-            .reduce((acc, cur) => {
-              acc[cur.key] = cur.value;
-              return acc;
-            }, {} as any),
-          body: webhook.body,
-          metadata: {
-            url,
-            webhook,
-          },
-        });
-      });
+      .forEach(webhook =>
+        send(appendQuery(url, webhook.query), webhook),
+      );
   };
 
   return {
