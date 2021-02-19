@@ -31,7 +31,7 @@ const Workspace = ({
           />
           <Route path="/" component={Endpoints} />
         </Switch>
-        {/* <Docker docked={docked} setDocked={setDocked} /> */}
+        <Docker docked={docked} setDocked={setDocked} />
       </div>
     </Router>
   );
