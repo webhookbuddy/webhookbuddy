@@ -1,5 +1,4 @@
 import { useMe } from 'context/user-context';
-import { useEffect } from 'react';
 import { Webhook } from 'schema/types';
 import { extractContentType, mapHeaders } from 'utils/http-fragment';
 import {
