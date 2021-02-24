@@ -42,7 +42,6 @@ const useBrowserSender = ({
       },
     }).then(
       (response: any) => {
-        console.log('Browser sender: ', response.data);
         onForwarded(
           webhook as AddForward_addForward_webhook,
           {

@@ -39,7 +39,6 @@ const useNodeSender = ({
         error: any;
       },
     ) => {
-      console.log('Node sender:', data);
       onForwarded(metadata.webhook, {
         __typename: 'Forward',
         id: '_' + Math.round(Math.random() * 1000000),
