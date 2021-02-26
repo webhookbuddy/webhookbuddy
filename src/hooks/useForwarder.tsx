@@ -7,7 +7,19 @@ import {
 } from './types/AddForward';
 import useAddForward from './useAddForward';
 import { appendQuery } from 'utils/http-fragment';
-import useSender from './useNodeSender';
+import isElectron from 'is-electron';
+
+let useSender: any;
+
+if (isElectron()) {
+  import('./useNodeSender').then(module => {
+    useSender = module.default;
+  });
+} else {
+  import('./useBrowserSender').then(module => {
+    useSender = module.default;
+  });
+}
 
 const useForwarder = (endpointId: string) => {
   const { addForwardingIds, removeForwardingId } = useForwardingIds();
