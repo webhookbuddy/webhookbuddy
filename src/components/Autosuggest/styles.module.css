@@ -5,3 +5,22 @@
   text-decoration: none;
   background-color: #007bff;
 }
+
+.btnGroupCustom {
+  display: flex;
+}
+
+.btnGroupCustom:hover {
+  background-color: #ececec;
+}
+
+.closeBtn {
+  margin: auto;
+  padding: 6px;
+}
+
+.closeBtn:hover,
+.closeBtn:focus {
+  background-color: #ff5733;
+  color: white;
+}
