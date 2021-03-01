@@ -9,10 +9,6 @@ import useAddForward from './useAddForward';
 import { appendQuery } from 'utils/http-fragment';
 import isElectron from 'is-electron';
 
-// example from Johnny
-// let obj = { prop1: 123 };
-// let obj2: typeof obj;
-
 let useSender: any;
 
 if (isElectron()) {

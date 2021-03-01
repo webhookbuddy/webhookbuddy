@@ -1,11 +1,11 @@
 import { useMe } from 'context/user-context';
-import { useEffect } from 'react';
 import { Webhook } from 'schema/types';
 import { extractContentType, mapHeaders } from 'utils/http-fragment';
 import {
   AddForward_addForward_webhook,
   AddForward_addForward_webhook_forwards,
 } from './types/AddForward';
+
 const axios = require('axios').default;
 
 const useBrowserSender = ({
@@ -19,9 +19,6 @@ const useBrowserSender = ({
   const me = useMe();
 
   const send = (url: string, webhook: Webhook) => {
-    console.log(url);
-    console.log(webhook);
-
     let ignoreHeaders = [
       'host',
       'content-length',
@@ -40,16 +37,18 @@ const useBrowserSender = ({
           return acc;
         }, {} as any),
       data: webhook.body,
+      transformResponse: (data: any) => {
+        return data;
+      },
     }).then(
       (response: any) => {
-        console.log(response);
         onForwarded(
           webhook as AddForward_addForward_webhook,
           {
             __typename: 'Forward',
             id: '_' + Math.round(Math.random() * 1000000),
             url: url,
-            statusCode: response.status ? 502 : response.status,
+            statusCode: response.status ?? 502,
             success: response.status >= 200 && response.status < 300,
             createdAt: new Date(),
             method: webhook.method,
