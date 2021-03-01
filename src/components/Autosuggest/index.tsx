@@ -23,15 +23,33 @@ const SuggestionsList = ({
     return (
       <div className="dropdown-menu" style={{ display: 'block' }}>
         {filteredSuggestions.map((suggestion, index) => (
-          <button
-            className={`dropdown-item ${
-              styles.dropdownItemAutosuggest
-            } ${index === activeIndex ? 'active' : ''}`}
-            key={suggestion}
-            onMouseDown={onMouseDown}
-          >
-            {suggestion}
-          </button>
+          <div className={`btn-group ${styles.btnGroupCustom}`}>
+            <i
+              className={`fa fa-times pointer ${styles.icon} ${styles.closeBtn}`}
+              onMouseDown={() => {
+                console.log('Locally deleting: ' + suggestion);
+                console.log(filteredSuggestions.indexOf(suggestion));
+                filteredSuggestions.splice(
+                  filteredSuggestions.indexOf(suggestion),
+                  1,
+                );
+              }}
+            ></i>
+            <button
+              style={{
+                paddingLeft: '5px',
+              }}
+              className={`
+              dropdown-item
+              ${styles.dropdownItemAutosuggest} 
+              ${index === activeIndex ? 'active' : ''}
+              `}
+              key={suggestion}
+              onMouseDown={onMouseDown}
+            >
+              {suggestion}
+            </button>
+          </div>
         ))}
       </div>
     );
@@ -74,6 +92,7 @@ const Autosuggest = ({
             .indexOf(e.currentTarget.value.toLowerCase().trim()) > -1,
       ),
     });
+    console.log(state.filteredSuggestions);
     setUserInput(e.currentTarget.value);
   };
 
@@ -108,9 +127,21 @@ const Autosuggest = ({
 
   const onKeyDown = (e: React.KeyboardEvent) => {
     switch (e.keyCode) {
+      case 46: // delete
+        if (
+          state.activeIndex < 0 ||
+          state.activeIndex >= state.filteredSuggestions.length
+        )
+          return;
+        state.filteredSuggestions.splice(state.activeIndex, 1);
+        setState(previous => ({
+          ...previous,
+          activeIndex: previous.activeIndex - 1,
+        }));
+        return;
+
       case 13: // enter
         if (state.activeIndex < 0) return;
-
         e.preventDefault(); // prevent form submission
         setState({
           activeIndex: -1,
@@ -118,21 +149,18 @@ const Autosuggest = ({
         });
         setUserInput(state.filteredSuggestions[state.activeIndex]);
         return;
+
       case 38: // up arrow
         if (state.activeIndex === -1) return;
-
         setState(previous => ({
           ...previous,
           activeIndex: previous.activeIndex - 1,
         }));
         return;
-      case 40: // down arrow
-        if (
-          state.activeIndex - 1 ===
-          state.filteredSuggestions.length
-        )
-          return;
 
+      case 40: // down arrow
+        if (state.activeIndex === state.filteredSuggestions.length)
+          return;
         setState(previous => ({
           ...previous,
           activeIndex: previous.activeIndex + 1,
