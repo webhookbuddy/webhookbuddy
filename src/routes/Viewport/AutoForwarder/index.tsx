@@ -1,14 +1,26 @@
 import React, { useState } from 'react';
-import { useQuery } from '@apollo/client';
+import { gql, useQuery, useSubscription } from '@apollo/client';
 import { GET_ENDPOINTS } from 'schema/queries';
+import { WEBHOOK_FRAGMENT } from 'schema/fragments';
 import { GetEndpoints } from 'schema/types/GetEndpoints';
 import Error from 'components/Error';
 import useForwardUrls from 'hooks/useForwardUrls';
 import Autosuggest, {
   AutosuggestPositionEnum,
 } from 'components/Autosuggest';
-
+import useForwarder from 'hooks/useForwarder';
 import styles from './styles.module.css';
+
+const WEBHOOK_CREATED = gql`
+  subscription WebhookCreated($endpointId: ID!) {
+    webhookCreated(endpointId: $endpointId) {
+      webhook {
+        ...Webhook
+      }
+    }
+  }
+  ${WEBHOOK_FRAGMENT}
+`;
 
 const AutoForwarder = ({ docked }: { docked: Boolean }) => {
   const { data, error, loading, refetch } = useQuery<GetEndpoints>(
@@ -22,6 +34,25 @@ const AutoForwarder = ({ docked }: { docked: Boolean }) => {
   const [running, setRunning] = useState(false);
   const { forwardUrls } = useForwardUrls(endpointId);
   const [url, setUrl] = useState('');
+
+  const subData = useSubscription(WEBHOOK_CREATED, {
+    variables: { endpointId, url },
+  });
+
+  const { forwardWebhook } = useForwarder(endpointId);
+  const forwardTo = (url: string) => {
+    const webhooks = [];
+    webhooks[0] = subData.data.webhookCreated.webhook;
+    forwardWebhook(url, webhooks);
+  };
+
+  if (running) {
+    if (subData) {
+      // Keeps forwarding the same webhook over and over
+      //forwardTo(url);
+      console.log(subData.data.webhookCreated.webhook);
+    }
+  }
 
   const retry = () => refetch().catch(() => {}); // Unless we catch, a network error will cause an unhandled rejection: https://github.com/apollographql/apollo-client/issues/3963
 
