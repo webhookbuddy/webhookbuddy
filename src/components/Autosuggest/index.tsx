@@ -21,24 +21,10 @@ const SuggestionsList = ({
 }) => {
   if (filteredSuggestions.length)
     return (
-      <div className="dropdown-menu" style={{ display: 'block' }}>
-        {filteredSuggestions.map((suggestion, index) => (
+      <div className={`dropdown-menu ${styles.dropdownMenuCustom}`}>
+        {filteredSuggestions.slice(0, 3).map((suggestion, index) => (
           <div className={`btn-group ${styles.btnGroupCustom}`}>
-            <i
-              className={`fa fa-times pointer ${styles.icon} ${styles.closeBtn}`}
-              onMouseDown={() => {
-                console.log('Locally deleting: ' + suggestion);
-                console.log(filteredSuggestions.indexOf(suggestion));
-                filteredSuggestions.splice(
-                  filteredSuggestions.indexOf(suggestion),
-                  1,
-                );
-              }}
-            ></i>
             <button
-              style={{
-                paddingLeft: '5px',
-              }}
               className={`
               dropdown-item
               ${styles.dropdownItemAutosuggest} 
@@ -49,6 +35,17 @@ const SuggestionsList = ({
             >
               {suggestion}
             </button>
+            <i
+              className={`fa fa-times pointer ${styles.closeBtn}`}
+              onMouseDown={() => {
+                // console.log('Locally deleting: ' + suggestion);
+                // console.log(filteredSuggestions.indexOf(suggestion));
+                filteredSuggestions.splice(
+                  filteredSuggestions.indexOf(suggestion),
+                  1,
+                );
+              }}
+            ></i>
           </div>
         ))}
       </div>
@@ -159,8 +156,8 @@ const Autosuggest = ({
         return;
 
       case 40: // down arrow
-        if (state.activeIndex === state.filteredSuggestions.length)
-          return;
+        // if (state.activeIndex === state.filteredSuggestions.length)
+        if (state.activeIndex === 2) return;
         setState(previous => ({
           ...previous,
           activeIndex: previous.activeIndex + 1,
