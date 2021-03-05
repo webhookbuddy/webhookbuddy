@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { gql, useQuery, useSubscription } from '@apollo/client';
 import { GET_ENDPOINTS } from 'schema/queries';
 import { WEBHOOK_FRAGMENT } from 'schema/fragments';
+import { Webhook } from 'schema/types';
 import { GetEndpoints } from 'schema/types/GetEndpoints';
 import Error from 'components/Error';
 import useForwardUrls from 'hooks/useForwardUrls';
@@ -10,9 +11,10 @@ import Autosuggest, {
 } from 'components/Autosuggest';
 import useForwarder from 'hooks/useForwarder';
 import styles from './styles.module.css';
+import { AutoForwarderWebhookCreated } from './types/AutoForwarderWebhookCreated';
 
 const WEBHOOK_CREATED = gql`
-  subscription WebhookCreated($endpointId: ID!) {
+  subscription AutoForwarderWebhookCreated($endpointId: ID!) {
     webhookCreated(endpointId: $endpointId) {
       webhook {
         ...Webhook
@@ -35,21 +37,16 @@ const AutoForwarder = ({ docked }: { docked: Boolean }) => {
   const { forwardUrls } = useForwardUrls(endpointId);
   const [url, setUrl] = useState('');
 
-  const webhooks: any = [];
   const { forwardWebhook } = useForwarder(endpointId);
 
-  useSubscription(WEBHOOK_CREATED, {
+  useSubscription<AutoForwarderWebhookCreated>(WEBHOOK_CREATED, {
     variables: { endpointId, url },
     onSubscriptionData: ({ subscriptionData: { data } }) => {
+      if (!data) return;
       const forwardTo = (url: string) => {
-        webhooks[0] = data.webhookCreated.webhook;
-        forwardWebhook(url, webhooks);
+        forwardWebhook(url, [data.webhookCreated.webhook as Webhook]);
       };
-      if (running) {
-        if (data !== undefined) {
-          forwardTo(url);
-        }
-      }
+      if (running) forwardTo(url);
     },
   });
 
