@@ -35,24 +35,24 @@ const AutoForwarder = ({ docked }: { docked: Boolean }) => {
   const { forwardUrls } = useForwardUrls(endpointId);
   const [url, setUrl] = useState('');
 
-  const subData = useSubscription(WEBHOOK_CREATED, {
-    variables: { endpointId, url },
-  });
-
+  let webhooks: any = [];
   const { forwardWebhook } = useForwarder(endpointId);
-  const forwardTo = (url: string) => {
-    const webhooks = [];
-    webhooks[0] = subData.data.webhookCreated.webhook;
-    forwardWebhook(url, webhooks);
-  };
 
-  if (running) {
-    if (subData) {
-      // Keeps forwarding the same webhook over and over
-      //forwardTo(url);
-      console.log(subData.data.webhookCreated.webhook);
-    }
-  }
+  useSubscription(WEBHOOK_CREATED, {
+    variables: { endpointId, url },
+    onSubscriptionData: ({ subscriptionData: { data } }) => {
+      const forwardTo = (url: string) => {
+        webhooks[0] = data.webhookCreated.webhook;
+        forwardWebhook(url, webhooks);
+      };
+      if (running) {
+        if (data !== undefined) {
+          forwardTo(url);
+          console.log(data.webhookCreated.webhook);
+        }
+      }
+    },
+  });
 
   const retry = () => refetch().catch(() => {}); // Unless we catch, a network error will cause an unhandled rejection: https://github.com/apollographql/apollo-client/issues/3963
 
