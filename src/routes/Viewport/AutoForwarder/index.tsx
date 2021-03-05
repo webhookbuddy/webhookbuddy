@@ -35,7 +35,7 @@ const AutoForwarder = ({ docked }: { docked: Boolean }) => {
   const { forwardUrls } = useForwardUrls(endpointId);
   const [url, setUrl] = useState('');
 
-  let webhooks: any = [];
+  const webhooks: any = [];
   const { forwardWebhook } = useForwarder(endpointId);
 
   useSubscription(WEBHOOK_CREATED, {
@@ -48,7 +48,6 @@ const AutoForwarder = ({ docked }: { docked: Boolean }) => {
       if (running) {
         if (data !== undefined) {
           forwardTo(url);
-          console.log(data.webhookCreated.webhook);
         }
       }
     },
@@ -92,9 +91,12 @@ const AutoForwarder = ({ docked }: { docked: Boolean }) => {
           <select
             className="custom-select custom-select-sm"
             onChange={e => setEndpointId(e.target.value)}
-            value={endpointId}
+            defaultValue={'DEFAULT'}
             disabled={running}
           >
+            <option value="DEFAULT" disabled>
+              Choose an endpoint
+            </option>
             {data &&
               !loading &&
               data?.endpoints.map(endpoint => (
