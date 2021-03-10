@@ -4,6 +4,7 @@ import {
   AddForwardUrl,
   AddForwardUrlVariables,
 } from './types/AddForwardUrl';
+import { ForwardUrl } from './types/ForwardUrl';
 import {
   GetForwardUrls,
   GetForwardUrlsVariables,
@@ -17,20 +18,15 @@ const DELETE_FORWARD_URLS = gql`
   }
 `;
 
-const FORWARD_URL_FRAGMENT = gql`
-  fragment ForwardUrl on ForwardUrl {
-      url
-    }
-  }
-  `;
-
 const GET_FORWARD_URLS = gql`
   query GetForwardUrls($endpointId: ID!) {
     forwardUrls(endpointId: $endpointId) {
-      ...ForwardUrl
+      url
+      endpointId
+      createdAt
+      id
     }
   }
-  ${FORWARD_URL_FRAGMENT}
 `;
 
 const useDeleteForwardUrls = (endpointId: string) => {
@@ -49,36 +45,6 @@ const useDeleteForwardUrls = (endpointId: string) => {
           url: url,
         },
       },
-      // update: cache => {
-      //   const data = cache.readQuery({
-      //     query: GET_FORWARD_URLS,
-      //     variables: {
-      //       endpointId,
-      //     },
-      //   });
-
-      //   cache.writeQuery({
-      //     query: GET_FORWARD_URLS,
-      //     variables: {
-      //       endpointId,
-      //     },
-      //     data: {
-      //       ...data,
-      //       forwardUrls: {
-      //         ...data?.forwardUrls,
-      //         nodes: data?.forwardUrls.filter(
-      //           n => !url.includes(n.url),
-      //         ),
-      //       },
-      //     },
-      //   });
-      // },
-      // optimisticResponse: {
-      //   deleteForwardUrls: {
-      //     __typename: 'DeleteWebhooksPayload,
-      //     affectedRows: ids.length,
-      //   },
-      // },
     });
   };
 
