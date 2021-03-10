@@ -3,6 +3,7 @@ import {
   AddForwardUrl,
   AddForwardUrlVariables,
 } from './types/AddForwardUrl';
+import { ForwardUrl } from './types/ForwardUrl';
 import {
   GetForwardUrls,
   GetForwardUrlsVariables,
