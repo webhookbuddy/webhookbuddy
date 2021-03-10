@@ -13,32 +13,20 @@ export enum AutosuggestPositionEnum {
 const SuggestionsList = ({
   activeIndex,
   filteredSuggestions,
+  deleteForwardUrls,
   onMouseDown,
 }: {
   activeIndex: number;
   filteredSuggestions: string[];
+  deleteForwardUrls: (url: string) => void;
   onMouseDown: (e: React.MouseEvent<HTMLElement>) => void;
 }) => {
   if (filteredSuggestions.length)
     return (
-      <div className="dropdown-menu" style={{ display: 'block' }}>
-        {filteredSuggestions.map((suggestion, index) => (
+      <div className={`dropdown-menu ${styles.dropdownMenuCustom}`}>
+        {filteredSuggestions.slice(0, 3).map((suggestion, index) => (
           <div className={`btn-group ${styles.btnGroupCustom}`}>
-            <i
-              className={`fa fa-times pointer ${styles.icon} ${styles.closeBtn}`}
-              onMouseDown={() => {
-                console.log('Locally deleting: ' + suggestion);
-                console.log(filteredSuggestions.indexOf(suggestion));
-                filteredSuggestions.splice(
-                  filteredSuggestions.indexOf(suggestion),
-                  1,
-                );
-              }}
-            ></i>
             <button
-              style={{
-                paddingLeft: '5px',
-              }}
               className={`
               dropdown-item
               ${styles.dropdownItemAutosuggest} 
@@ -49,6 +37,18 @@ const SuggestionsList = ({
             >
               {suggestion}
             </button>
+            <i
+              className={`fa fa-times pointer ${styles.closeBtn}`}
+              onMouseDown={() => {
+                console.log('Locally deleting: ' + suggestion);
+                console.log(filteredSuggestions.indexOf(suggestion));
+                deleteForwardUrls(suggestion);
+                filteredSuggestions.splice(
+                  filteredSuggestions.indexOf(suggestion),
+                  1,
+                );
+              }}
+            ></i>
           </div>
         ))}
       </div>
@@ -60,6 +60,7 @@ const Autosuggest = ({
   type,
   placeholder,
   suggestions,
+  deleteForwardUrls,
   userInput,
   setUserInput,
   position = AutosuggestPositionEnum.Down,
@@ -68,6 +69,7 @@ const Autosuggest = ({
   type: string;
   placeholder: string;
   suggestions: string[];
+  deleteForwardUrls: (url: string) => void;
   userInput: string;
   setUserInput: React.Dispatch<React.SetStateAction<string>>;
   position?: AutosuggestPositionEnum;
@@ -159,8 +161,8 @@ const Autosuggest = ({
         return;
 
       case 40: // down arrow
-        if (state.activeIndex === state.filteredSuggestions.length)
-          return;
+        // if (state.activeIndex === state.filteredSuggestions.length)
+        if (state.activeIndex === 2) return;
         setState(previous => ({
           ...previous,
           activeIndex: previous.activeIndex + 1,
@@ -190,6 +192,7 @@ const Autosuggest = ({
       <SuggestionsList
         activeIndex={state.activeIndex}
         filteredSuggestions={state.filteredSuggestions}
+        deleteForwardUrls={deleteForwardUrls}
         onMouseDown={onMouseDown}
       />
     </div>
