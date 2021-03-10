@@ -45,13 +45,17 @@ const useWebhookSelectionManager = ({
     string | undefined
   >(selectedWebhookIds.length ? selectedWebhookIds[0] : undefined);
 
+  const [startWebhookId, setStartWebhookId] = useState<
+    string | undefined
+  >(selectedWebhookIds.length ? selectedWebhookIds[0] : undefined);
+
   const handleWebhookClick = (
     webhook: GetWebhooks_webhooks_nodes,
     ctrlKey: boolean,
     shiftKey: boolean,
   ) => {
     setActiveWebhookId(webhook.id);
-
+    if (!shiftKey) setStartWebhookId(webhook.id);
     if (ctrlKey) {
       setSelection(
         sortDistinct(selectedWebhookIds.concat(webhook.id)),
@@ -60,12 +64,11 @@ const useWebhookSelectionManager = ({
     }
 
     if (shiftKey) {
-      const mostRecent = sort(selectedWebhookIds)[0];
-      let start = webhooks.findIndex(w => w.id === mostRecent);
+      // const mostRecent = sort(selectedWebhookIds)[0];
+      let start = webhooks.findIndex(w => w.id === startWebhookId);
       if (start === -1) start = 0;
 
       let end = webhooks.findIndex(w => w.id === webhook.id);
-
       if (start < 0 || end < 0) return;
 
       if (end < start) {
@@ -141,6 +144,70 @@ const useWebhookSelectionManager = ({
       selectIndex(selectedIndex + 1, concat);
   };
 
+  const shiftSelect = () => {
+    let start = webhooks.findIndex(w => w.id === startWebhookId);
+    if (start === -1) start = 0;
+
+    let end = webhooks.findIndex(w => w.id === activeWebhookId);
+    if (start < 0 || end < 0) return;
+
+    if (end < start) {
+      const prevStart = start;
+      start = end;
+      end = prevStart;
+    }
+
+    setSelection(
+      webhooks.reduce(
+        (acc, cur, index) => {
+          if (acc.including) {
+            acc.selected.push(cur.id);
+            if (index === end) acc.including = false;
+          } else if (index === start) {
+            acc.selected.push(cur.id);
+            acc.including = true;
+          }
+          return acc;
+        },
+        { including: false, selected: [] } as {
+          including: boolean;
+          selected: string[];
+        },
+      ).selected,
+    );
+    return;
+  };
+
+  useHotkeys(
+    'ctrl+a',
+    e => {
+      e.preventDefault();
+      let start = 0;
+      let end = 0;
+      setSelection(
+        webhooks.reduce(
+          (acc, cur, index) => {
+            if (acc.including) {
+              acc.selected.push(cur.id);
+              if (index === end) acc.including = false;
+            } else if (index === start) {
+              acc.selected.push(cur.id);
+              acc.including = true;
+            }
+            return acc;
+          },
+          { including: false, selected: [] } as {
+            including: boolean;
+            selected: string[];
+          },
+        ).selected,
+      );
+      return;
+    },
+    undefined,
+    [selectedWebhookIds],
+  );
+
   useHotkeys(
     'up',
     e => {
@@ -164,7 +231,8 @@ const useWebhookSelectionManager = ({
   useHotkeys(
     'shift+up',
     () => {
-      selectPrevious(true);
+      // selectPrevious(true);
+      shiftSelect();
     },
     undefined,
     [selectedWebhookIds],
@@ -173,7 +241,8 @@ const useWebhookSelectionManager = ({
   useHotkeys(
     'shift+down',
     () => {
-      selectNext(true);
+      // selectNext(true);
+      shiftSelect();
     },
     undefined,
     [selectedWebhookIds],
@@ -233,6 +302,7 @@ const useWebhookSelectionManager = ({
   );
 
   return {
+    activeWebhookId,
     selectedWebhookIds,
     handleWebhookClick,
     handleWebhookDelete,
