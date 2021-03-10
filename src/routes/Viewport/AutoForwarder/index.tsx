@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { gql, useQuery, useSubscription } from '@apollo/client';
 import { GET_ENDPOINTS } from 'schema/queries';
 import { WEBHOOK_FRAGMENT } from 'schema/fragments';
@@ -36,7 +36,6 @@ const AutoForwarder = ({ docked }: { docked: Boolean }) => {
   const [running, setRunning] = useState(false);
   const { forwardUrls } = useForwardUrls(endpointId);
   const [url, setUrl] = useState('');
-
   const { forwardWebhook } = useForwarder(endpointId);
 
   useSubscription<AutoForwarderWebhookCreated>(WEBHOOK_CREATED, {
