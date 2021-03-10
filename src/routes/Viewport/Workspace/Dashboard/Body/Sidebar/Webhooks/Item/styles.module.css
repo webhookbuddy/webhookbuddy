@@ -9,6 +9,11 @@
   cursor: pointer;
 }
 
+.active {
+  background: #fa8808 !important;
+  color: white;
+}
+
 .selected,
 .selected:hover {
   background: #f09e22;
