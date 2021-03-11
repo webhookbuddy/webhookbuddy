@@ -1,4 +1,4 @@
-import { gql, useMutation } from '@apollo/client';
+import { gql, useMutation, useQuery } from '@apollo/client';
 import { toast } from 'react-toastify';
 import {
   AddForwardUrl,
@@ -30,6 +30,17 @@ const GET_FORWARD_URLS = gql`
 `;
 
 const useDeleteForwardUrls = (endpointId: string) => {
+  const { data } = useQuery<GetForwardUrls, GetForwardUrlsVariables>(
+    GET_FORWARD_URLS,
+    {
+      variables: {
+        endpointId,
+      },
+    },
+  );
+
+  console.log(data);
+
   const [mutate] = useMutation<AddForwardUrl, AddForwardUrlVariables>(
     DELETE_FORWARD_URLS,
     {
