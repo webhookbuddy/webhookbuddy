@@ -73,6 +73,7 @@ const useForwardUrls = (endpointId: string) => {
             endpointId,
           },
         });
+        console.log(forwardUrlsData);
 
         cache.writeQuery({
           query: GET_FORWARD_URLS,
