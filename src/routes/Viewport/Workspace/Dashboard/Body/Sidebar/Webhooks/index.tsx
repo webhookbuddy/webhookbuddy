@@ -29,7 +29,7 @@ const Row = ({ index, style, data }: ListChildComponentProps) => {
           isSelected={data.selectedWebhookIds.includes(
             data.webhooks[index].id,
           )}
-          isActive={data.activeWebhookId == data.webhooks[index].id}
+          isActive={data.activeWebhookId === data.webhooks[index].id}
           handleClick={data.handleWebhookClick}
           handleDelete={data.handleWebhookDelete}
         />

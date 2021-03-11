@@ -9,6 +9,7 @@ import Autosuggest, {
 } from 'components/Autosuggest';
 
 import styles from './styles.module.css';
+import useDeleteForwardUrls from 'hooks/useDeleteForwardUrls';
 
 const AutoForwarder = ({ docked }: { docked: Boolean }) => {
   const { data, error, loading, refetch } = useQuery<GetEndpoints>(
@@ -21,6 +22,7 @@ const AutoForwarder = ({ docked }: { docked: Boolean }) => {
   const [endpointId, setEndpointId] = useState('');
   const [running, setRunning] = useState(false);
   const { forwardUrls } = useForwardUrls(endpointId);
+  const { deleteForwardUrls } = useDeleteForwardUrls(endpointId);
   const [url, setUrl] = useState('');
 
   const retry = () => refetch().catch(() => {}); // Unless we catch, a network error will cause an unhandled rejection: https://github.com/apollographql/apollo-client/issues/3963
@@ -84,6 +86,7 @@ const AutoForwarder = ({ docked }: { docked: Boolean }) => {
           suggestions={forwardUrls}
           position={AutosuggestPositionEnum.Up}
           disabled={running}
+          deleteForwardUrls={useDeleteForwardUrls}
         />
       </div>
     </div>
