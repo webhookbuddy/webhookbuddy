@@ -7,6 +7,7 @@ import useDeleteWebhooks from './useDeleteWebhooks';
 import { GetWebhooks_webhooks_nodes } from 'schema/types/GetWebhooks';
 import { useMe } from 'context/user-context';
 
+// TODO ctrl key deselect
 const useWebhookSelectionManager = ({
   endpointId,
   webhooks,
@@ -110,7 +111,7 @@ const useWebhookSelectionManager = ({
       readWebhook(webhook);
   };
 
-  // With the latest change to shift+up and down, selectIndex do not need to have the concat variable anymore
+  // TODO remove boolean
   const selectIndex = (index: number, concat: boolean) => {
     setActiveWebhookId(webhooks[index].id);
 
