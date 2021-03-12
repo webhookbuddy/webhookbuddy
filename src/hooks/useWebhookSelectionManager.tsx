@@ -7,7 +7,6 @@ import useDeleteWebhooks from './useDeleteWebhooks';
 import { GetWebhooks_webhooks_nodes } from 'schema/types/GetWebhooks';
 import { useMe } from 'context/user-context';
 
-// TODO ctrl key deselect
 const useWebhookSelectionManager = ({
   endpointId,
   webhooks,
@@ -58,14 +57,24 @@ const useWebhookSelectionManager = ({
     setActiveWebhookId(webhook.id);
     if (!shiftKey) setStartWebhookId(webhook.id);
     if (ctrlKey) {
-      setSelection(
-        sortDistinct(selectedWebhookIds.concat(webhook.id)),
+      let alreadySelectedIndex = selectedWebhookIds.findIndex(
+        webhookId => {
+          return webhookId === webhook.id;
+        },
       );
+
+      if (alreadySelectedIndex < 0) {
+        setSelection(
+          sortDistinct(selectedWebhookIds.concat(webhook.id)),
+        );
+      } else {
+        selectedWebhookIds.splice(alreadySelectedIndex, 1);
+        setSelection(sortDistinct(selectedWebhookIds));
+      }
       return;
     }
 
     if (shiftKey) {
-      // const mostRecent = sort(selectedWebhookIds)[0];
       let start = webhooks.findIndex(w => w.id === startWebhookId);
       if (start === -1) start = 0;
 
@@ -111,33 +120,27 @@ const useWebhookSelectionManager = ({
       readWebhook(webhook);
   };
 
-  // TODO remove boolean
-  const selectIndex = (index: number, concat: boolean) => {
+  const selectIndex = (index: number) => {
     setActiveWebhookId(webhooks[index].id);
-
-    if (concat)
-      setSelection(selectedWebhookIds.concat(webhooks[index].id));
-    else setSingleSelection(webhooks[index]);
-
+    setSingleSelection(webhooks[index]);
     ensureIndexVisible(index);
   };
 
-  const selectPrevious = (concat: boolean) => {
+  const selectPrevious = () => {
     let selectedIndex = webhooks.findIndex(
       w => w.id === activeWebhookId,
     );
-    if (selectedIndex === 0) selectIndex(selectedIndex, concat);
-    else selectIndex(selectedIndex - 1, concat);
+    if (selectedIndex === 0) selectIndex(selectedIndex);
+    else selectIndex(selectedIndex - 1);
   };
 
-  const selectNext = (concat: boolean) => {
+  const selectNext = () => {
     let selectedIndex = webhooks.findIndex(
       w => w.id === activeWebhookId,
     );
-
     if (selectedIndex + 1 >= webhooks.length)
-      selectIndex(selectedIndex, concat);
-    else selectIndex(selectedIndex + 1, concat);
+      selectIndex(selectedIndex);
+    else selectIndex(selectedIndex + 1);
   };
 
   const shiftKeyboardSelect = (direction: string) => {
@@ -151,7 +154,7 @@ const useWebhookSelectionManager = ({
     setActiveWebhookId(webhooks[end].id);
 
     if (start == end) {
-      selectIndex(start, false);
+      selectIndex(start);
       return;
     }
 
@@ -182,7 +185,6 @@ const useWebhookSelectionManager = ({
     return;
   };
 
-  //Select All
   useHotkeys(
     'ctrl+a',
     e => {
@@ -215,7 +217,7 @@ const useWebhookSelectionManager = ({
     'up',
     e => {
       e.preventDefault();
-      selectPrevious(false);
+      selectPrevious();
     },
     undefined,
     [selectedWebhookIds],
@@ -225,7 +227,7 @@ const useWebhookSelectionManager = ({
     'down',
     e => {
       e.preventDefault();
-      selectNext(false);
+      selectNext();
     },
     undefined,
     [selectedWebhookIds],
@@ -277,7 +279,6 @@ const useWebhookSelectionManager = ({
             webhooks.findIndex(
               w => w.id === remainingWebhooks[lowestIndex].id,
             ),
-            false,
           );
         else
           selectIndex(
@@ -286,7 +287,6 @@ const useWebhookSelectionManager = ({
                 w.id ===
                 remainingWebhooks[remainingWebhooks.length - 1].id,
             ),
-            false,
           );
         return;
       }
