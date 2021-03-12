@@ -38,7 +38,13 @@ const Item = ({
     <div
       className={`
       ${styles.item} 
-      ${isActive ? styles.active : ''}
+      ${
+        isActive
+          ? isSelected
+            ? styles.activeSelected
+            : styles.activeNotSelected
+          : ''
+      }
       ${isSelected ? styles.selected : ''} 
       ${
         webhook.reads.some(r => r.reader.id === me?.id)

@@ -105,6 +105,8 @@ const Webhooks = ({ filter }: { filter: FilterEnum }) => {
   const isItemLoaded = (index: number) =>
     !hasNextPage || index < filteredWebhooks.length;
 
+  console.log('Number of webhook ids: ' + selectedWebhookIds.length);
+
   return (
     <Autosizer>
       {({ height, width }) => (
