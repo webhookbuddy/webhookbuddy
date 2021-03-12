@@ -65,7 +65,7 @@ const AutoForwarder = ({ docked }: { docked: Boolean }) => {
           ></i>
         ) : (
           <i
-            className={`fa fa-play fa-lg pointer ${styles.idleIcon}`}
+            className={`fa fa-play fa-2x pointer ${styles.idleIcon}`}
             onClick={() => setRunning(true)}
           ></i>
         )}
