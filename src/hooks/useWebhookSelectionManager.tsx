@@ -31,6 +31,14 @@ const useWebhookSelectionManager = ({
   const selectedWebhookIds =
     match?.params.webhookIds?.split(',') ?? [];
 
+  const [activeWebhookId, setActiveWebhookId] = useState<
+    string | undefined
+  >(selectedWebhookIds.length ? selectedWebhookIds[0] : undefined);
+
+  const [startWebhookId, setStartWebhookId] = useState<
+    string | undefined
+  >(selectedWebhookIds.length ? selectedWebhookIds[0] : undefined);
+
   const setSelection = (ids: string[]) => {
     const path = !ids.length
       ? `/dashboard/${endpointId}`
@@ -40,14 +48,6 @@ const useWebhookSelectionManager = ({
 
     if (location.pathname !== path) history.push(path);
   };
-
-  const [activeWebhookId, setActiveWebhookId] = useState<
-    string | undefined
-  >(selectedWebhookIds.length ? selectedWebhookIds[0] : undefined);
-
-  const [startWebhookId, setStartWebhookId] = useState<
-    string | undefined
-  >(selectedWebhookIds.length ? selectedWebhookIds[0] : undefined);
 
   const handleWebhookClick = (
     webhook: GetWebhooks_webhooks_nodes,
@@ -105,10 +105,12 @@ const useWebhookSelectionManager = ({
     webhook: GetWebhooks_webhooks_nodes,
   ) => {
     setSelection([webhook.id]);
+    setStartWebhookId(webhook.id);
     if (!webhook.reads.some(r => r.reader.id === me?.id))
       readWebhook(webhook);
   };
 
+  // With the latest change to shift+up and down, selectIndex do not need to have the concat variable anymore
   const selectIndex = (index: number, concat: boolean) => {
     setActiveWebhookId(webhooks[index].id);
 
@@ -123,10 +125,8 @@ const useWebhookSelectionManager = ({
     let selectedIndex = webhooks.findIndex(
       w => w.id === activeWebhookId,
     );
-
-    if (selectedIndex < 1) return;
-
-    selectIndex(selectedIndex - 1, concat);
+    if (selectedIndex === 0) selectIndex(selectedIndex, concat);
+    else selectIndex(selectedIndex - 1, concat);
   };
 
   const selectNext = (concat: boolean) => {
@@ -134,22 +134,25 @@ const useWebhookSelectionManager = ({
       w => w.id === activeWebhookId,
     );
 
-    if (selectedIndex < 0) {
-      if (webhooks.length) selectIndex(0, false);
-
-      return;
-    }
-
-    if (webhooks.length > selectedIndex + 1)
-      selectIndex(selectedIndex + 1, concat);
+    if (selectedIndex + 1 >= webhooks.length)
+      selectIndex(selectedIndex, concat);
+    else selectIndex(selectedIndex + 1, concat);
   };
 
-  const shiftSelect = () => {
+  const shiftKeyboardSelect = (direction: string) => {
     let start = webhooks.findIndex(w => w.id === startWebhookId);
-    if (start === -1) start = 0;
-
     let end = webhooks.findIndex(w => w.id === activeWebhookId);
+    if (direction === 'up') end -= 1;
+    else if (direction === 'down') end += 1;
+    if (end >= webhooks.length) return;
+    if (start === -1) start = 0;
     if (start < 0 || end < 0) return;
+    setActiveWebhookId(webhooks[end].id);
+
+    if (start == end) {
+      selectIndex(start, false);
+      return;
+    }
 
     if (end < start) {
       const prevStart = start;
@@ -178,19 +181,18 @@ const useWebhookSelectionManager = ({
     return;
   };
 
+  //Select All
   useHotkeys(
     'ctrl+a',
     e => {
       e.preventDefault();
-      let start = 0;
-      let end = 0;
       setSelection(
         webhooks.reduce(
           (acc, cur, index) => {
             if (acc.including) {
               acc.selected.push(cur.id);
-              if (index === end) acc.including = false;
-            } else if (index === start) {
+              if (index === 0) acc.including = false;
+            } else if (index === 0) {
               acc.selected.push(cur.id);
               acc.including = true;
             }
@@ -231,8 +233,7 @@ const useWebhookSelectionManager = ({
   useHotkeys(
     'shift+up',
     () => {
-      // selectPrevious(true);
-      shiftSelect();
+      shiftKeyboardSelect('up');
     },
     undefined,
     [selectedWebhookIds],
@@ -241,8 +242,7 @@ const useWebhookSelectionManager = ({
   useHotkeys(
     'shift+down',
     () => {
-      // selectNext(true);
-      shiftSelect();
+      shiftKeyboardSelect('down');
     },
     undefined,
     [selectedWebhookIds],
