@@ -1,6 +1,5 @@
 import { FormEvent, MouseEvent, useState, useRef } from 'react';
 import useForwardUrls from 'hooks/useForwardUrls';
-import useDeleteForwardUrls from 'hooks/useDeleteForwardUrls';
 import Autosuggest from 'components/Autosuggest';
 
 import styles from './styles.module.css';
@@ -13,7 +12,6 @@ const Forwarder = ({
   forwardTo: (url: string) => void;
 }) => {
   const { forwardUrls } = useForwardUrls(endpointId);
-  const { deleteForwardUrls } = useDeleteForwardUrls(endpointId);
   const [url, setUrl] = useState<string>('');
   const buttonRef = useRef<HTMLButtonElement>(null);
 
@@ -38,7 +36,6 @@ const Forwarder = ({
         userInput={url}
         setUserInput={setUrl}
         suggestions={forwardUrls}
-        deleteForwardUrls={deleteForwardUrls}
       />
       <button
         type="submit"
