@@ -4,11 +4,16 @@ import {
   AddForwardUrl,
   AddForwardUrlVariables,
 } from './types/AddForwardUrl';
-import { ForwardUrl } from './types/ForwardUrl';
 import {
   GetForwardUrls,
   GetForwardUrlsVariables,
 } from './types/GetForwardUrls';
+
+const FORWARD_URL_FRAGMENT = gql`
+  fragment ForwardUrl on ForwardUrl {
+    url
+  }
+`;
 
 const DELETE_FORWARD_URLS = gql`
   mutation DeleteForwardUrls($input: DeleteForwardUrlInput!) {
@@ -21,26 +26,13 @@ const DELETE_FORWARD_URLS = gql`
 const GET_FORWARD_URLS = gql`
   query GetForwardUrls($endpointId: ID!) {
     forwardUrls(endpointId: $endpointId) {
-      url
-      endpointId
-      createdAt
-      id
+      ...ForwardUrl
     }
   }
+  ${FORWARD_URL_FRAGMENT}
 `;
 
 const useDeleteForwardUrls = (endpointId: string) => {
-  const { data } = useQuery<GetForwardUrls, GetForwardUrlsVariables>(
-    GET_FORWARD_URLS,
-    {
-      variables: {
-        endpointId,
-      },
-    },
-  );
-
-  console.log(data);
-
   const [mutate] = useMutation<AddForwardUrl, AddForwardUrlVariables>(
     DELETE_FORWARD_URLS,
     {
@@ -54,6 +46,40 @@ const useDeleteForwardUrls = (endpointId: string) => {
         input: {
           endpointId,
           url: url,
+        },
+      },
+      update: (cache, { data }) => {
+        const forwardUrl = data?.addForwardUrl.forwardUrl;
+        if (!forwardUrl) return;
+
+        const forwardUrlData = cache.readQuery<
+          GetForwardUrls,
+          GetForwardUrlsVariables
+        >({
+          query: GET_FORWARD_URLS,
+          variables: {
+            endpointId,
+          },
+        });
+        cache.writeQuery({
+          query: GET_FORWARD_URLS,
+          variables: {
+            endpointId,
+          },
+          data: {
+            ...forwardUrlData,
+            forwardUrls: [
+              forwardUrlData?.forwardUrls.filter(
+                n => !forwardUrl.url.includes(n.url),
+              ) || [],
+            ],
+          },
+        });
+      },
+      optimisticResponse: {
+        addForwardUrl: {
+          __typename: 'AddForwardUrlPayload',
+          forwardUrl: { url, __typename: 'ForwardUrl' },
         },
       },
     });
