@@ -42,6 +42,7 @@ const useForwardUrls = (endpointId: string) => {
       variables: {
         endpointId,
       },
+      fetchPolicy: 'cache-and-network',
     },
   );
 
