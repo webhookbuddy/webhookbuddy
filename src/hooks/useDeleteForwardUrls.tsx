@@ -1,5 +1,4 @@
-import { gql, useMutation, useQuery } from '@apollo/client';
-import { toast } from 'react-toastify';
+import { gql, useMutation } from '@apollo/client';
 import {
   AddForwardUrl,
   AddForwardUrlVariables,
@@ -36,7 +35,7 @@ const useDeleteForwardUrls = (endpointId: string) => {
   const [mutate] = useMutation<AddForwardUrl, AddForwardUrlVariables>(
     DELETE_FORWARD_URLS,
     {
-      onError: error => toast.error(error.message), // Handle error to avoid unhandled rejection: https://github.com/apollographql/apollo-client/issues/6070
+      onError: () => {}, // Handle error to avoid unhandled rejection: https://github.com/apollographql/apollo-client/issues/6070
     },
   );
 
