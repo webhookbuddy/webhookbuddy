@@ -3,7 +3,6 @@ import {
   AddForwardUrl,
   AddForwardUrlVariables,
 } from './types/AddForwardUrl';
-import { ForwardUrl } from './types/ForwardUrl';
 import {
   GetForwardUrls,
   GetForwardUrlsVariables,
@@ -20,17 +19,6 @@ const DELETE_FORWARD_URLS = gql`
 `;
 
 const useDeleteForwardUrls = (endpointId: string) => {
-  const { data } = useQuery<GetForwardUrls, GetForwardUrlsVariables>(
-    GET_FORWARD_URLS,
-    {
-      variables: {
-        endpointId,
-      },
-    },
-  );
-
-  console.log(data);
-
   const [mutate] = useMutation<AddForwardUrl, AddForwardUrlVariables>(
     DELETE_FORWARD_URLS,
     {
