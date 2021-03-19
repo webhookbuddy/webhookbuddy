@@ -8,11 +8,7 @@ import {
   GetForwardUrlsVariables,
 } from './types/GetForwardUrls';
 
-const FORWARD_URL_FRAGMENT = gql`
-  fragment ForwardUrl on ForwardUrl {
-    url
-  }
-`;
+import { GET_FORWARD_URLS } from './useFetchForwardUrls';
 
 const DELETE_FORWARD_URLS = gql`
   mutation DeleteForwardUrls($input: DeleteForwardUrlInput!) {
@@ -20,15 +16,6 @@ const DELETE_FORWARD_URLS = gql`
       affectedRows
     }
   }
-`;
-
-const GET_FORWARD_URLS = gql`
-  query GetForwardUrls($endpointId: ID!) {
-    forwardUrls(endpointId: $endpointId) {
-      ...ForwardUrl
-    }
-  }
-  ${FORWARD_URL_FRAGMENT}
 `;
 
 const useDeleteForwardUrls = (endpointId: string) => {
