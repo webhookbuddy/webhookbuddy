@@ -9,20 +9,10 @@ import {
   GetForwardUrlsVariables,
 } from './types/GetForwardUrls';
 
-const FORWARD_URL_FRAGMENT = gql`
-  fragment ForwardUrl on ForwardUrl {
-    url
-  }
-`;
-
-const GET_FORWARD_URLS = gql`
-  query GetForwardUrls($endpointId: ID!) {
-    forwardUrls(endpointId: $endpointId) {
-      ...ForwardUrl
-    }
-  }
-  ${FORWARD_URL_FRAGMENT}
-`;
+import {
+  FORWARD_URL_FRAGMENT,
+  GET_FORWARD_URLS,
+} from './useFetchForwardUrls';
 
 const ADD_FORWARD_URL = gql`
   mutation AddForwardUrl($input: AddForwardUrlInput!) {
