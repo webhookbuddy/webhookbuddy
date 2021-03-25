@@ -4,14 +4,11 @@ import { GET_ENDPOINTS } from 'schema/queries';
 import { WEBHOOK_FRAGMENT } from 'schema/fragments';
 import { Webhook } from 'schema/types';
 import { GetEndpoints } from 'schema/types/GetEndpoints';
-import Error from 'components/Error';
-import useForwardUrls from 'hooks/useForwardUrls';
-import Autosuggest, {
-  AutosuggestPositionEnum,
-} from 'components/Autosuggest';
 import useForwarder from 'hooks/useForwarder';
 import styles from './styles.module.css';
 import { AutoForwarderWebhookCreated } from './types/AutoForwarderWebhookCreated';
+import AutoForwardSuggest from 'components/AutoForward/AutoForwardSuggest';
+import AutoForwardDropdown from 'components/AutoForward/AutoForwardDropdown';
 
 const WEBHOOK_CREATED = gql`
   subscription AutoForwarderWebhookCreated($endpointId: ID!) {
@@ -34,7 +31,6 @@ const AutoForwarder = ({ docked }: { docked: Boolean }) => {
 
   const [endpointId, setEndpointId] = useState('');
   const [running, setRunning] = useState(false);
-  const { forwardUrls } = useForwardUrls(endpointId);
   const [url, setUrl] = useState('');
   const { forwardWebhook } = useForwarder(endpointId);
 
@@ -70,51 +66,24 @@ const AutoForwarder = ({ docked }: { docked: Boolean }) => {
           ></i>
         )}
       </div>
-      <div className="form-group">
-        <label>Endpoint</label>
-        {error ? (
-          <div style={{ fontSize: '10px' }}>
-            <Error error="">
-              <button
-                className="btn btn-primary btn-sm"
-                onClick={retry}
-              >
-                Try again!
-              </button>
-            </Error>
-          </div>
-        ) : (
-          <select
-            className="custom-select custom-select-sm"
-            onChange={e => setEndpointId(e.target.value)}
-            defaultValue={'DEFAULT'}
-            disabled={running}
-          >
-            <option value="DEFAULT" disabled>
-              Choose an endpoint
-            </option>
-            {data &&
-              !loading &&
-              data?.endpoints.map(endpoint => (
-                <option key={endpoint.id} value={endpoint.id}>
-                  {endpoint.name}
-                </option>
-              ))}
-          </select>
-        )}
-      </div>
-      <div className="form-group">
-        <label>Auto-forward to</label>
-        <Autosuggest
-          type="url"
-          placeholder="Forward to URL (e.g. http://localhost:8000/send-webhook-here)"
-          userInput={url}
-          setUserInput={setUrl}
-          suggestions={forwardUrls}
-          position={AutosuggestPositionEnum.Up}
-          disabled={running}
+      <AutoForwardDropdown
+        error={error}
+        retry={retry}
+        setEndpointId={setEndpointId}
+        running={running}
+        data={data}
+        loading={loading}
+      />
+      {endpointId !== '' ? (
+        <AutoForwardSuggest
+          url={url}
+          setUrl={setUrl}
+          running={running}
+          endpointId={endpointId}
         />
-      </div>
+      ) : (
+        <p>No endpoint selected.</p>
+      )}
     </div>
   );
 };
