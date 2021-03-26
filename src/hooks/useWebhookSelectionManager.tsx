@@ -153,7 +153,7 @@ const useWebhookSelectionManager = ({
     if (start < 0 || end < 0) return;
     setActiveWebhookId(webhooks[end].id);
 
-    if (start == end) {
+    if (start === end) {
       selectIndex(start);
       return;
     }

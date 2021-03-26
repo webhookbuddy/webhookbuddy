@@ -49,6 +49,13 @@ export interface ReadWebhookInput {
   id: string;
 }
 
+export interface RegisterInput {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+}
+
 //==============================================================
 // END Enums and Input Objects
 //==============================================================
