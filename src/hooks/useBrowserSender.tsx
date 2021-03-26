@@ -4,7 +4,7 @@ import { extractContentType, mapHeaders } from 'utils/http-fragment';
 import {
   AddForward_addForward_webhook,
   AddForward_addForward_webhook_forwards,
-} from './types/AddForward';
+} from 'schema/types/AddForward';
 
 const axios = require('axios').default;
 

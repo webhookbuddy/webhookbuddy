@@ -4,11 +4,11 @@ import { distinct } from 'services/ids';
 import {
   AddForwardUrl,
   AddForwardUrlVariables,
-} from './types/AddForwardUrl';
+} from 'schema/types/AddForwardUrl';
 import {
   GetForwardUrls,
   GetForwardUrlsVariables,
-} from './types/GetForwardUrls';
+} from 'schema/types/GetForwardUrls';
 
 const useForwardUrls = (endpointId: string) => {
   const { data } = useQuery<GetForwardUrls, GetForwardUrlsVariables>(

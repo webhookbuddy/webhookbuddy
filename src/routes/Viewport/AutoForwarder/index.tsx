@@ -5,7 +5,7 @@ import { Webhook } from 'schema/types';
 import { GetEndpoints } from 'schema/types/GetEndpoints';
 import useForwarder from 'hooks/useForwarder';
 import styles from './styles.module.css';
-import { AutoForwarderWebhookCreated } from './types/AutoForwarderWebhookCreated';
+import { WebhookCreated } from 'hooks/types/WebhookCreated';
 import AutoForwardSuggest from 'components/AutoForward/AutoForwardSuggest';
 import AutoForwardDropdown from 'components/AutoForward/AutoForwardDropdown';
 
@@ -22,7 +22,7 @@ const AutoForwarder = ({ docked }: { docked: Boolean }) => {
   const [url, setUrl] = useState('');
   const { forwardWebhook } = useForwarder(endpointId);
 
-  useSubscription<AutoForwarderWebhookCreated>(WEBHOOK_CREATED, {
+  useSubscription<WebhookCreated>(WEBHOOK_CREATED, {
     variables: { endpointId, url },
     onSubscriptionData: ({ subscriptionData: { data } }) => {
       if (!data) return;

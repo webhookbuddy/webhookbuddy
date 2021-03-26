@@ -4,7 +4,7 @@ import useForwardUrls from './useForwardUrls';
 import {
   AddForward_addForward_webhook,
   AddForward_addForward_webhook_forwards,
-} from './types/AddForward';
+} from 'schema/types/AddForward';
 import useAddForward from './useAddForward';
 import { appendQuery } from 'utils/http-fragment';
 import isElectron from 'is-electron';

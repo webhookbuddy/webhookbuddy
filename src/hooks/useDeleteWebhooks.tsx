@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import {
   DeleteWebhooks,
   DeleteWebhooksVariables,
-} from './types/DeleteWebhooks';
+} from 'schema/types/DeleteWebhooks';
 import { GetWebhooks } from 'schema/types/GetWebhooks';
 
 const useDeleteWebhooks = (endpointId: string) => {

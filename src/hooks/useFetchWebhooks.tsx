@@ -1,4 +1,7 @@
-import { GET_WEBHOOKS, WEBHOOKS_DELETED, WEBHOOK_CREATED, WEBHOOK_UPDATED } from 'schema/queries';
+import { GET_WEBHOOKS,
+  WEBHOOKS_DELETED,
+  WEBHOOK_CREATED,
+  WEBHOOK_UPDATED } from 'schema/queries';
 import { useQuery } from '@apollo/client';
 import {
   GetWebhooks,
@@ -7,15 +10,15 @@ import {
 import {
   WebhookCreated,
   WebhookCreatedVariables,
-} from './types/WebhookCreated';
+} from 'schema/types/WebhookCreated';
 import {
   WebhookUpdated,
   WebhookUpdatedVariables,
-} from './types/WebhookUpdated';
+} from 'schema/types/WebhookUpdated';
 import {
   WebhooksDeleted,
   WebhooksDeletedVariables,
-} from './types/WebhooksDeleted';
+} from 'schema/types/WebhooksDeleted';
 
 const useFetchWebhooks = (endpointId: string) => {
   const {

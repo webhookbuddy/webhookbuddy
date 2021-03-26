@@ -2,7 +2,7 @@ import { useQuery } from '@apollo/client';
 import { useSetMe } from 'context/user-context';
 import Error from 'components/Error';
 import Loading from 'components/Loading';
-import { GetMe } from './types/GetMe';
+import { GetMe } from 'schema/types/GetMe';
 import { GET_ME } from 'schema/queries';
 
 const Session = () => {

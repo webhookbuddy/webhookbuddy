@@ -6,7 +6,7 @@ import { useHistory } from 'react-router-dom';
 import {
   CreateEndpoint,
   CreateEndpointVariables,
-} from './types/CreateEndpoint';
+} from 'schema/types/CreateEndpoint';
 import { CREATE_ENDPOINT, GET_ENDPOINTS } from 'schema/queries';
 import { GetEndpoints } from 'schema/types/GetEndpoints';
 

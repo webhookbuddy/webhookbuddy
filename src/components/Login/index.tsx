@@ -2,7 +2,7 @@ import { useApolloClient, useMutation } from '@apollo/client';
 import { usePersistorContext } from 'context/persistor-context';
 import { changeLoginState } from 'services/login-state';
 import LoginForm from './LoginForm';
-import { Login as LoginPayload, LoginVariables } from './types/Login';
+import { Login as LoginPayload, LoginVariables } from 'schema/types/Login';
 import { LOGIN_USER } from 'schema/queries';
 
 const Login = () => {

@@ -6,7 +6,7 @@ import { DELETE_ENDPOINT, GET_ENDPOINTS } from 'schema/queries';
 import {
   DeleteEndpoint,
   DeleteEndpointVariables,
-} from './types/DeleteEndpoint';
+} from 'schema/types/DeleteEndpoint';
 import {
   GetEndpoints,
   GetEndpoints_endpoints,

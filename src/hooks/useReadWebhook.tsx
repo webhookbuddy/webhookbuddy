@@ -4,7 +4,7 @@ import {
   ReadWebhook,
   ReadWebhookVariables,
   ReadWebhook_readWebhook_webhook,
-} from './types/ReadWebhook';
+} from 'schema/types/ReadWebhook';
 import { READ_WEBHOOK } from 'schema/queries';
 
 const useReadWebhook = () => {
