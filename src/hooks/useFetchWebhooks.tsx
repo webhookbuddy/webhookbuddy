@@ -1,6 +1,5 @@
-import { GET_WEBHOOKS } from 'schema/queries';
-import { WEBHOOK_FRAGMENT } from 'schema/fragments';
-import { gql, useQuery } from '@apollo/client';
+import { GET_WEBHOOKS, WEBHOOKS_DELETED, WEBHOOK_CREATED, WEBHOOK_UPDATED } from 'schema/queries';
+import { useQuery } from '@apollo/client';
 import {
   GetWebhooks,
   GetWebhooksVariables,
@@ -17,36 +16,6 @@ import {
   WebhooksDeleted,
   WebhooksDeletedVariables,
 } from './types/WebhooksDeleted';
-
-const WEBHOOK_CREATED = gql`
-  subscription WebhookCreated($endpointId: ID!) {
-    webhookCreated(endpointId: $endpointId) {
-      webhook {
-        ...Webhook
-      }
-    }
-  }
-  ${WEBHOOK_FRAGMENT}
-`;
-
-const WEBHOOK_UPDATED = gql`
-  subscription WebhookUpdated($endpointId: ID!) {
-    webhookUpdated(endpointId: $endpointId) {
-      webhook {
-        ...Webhook
-      }
-    }
-  }
-  ${WEBHOOK_FRAGMENT}
-`;
-
-const WEBHOOKS_DELETED = gql`
-  subscription WebhooksDeleted($endpointId: ID!) {
-    webhooksDeleted(endpointId: $endpointId) {
-      webhookIds
-    }
-  }
-`;
 
 const useFetchWebhooks = (endpointId: string) => {
   const {

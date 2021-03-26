@@ -1,4 +1,5 @@
-import { gql, useQuery, useMutation } from '@apollo/client';
+import {  useQuery, useMutation } from '@apollo/client';
+import { ADD_FORWARD_URL, GET_FORWARD_URLS } from 'schema/queries';
 import { distinct } from 'services/ids';
 import {
   AddForwardUrl,
@@ -8,32 +9,6 @@ import {
   GetForwardUrls,
   GetForwardUrlsVariables,
 } from './types/GetForwardUrls';
-
-const FORWARD_URL_FRAGMENT = gql`
-  fragment ForwardUrl on ForwardUrl {
-    url
-  }
-`;
-
-const GET_FORWARD_URLS = gql`
-  query GetForwardUrls($endpointId: ID!) {
-    forwardUrls(endpointId: $endpointId) {
-      ...ForwardUrl
-    }
-  }
-  ${FORWARD_URL_FRAGMENT}
-`;
-
-const ADD_FORWARD_URL = gql`
-  mutation AddForwardUrl($input: AddForwardUrlInput!) {
-    addForwardUrl(input: $input) {
-      forwardUrl {
-        ...ForwardUrl
-      }
-    }
-  }
-  ${FORWARD_URL_FRAGMENT}
-`;
 
 const useForwardUrls = (endpointId: string) => {
   const { data } = useQuery<GetForwardUrls, GetForwardUrlsVariables>(

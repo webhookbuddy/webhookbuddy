@@ -1,18 +1,9 @@
-import { gql, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import { useSetMe } from 'context/user-context';
-import { USER_FRAGMENT } from 'schema/fragments';
 import Error from 'components/Error';
 import Loading from 'components/Loading';
 import { GetMe } from './types/GetMe';
-
-const GET_ME = gql`
-  query GetMe {
-    me {
-      ...User
-    }
-  }
-  ${USER_FRAGMENT}
-`;
+import { GET_ME } from 'schema/queries';
 
 const Session = () => {
   const setMe = useSetMe();

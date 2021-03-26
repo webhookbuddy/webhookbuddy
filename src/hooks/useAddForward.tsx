@@ -1,18 +1,7 @@
-import { gql, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import { toast } from 'react-toastify';
-import { WEBHOOK_FRAGMENT } from 'schema/fragments';
 import { AddForward, AddForwardVariables } from './types/AddForward';
-
-const ADD_FORWARD = gql`
-  mutation AddForward($input: AddForwardInput!) {
-    addForward(input: $input) {
-      webhook {
-        ...Webhook
-      }
-    }
-  }
-  ${WEBHOOK_FRAGMENT}
-`;
+import { ADD_FORWARD } from 'schema/queries';
 
 const useAddForward = () => {
   const [addForward] = useMutation<AddForward, AddForwardVariables>(

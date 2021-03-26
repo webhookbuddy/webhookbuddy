@@ -1,8 +1,8 @@
 import { MouseEvent, useState } from 'react';
 import { ConfirmModal } from 'react-bootstrap4-modal';
-import { gql, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import { toast } from 'react-toastify';
-import { GET_ENDPOINTS } from 'schema/queries';
+import { DELETE_ENDPOINT, GET_ENDPOINTS } from 'schema/queries';
 import {
   DeleteEndpoint,
   DeleteEndpointVariables,
@@ -11,14 +11,6 @@ import {
   GetEndpoints,
   GetEndpoints_endpoints,
 } from 'schema/types/GetEndpoints';
-
-const DELETE_ENDPOINT = gql`
-  mutation DeleteEndpoint($input: DeleteEndpointInput!) {
-    deleteEndpoint(input: $input) {
-      affectedRows
-    }
-  }
-`;
 
 const Delete = ({
   endpoint,

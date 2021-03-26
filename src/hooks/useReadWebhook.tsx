@@ -1,22 +1,11 @@
-import { WEBHOOK_FRAGMENT } from 'schema/fragments';
-import { gql, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import { useMe } from 'context/user-context';
 import {
   ReadWebhook,
   ReadWebhookVariables,
   ReadWebhook_readWebhook_webhook,
 } from './types/ReadWebhook';
-
-const READ_WEBHOOK = gql`
-  mutation ReadWebhook($input: ReadWebhookInput!) {
-    readWebhook(input: $input) {
-      webhook {
-        ...Webhook
-      }
-    }
-  }
-  ${WEBHOOK_FRAGMENT}
-`;
+import { READ_WEBHOOK } from 'schema/queries';
 
 const useReadWebhook = () => {
   const me = useMe();
