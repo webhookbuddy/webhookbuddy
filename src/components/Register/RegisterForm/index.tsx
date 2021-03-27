@@ -57,7 +57,14 @@ const RegisterForm = ({
       <div className={styles.main}>
         <form onSubmit={handleSubmit}>
           <div className={`form-group ${styles.formGroupCustom}`}>
-            <label style={{ opacity: firstName ? 1 : 0 }}>
+            <label
+              className={
+                firstName
+                  ? `${styles.floatLabel}`
+                  : `${styles.noLabel}`
+              }
+            >
+              {' '}
               First Name:
             </label>
             <input
@@ -71,7 +78,14 @@ const RegisterForm = ({
             />
           </div>
           <div className={`form-group ${styles.formGroupCustom}`}>
-            <label style={{ opacity: lastName ? 1 : 0 }}>
+            <label
+              className={
+                lastName
+                  ? `${styles.floatLabel}`
+                  : `${styles.noLabel}`
+              }
+            >
+              {' '}
               Last Name:
             </label>
             <input
@@ -84,7 +98,13 @@ const RegisterForm = ({
             />
           </div>
           <div className={`form-group ${styles.formGroupCustom}`}>
-            <label style={{ opacity: email ? 1 : 0 }}>Email:</label>
+            <label
+              className={
+                email ? `${styles.floatLabel}` : `${styles.noLabel}`
+              }
+            >
+              Email
+            </label>
             <input
               type="email"
               value={email}
@@ -95,7 +115,14 @@ const RegisterForm = ({
             />
           </div>
           <div className={`form-group ${styles.formGroupCustom}`}>
-            <label style={{ opacity: password ? 1 : 0 }}>
+            <label
+              className={
+                password
+                  ? `${styles.floatLabel}`
+                  : `${styles.noLabel}`
+              }
+            >
+              {' '}
               Password:
             </label>
             <input
@@ -108,7 +135,13 @@ const RegisterForm = ({
             />
           </div>
           <div className={`form-group ${styles.formGroupCustom}`}>
-            <label style={{ opacity: confirmPassword ? 1 : 0 }}>
+            <label
+              className={
+                confirmPassword
+                  ? `${styles.floatLabel}`
+                  : `${styles.noLabel}`
+              }
+            >
               Confirm Password:
             </label>
             <label
