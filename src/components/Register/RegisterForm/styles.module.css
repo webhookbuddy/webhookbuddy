@@ -26,6 +26,21 @@
 }
 
 .formGroupCustom label {
-  padding-left: 10px;
-  transition-duration: 0.5s;
+  padding-left: 13.5px;
+}
+
+.floatLabel {
+  opacity: 1;
+  position: relative;
+  top: 40px;
+  transform: translateY(-40px);
+  transition-duration: 0.3s;
+}
+
+.noLabel {
+  opacity: 0;
+  position: relative;
+  top: 40px;
+  transform: translateY(0px);
+  transition-duration: 0.3s;
 }
