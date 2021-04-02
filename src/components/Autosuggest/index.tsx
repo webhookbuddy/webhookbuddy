@@ -26,9 +26,9 @@ const SuggestionsList = ({
           <div className={`btn-group ${styles.btnGroupCustom}`}>
             <button
               className={`
-              dropdown-item
-              ${styles.dropdownItemAutosuggest} 
-              ${index === activeIndex ? 'active' : ''}
+                dropdown-item
+                ${styles.dropdownItemAutosuggest} 
+                ${index === activeIndex ? 'active' : ''}
               `}
               key={suggestion}
               onMouseDown={onMouseDown}
@@ -168,9 +168,9 @@ const Autosuggest = ({
 
   return (
     <div
-      className={`d-flex dropdown ${
-        position === AutosuggestPositionEnum.Up ? 'dropup' : ''
-      }`}
+      className={`d-flex dropdown 
+        ${position === AutosuggestPositionEnum.Up ? 'dropup' : ''}
+      `}
     >
       <input
         type={type}
