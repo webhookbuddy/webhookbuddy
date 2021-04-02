@@ -63,7 +63,7 @@ const useNodeSender = ({
         onForwardedListener,
       );
     };
-  }, [me]);
+  }, [me, onForwarded]);
 
   const send = (url: string, webhook: Webhook) => {
     ipcRenderer.send('http-request', {
