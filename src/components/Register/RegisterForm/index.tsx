@@ -49,80 +49,100 @@ const RegisterForm = ({
     }
   };
 
+  console.log(firstName);
+
   return (
     <div className={styles.container}>
       <div className="gutter" />
       <div className={styles.main}>
         <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label>First Name</label>
+          <div className={`form-group ${styles.formGroupCustom}`}>
+            <label style={{ opacity: firstName ? 1 : 0 }}>
+              First Name:
+            </label>
             <input
               type="text"
               value={firstName}
+              placeholder="First Name"
               onChange={e => setFirstName(e.target.value)}
               className="form-control"
               required
               autoFocus
             />
           </div>
-          <div className="form-group">
-            <label>Last Name</label>
+          <div className={`form-group ${styles.formGroupCustom}`}>
+            <label style={{ opacity: lastName ? 1 : 0 }}>
+              Last Name:
+            </label>
             <input
               type="text"
               value={lastName}
+              placeholder="Last Name"
               onChange={e => setLastName(e.target.value)}
               className="form-control"
               required
-              autoFocus
             />
           </div>
-          <div className="form-group">
-            <label>Email</label>
+          <div className={`form-group ${styles.formGroupCustom}`}>
+            <label style={{ opacity: email ? 1 : 0 }}>Email:</label>
             <input
               type="email"
               value={email}
+              placeholder="Email"
               onChange={e => setEmail(e.target.value)}
               className="form-control"
               required
-              autoFocus
             />
           </div>
-          <div className="form-group">
-            <label>Password</label>
+          <div className={`form-group ${styles.formGroupCustom}`}>
+            <label style={{ opacity: password ? 1 : 0 }}>
+              Password:
+            </label>
             <input
               type="password"
               value={password}
+              placeholder="Password"
               onChange={e => setPassword(e.target.value)}
               className="form-control"
               required
             />
           </div>
-          <div className="form-group">
-            <label>Confirm Password</label>
+          <div className={`form-group ${styles.formGroupCustom}`}>
+            <label style={{ opacity: confirmPassword ? 1 : 0 }}>
+              Confirm Password:
+            </label>
+            <label
+              style={{
+                opacity:
+                  password &&
+                  confirmPassword &&
+                  password !== confirmPassword
+                    ? 1
+                    : 0,
+                color: 'red',
+              }}
+            >
+              {' '}
+              Password do not match{' '}
+            </label>
             <input
               type="password"
               value={confirmPassword}
+              placeholder="Confirm Password"
               onChange={e => setConfirmPassword(e.target.value)}
               className="form-control"
               required
             />
           </div>
-          <button type="submit" className="btn btn-primary">
+          <button
+            type="submit"
+            className="btn btn-primary btn-block mt-4"
+          >
             Register
           </button>
           <br />
           Already have an account? <Link to="/">Login</Link>!
         </form>
-
-        <div
-          className="alert alert-success mt-2"
-          style={{
-            display: password !== confirmPassword ? 'block' : 'none',
-          }}
-          role="alert"
-        >
-          Passwords do not match!
-        </div>
       </div>
       <div className="gutter" />
     </div>

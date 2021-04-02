@@ -41,7 +41,6 @@ const LoginForm = ({
 
   return (
     <div className={styles.container}>
-      <div className="gutter" />
       <div className={styles.main}>
         {error && <Error error={error} />}
         {loading ? (
@@ -78,7 +77,6 @@ const LoginForm = ({
           </form>
         )}
       </div>
-      <div className="gutter" />
     </div>
   );
 };
