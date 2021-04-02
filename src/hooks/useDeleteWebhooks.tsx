@@ -1,19 +1,11 @@
-import { gql, useMutation } from '@apollo/client';
-import { GET_WEBHOOKS } from 'schema/queries';
+import { useMutation } from '@apollo/client';
+import { DELETE_WEBHOOKS, GET_WEBHOOKS } from 'schema/queries';
 import { toast } from 'react-toastify';
 import {
   DeleteWebhooks,
   DeleteWebhooksVariables,
-} from './types/DeleteWebhooks';
+} from 'schema/types/DeleteWebhooks';
 import { GetWebhooks } from 'schema/types/GetWebhooks';
-
-const DELETE_WEBHOOKS = gql`
-  mutation DeleteWebhooks($input: DeleteWebhooksInput!) {
-    deleteWebhooks(input: $input) {
-      affectedRows
-    }
-  }
-`;
 
 const useDeleteWebhooks = (endpointId: string) => {
   const [mutate] = useMutation<
