@@ -6,6 +6,9 @@
 
 .content {
   color: #007bff;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
 .icon {
