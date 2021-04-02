@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { matchPath, useHistory, useLocation } from 'react-router-dom';
 import { useHotkeys } from 'react-hotkeys-hook';
-import { sortDistinct, sort } from 'services/ids';
+import { sortDistinct } from 'services/ids';
 import useReadWebhook from './useReadWebhook';
 import useDeleteWebhooks from './useDeleteWebhooks';
 import { GetWebhooks_webhooks_nodes } from 'schema/types/GetWebhooks';
