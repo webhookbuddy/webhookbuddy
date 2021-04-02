@@ -2,7 +2,6 @@ import { gql } from '@apollo/client';
 import {
   USER_FRAGMENT,
   ENDPOINT_FRAGMENT,
-  FORWARD_FRAGMENT,
   WEBHOOK_FRAGMENT,
   FORWARD_URL_FRAGMENT,
 } from './fragments';
