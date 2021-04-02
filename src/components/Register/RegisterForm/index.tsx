@@ -44,11 +44,9 @@ const RegisterForm = ({
         },
       });
     } else {
-      console.log('Passwords do not match warning');
+      console.log('Passwords do not match!');
     }
   };
-
-  console.log(firstName);
 
   return (
     <div className={styles.container}>
@@ -159,7 +157,7 @@ const RegisterForm = ({
                 }}
               >
                 {' '}
-                Password do not match{' '}
+                Password do not match
               </label>
               <input
                 type="password"
