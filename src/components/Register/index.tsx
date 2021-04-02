@@ -1,5 +1,6 @@
 import { gql, useApolloClient, useMutation } from '@apollo/client';
 import { usePersistorContext } from 'context/persistor-context';
+import { changeLoginState } from 'services/login-state';
 import RegisterForm from './RegisterForm';
 import {
   Register as RegisterPayload,
@@ -24,7 +25,7 @@ const Register = () => {
   >(REGISTER_USER, {
     onCompleted: ({ register }) => {
       localStorage.setItem('x-token', register.token);
-      console.log('Route to login page');
+      changeLoginState(client, persistor, true);
     },
     onError: () => {}, // Handle error to avoid unhandled rejection: https://github.com/apollographql/apollo-client/issues/6070
   });
