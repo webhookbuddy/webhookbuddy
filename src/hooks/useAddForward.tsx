@@ -1,6 +1,9 @@
 import { useMutation } from '@apollo/client';
 import { toast } from 'react-toastify';
-import { AddForward, AddForwardVariables } from 'schema/types/AddForward';
+import {
+  AddForward,
+  AddForwardVariables,
+} from 'schema/types/AddForward';
 import { ADD_FORWARD } from 'schema/queries';
 
 const useAddForward = () => {

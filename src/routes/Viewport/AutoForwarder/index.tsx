@@ -5,7 +5,7 @@ import { Webhook } from 'schema/types';
 import { GetEndpoints } from 'schema/types/GetEndpoints';
 import useForwarder from 'hooks/useForwarder';
 import styles from './styles.module.css';
-import { WebhookCreated } from 'hooks/types/WebhookCreated';
+import { WebhookCreated } from 'schema/types/WebhookCreated';
 import AutoForwardSuggest from 'components/AutoForward/AutoForwardSuggest';
 import AutoForwardDropdown from 'components/AutoForward/AutoForwardDropdown';
 
