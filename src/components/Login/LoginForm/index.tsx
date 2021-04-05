@@ -4,7 +4,7 @@ import { ExecutionResult } from 'graphql';
 import {
   Login as LoginPayload,
   LoginVariables,
-} from '../types/Login';
+} from 'schema/types/Login';
 import Loading from 'components/Loading';
 import Error from 'components/Error';
 
