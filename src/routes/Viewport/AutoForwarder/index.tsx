@@ -1,14 +1,13 @@
-import React, { useState } from 'react';
-import { useQuery } from '@apollo/client';
-import { GET_ENDPOINTS } from 'schema/queries';
+import { useState } from 'react';
+import { useQuery, useSubscription } from '@apollo/client';
+import { GET_ENDPOINTS, WEBHOOK_CREATED } from 'schema/queries';
+import { Webhook } from 'schema/types';
 import { GetEndpoints } from 'schema/types/GetEndpoints';
-import Error from 'components/Error';
-import useForwardUrls from 'hooks/useForwardUrls';
-import Autosuggest, {
-  AutosuggestPositionEnum,
-} from 'components/Autosuggest';
-
+import useForwarder from 'hooks/useForwarder';
 import styles from './styles.module.css';
+import { WebhookCreated } from 'schema/types/WebhookCreated';
+import AutoForwardSuggest from 'components/AutoForward/AutoForwardSuggest';
+import AutoForwardDropdown from 'components/AutoForward/AutoForwardDropdown';
 
 const AutoForwarder = ({ docked }: { docked: Boolean }) => {
   const { data, error, loading, refetch } = useQuery<GetEndpoints>(
@@ -20,8 +19,19 @@ const AutoForwarder = ({ docked }: { docked: Boolean }) => {
 
   const [endpointId, setEndpointId] = useState('');
   const [running, setRunning] = useState(false);
-  const { forwardUrls } = useForwardUrls(endpointId);
   const [url, setUrl] = useState('');
+  const { forwardWebhook } = useForwarder(endpointId);
+
+  useSubscription<WebhookCreated>(WEBHOOK_CREATED, {
+    variables: { endpointId, url },
+    onSubscriptionData: ({ subscriptionData: { data } }) => {
+      if (!data) return;
+      const forwardTo = (url: string) => {
+        forwardWebhook(url, [data.webhookCreated.webhook as Webhook]);
+      };
+      if (running) forwardTo(url);
+    },
+  });
 
   const retry = () => refetch().catch(() => {}); // Unless we catch, a network error will cause an unhandled rejection: https://github.com/apollographql/apollo-client/issues/3963
 
@@ -39,53 +49,29 @@ const AutoForwarder = ({ docked }: { docked: Boolean }) => {
           ></i>
         ) : (
           <i
-            className={`fa fa-play fa-lg pointer ${styles.idleIcon}`}
+            className={`fa fa-play fa-2x pointer ${styles.idleIcon}`}
             onClick={() => setRunning(true)}
           ></i>
         )}
       </div>
-      <div className="form-group">
-        <label>Endpoint</label>
-        {error ? (
-          <div style={{ fontSize: '10px' }}>
-            <Error error="">
-              <button
-                className="btn btn-primary btn-sm"
-                onClick={retry}
-              >
-                Try again!
-              </button>
-            </Error>
-          </div>
-        ) : (
-          <select
-            className="custom-select custom-select-sm"
-            onChange={e => setEndpointId(e.target.value)}
-            value={endpointId}
-            disabled={running}
-          >
-            {data &&
-              !loading &&
-              data?.endpoints.map(endpoint => (
-                <option key={endpoint.id} value={endpoint.id}>
-                  {endpoint.name}
-                </option>
-              ))}
-          </select>
-        )}
-      </div>
-      <div className="form-group">
-        <label>Auto-forward to</label>
-        <Autosuggest
-          type="url"
-          placeholder="Forward to URL (e.g. http://localhost:8000/send-webhook-here)"
-          userInput={url}
-          setUserInput={setUrl}
-          suggestions={forwardUrls}
-          position={AutosuggestPositionEnum.Up}
-          disabled={running}
+      <AutoForwardDropdown
+        error={error}
+        retry={retry}
+        setEndpointId={setEndpointId}
+        running={running}
+        data={data}
+        loading={loading}
+      />
+      {endpointId !== '' ? (
+        <AutoForwardSuggest
+          url={url}
+          setUrl={setUrl}
+          running={running}
+          endpointId={endpointId}
         />
-      </div>
+      ) : (
+        <p>No endpoint selected.</p>
+      )}
     </div>
   );
 };

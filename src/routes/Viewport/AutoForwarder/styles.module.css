@@ -13,11 +13,12 @@
 }
 
 .iconWrapper {
-  margin-right: 10px;
+  margin-right: 20px;
 }
 
 .idleIcon {
   color: #28a745;
+  margin-right: 2px;
 }
 
 .runningIcon {
