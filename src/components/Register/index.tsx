@@ -1,19 +1,12 @@
-import { gql, useApolloClient, useMutation } from '@apollo/client';
+import { useApolloClient, useMutation } from '@apollo/client';
 import { usePersistorContext } from 'context/persistor-context';
 import { changeLoginState } from 'services/login-state';
 import RegisterForm from './RegisterForm';
+import { REGISTER_USER } from 'schema/queries';
 import {
   Register as RegisterPayload,
   RegisterVariables,
-} from './types/Register';
-
-const REGISTER_USER = gql`
-  mutation Register($input: RegisterInput!) {
-    register(input: $input) {
-      token
-    }
-  }
-`;
+} from 'schema/types/Register';
 
 const Register = () => {
   const client = useApolloClient();
