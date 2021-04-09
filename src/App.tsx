@@ -19,7 +19,7 @@ toast.configure({
   autoClose: 6000,
 });
 
-function FallBack() {
+function Program() {
   const { data } = useQuery<IsUserLoggedIn>(IS_LOGGED_IN);
   const me = useMe();
   return !data || !data.isLoggedIn ? (
@@ -39,7 +39,7 @@ function App() {
           <Register />
         </Route>
         <Route path="/">
-          <FallBack />
+          <Program />
         </Route>
       </Switch>
     </Router>
