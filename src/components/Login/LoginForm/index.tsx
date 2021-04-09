@@ -9,7 +9,7 @@ import { ExecutionResult } from 'graphql';
 import {
   Login as LoginPayload,
   LoginVariables,
-} from '../types/Login';
+} from 'schema/types/Login';
 
 const LoginForm = ({
   loginUser,
