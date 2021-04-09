@@ -1,26 +1,14 @@
 import { FormEvent, useState } from 'react';
-import { ENDPOINT_FRAGMENT } from 'schema/fragments';
-import { gql, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import Error from 'components/Error';
 import Loading from 'components/Loading';
 import { useHistory } from 'react-router-dom';
 import {
   CreateEndpoint,
   CreateEndpointVariables,
-} from './types/CreateEndpoint';
-import { GET_ENDPOINTS } from 'schema/queries';
+} from 'schema/types/CreateEndpoint';
+import { CREATE_ENDPOINT, GET_ENDPOINTS } from 'schema/queries';
 import { GetEndpoints } from 'schema/types/GetEndpoints';
-
-const CREATE_ENDPOINT = gql`
-  mutation CreateEndpoint($input: CreateEndpointInput!) {
-    createEndpoint(input: $input) {
-      endpoint {
-        ...Endpoint
-      }
-    }
-  }
-  ${ENDPOINT_FRAGMENT}
-`;
 
 const Create = () => {
   const history = useHistory();

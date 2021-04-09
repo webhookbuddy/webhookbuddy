@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Workspace from './Workspace';
-// import AutoForwarder from './AutoForwarder';
+import AutoForwarder from './AutoForwarder';
 
 import styles from './styles.module.css';
 
@@ -10,7 +10,7 @@ const Viewport = () => {
   return (
     <div className={styles.viewport}>
       <Workspace docked={docked} setDocked={setDocked} />
-      {/* <AutoForwarder docked={docked} /> */}
+      <AutoForwarder docked={docked} />
     </div>
   );
 };

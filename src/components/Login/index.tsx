@@ -1,16 +1,9 @@
-import { gql, useApolloClient, useMutation } from '@apollo/client';
+import { useApolloClient, useMutation } from '@apollo/client';
 import { usePersistorContext } from 'context/persistor-context';
 import { changeLoginState } from 'services/login-state';
 import LoginForm from './LoginForm';
-import { Login as LoginPayload, LoginVariables } from './types/Login';
-
-const LOGIN_USER = gql`
-  mutation Login($input: LoginInput!) {
-    login(input: $input) {
-      token
-    }
-  }
-`;
+import { Login as LoginPayload, LoginVariables } from 'schema/types/Login';
+import { LOGIN_USER } from 'schema/queries';
 
 const Login = () => {
   const client = useApolloClient();

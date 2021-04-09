@@ -6,7 +6,7 @@ import {
 } from 'react-router-dom';
 import Endpoints from './Endpoints';
 import Dashboard from './Dashboard';
-// import Docker from './Docker';
+import Docker from './Docker';
 
 import styles from './styles.module.css';
 
@@ -31,7 +31,7 @@ const Workspace = ({
           />
           <Route path="/" component={Endpoints} />
         </Switch>
-        {/* <Docker docked={docked} setDocked={setDocked} /> */}
+        <Docker docked={docked} setDocked={setDocked} />
       </div>
     </Router>
   );

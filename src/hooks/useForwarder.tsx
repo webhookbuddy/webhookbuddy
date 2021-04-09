@@ -1,13 +1,13 @@
 import { Webhook } from 'schema/types';
 import useForwardingIds from './useForwardingIds';
-import useForwardUrls from './useForwardUrls';
 import {
   AddForward_addForward_webhook,
   AddForward_addForward_webhook_forwards,
-} from './types/AddForward';
+} from 'schema/types/AddForward';
 import useAddForward from './useAddForward';
 import { appendQuery } from 'utils/http-fragment';
 import isElectron from 'is-electron';
+import useAddForwardUrl from './useAddForwardUrl';
 
 let useSender: any;
 
@@ -23,7 +23,7 @@ if (isElectron()) {
 
 const useForwarder = (endpointId: string) => {
   const { addForwardingIds, removeForwardingId } = useForwardingIds();
-  const { addForwardUrl } = useForwardUrls(endpointId);
+  const { addForwardUrl } = useAddForwardUrl(endpointId);
   const { addForward } = useAddForward();
 
   const onForwarded = (

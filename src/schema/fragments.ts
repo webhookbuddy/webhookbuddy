@@ -72,3 +72,9 @@ export const WEBHOOK_FRAGMENT = gql`
   }
   ${FORWARD_FRAGMENT}
 `;
+
+export const FORWARD_URL_FRAGMENT = gql`
+  fragment ForwardUrl on ForwardUrl {
+    url
+  }
+`;

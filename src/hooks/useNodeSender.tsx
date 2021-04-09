@@ -5,7 +5,7 @@ import { extractContentType, mapHeaders } from 'utils/http-fragment';
 import {
   AddForward_addForward_webhook,
   AddForward_addForward_webhook_forwards,
-} from './types/AddForward';
+} from 'schema/types/AddForward';
 
 const { ipcRenderer } = window.require('electron');
 
@@ -63,7 +63,7 @@ const useNodeSender = ({
         onForwardedListener,
       );
     };
-  }, [me]);
+  }, [me, onForwarded]);
 
   const send = (url: string, webhook: Webhook) => {
     ipcRenderer.send('http-request', {

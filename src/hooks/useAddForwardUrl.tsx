@@ -1,4 +1,5 @@
 import { useMutation } from '@apollo/client';
+import { ADD_FORWARD_URL, GET_FORWARD_URLS } from 'schema/queries';
 import {
   AddForwardUrl,
   AddForwardUrlVariables,
@@ -7,30 +8,28 @@ import {
   GetForwardUrls,
   GetForwardUrlsVariables,
 } from 'schema/types/GetForwardUrls';
-import { GET_FORWARD_URLS } from './useFetchForwardUrls';
-import { DELETE_FORWARD_URLS } from 'schema/queries';
 
-const useDeleteForwardUrls = (endpointId: string) => {
+const useAddForwardUrl = (endpointId: string) => {
   const [mutate] = useMutation<AddForwardUrl, AddForwardUrlVariables>(
-    DELETE_FORWARD_URLS,
+    ADD_FORWARD_URL,
     {
       onError: () => {}, // Handle error to avoid unhandled rejection: https://github.com/apollographql/apollo-client/issues/6070
     },
   );
 
-  const deleteForwardUrls = (url: string) => {
+  const addForwardUrl = (url: string) =>
     mutate({
       variables: {
         input: {
           endpointId,
-          url: url,
+          url,
         },
       },
       update: (cache, { data }) => {
         const forwardUrl = data?.addForwardUrl.forwardUrl;
         if (!forwardUrl) return;
 
-        const forwardUrlData = cache.readQuery<
+        const forwardUrlsData = cache.readQuery<
           GetForwardUrls,
           GetForwardUrlsVariables
         >({
@@ -39,17 +38,17 @@ const useDeleteForwardUrls = (endpointId: string) => {
             endpointId,
           },
         });
+
         cache.writeQuery({
           query: GET_FORWARD_URLS,
           variables: {
             endpointId,
           },
           data: {
-            ...forwardUrlData,
+            ...forwardUrlsData,
             forwardUrls: [
-              forwardUrlData?.forwardUrls.filter(
-                n => !forwardUrl.url.includes(n.url),
-              ) || [],
+              forwardUrl,
+              ...(forwardUrlsData?.forwardUrls ?? []),
             ],
           },
         });
@@ -61,11 +60,8 @@ const useDeleteForwardUrls = (endpointId: string) => {
         },
       },
     });
-  };
 
-  return {
-    deleteForwardUrls,
-  };
+  return { addForwardUrl };
 };
 
-export default useDeleteForwardUrls;
+export default useAddForwardUrl;
