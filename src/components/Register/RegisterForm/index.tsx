@@ -8,7 +8,7 @@ import { ExecutionResult } from 'graphql';
 import {
   Register as RegisterPayload,
   RegisterVariables,
-} from '../types/Register';
+} from 'schema/types/Register';
 
 const RegisterForm = ({
   registerUser,
