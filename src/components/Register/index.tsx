@@ -7,10 +7,12 @@ import {
   Register as RegisterPayload,
   RegisterVariables,
 } from 'schema/types/Register';
+import { useHistory } from 'react-router-dom';
 
 const Register = () => {
   const client = useApolloClient();
   const persistor = usePersistorContext();
+  const history = useHistory();
 
   const [registerUser, { loading, error }] = useMutation<
     RegisterPayload,
@@ -19,6 +21,7 @@ const Register = () => {
     onCompleted: ({ register }) => {
       localStorage.setItem('x-token', register.token);
       changeLoginState(client, persistor, true);
+      history.push('/');
     },
     onError: () => {}, // Handle error to avoid unhandled rejection: https://github.com/apollographql/apollo-client/issues/6070
   });
