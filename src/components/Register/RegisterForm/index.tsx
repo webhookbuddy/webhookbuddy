@@ -27,25 +27,19 @@ const RegisterForm = ({
   const [lastName, setLastName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const [confirmPassword, setConfirmPassword] = useState<string>('');
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (password === confirmPassword) {
-      console.log('Send data to server!');
-      registerUser({
-        variables: {
-          input: {
-            firstName,
-            lastName,
-            email,
-            password,
-          },
+    registerUser({
+      variables: {
+        input: {
+          firstName,
+          lastName,
+          email,
+          password,
         },
-      });
-    } else {
-      console.log('Passwords do not match!');
-    }
+      },
+    });
   };
 
   return (
@@ -131,39 +125,6 @@ const RegisterForm = ({
                 value={password}
                 placeholder="Password"
                 onChange={e => setPassword(e.target.value)}
-                className="form-control"
-                required
-              />
-            </div>
-            <div className={`form-group ${styles.formGroupCustom}`}>
-              <label
-                className={
-                  confirmPassword
-                    ? `${styles.floatLabel}`
-                    : `${styles.noLabel}`
-                }
-              >
-                Confirm Password:
-              </label>
-              <label
-                style={{
-                  opacity:
-                    password &&
-                    confirmPassword &&
-                    password !== confirmPassword
-                      ? 1
-                      : 0,
-                  color: 'red',
-                }}
-              >
-                {' '}
-                Password do not match
-              </label>
-              <input
-                type="password"
-                value={confirmPassword}
-                placeholder="Confirm Password"
-                onChange={e => setConfirmPassword(e.target.value)}
                 className="form-control"
                 required
               />
