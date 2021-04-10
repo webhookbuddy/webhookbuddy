@@ -1,14 +1,15 @@
 import { FormEvent, useState } from 'react';
+import Loading from 'components/Loading';
+import Error from 'components/Error';
+import { Link } from 'react-router-dom';
+import styles from './styles.module.css';
+
 import { ApolloError, MutationFunctionOptions } from '@apollo/client';
 import { ExecutionResult } from 'graphql';
 import {
   Login as LoginPayload,
   LoginVariables,
 } from 'schema/types/Login';
-import Loading from 'components/Loading';
-import Error from 'components/Error';
-
-import styles from './styles.module.css';
 
 const LoginForm = ({
   loginUser,
@@ -40,7 +41,6 @@ const LoginForm = ({
 
   return (
     <div className={styles.container}>
-      <div className="gutter" />
       <div className={styles.main}>
         {error && <Error error={error} />}
         {loading ? (
@@ -71,10 +71,12 @@ const LoginForm = ({
             <button type="submit" className="btn btn-primary">
               Log in
             </button>
+            <br />
+            Do not have an account?{' '}
+            <Link to="/register">Register</Link>!
           </form>
         )}
       </div>
-      <div className="gutter" />
     </div>
   );
 };
