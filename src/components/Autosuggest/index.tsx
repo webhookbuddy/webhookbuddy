@@ -89,7 +89,6 @@ const Autosuggest = ({
             .indexOf(e.currentTarget.value.toLowerCase().trim()) > -1,
       ),
     });
-    console.log(state.filteredSuggestions);
     setUserInput(e.currentTarget.value);
   };
 
