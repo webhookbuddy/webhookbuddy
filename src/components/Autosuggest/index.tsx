@@ -40,8 +40,6 @@ const SuggestionsList = ({
             <i
               className={`fa fa-times pointer ${styles.closeBtn}`}
               onMouseDown={() => {
-                console.log('Locally deleting: ' + suggestion);
-                console.log(filteredSuggestions.indexOf(suggestion));
                 deleteForwardUrls(suggestion);
                 filteredSuggestions.splice(
                   filteredSuggestions.indexOf(suggestion),
@@ -94,7 +92,6 @@ const Autosuggest = ({
             .indexOf(e.currentTarget.value.toLowerCase().trim()) > -1,
       ),
     });
-    console.log(state.filteredSuggestions);
     setUserInput(e.currentTarget.value);
   };
 
