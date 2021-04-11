@@ -134,6 +134,9 @@ const Autosuggest = ({
           state.activeIndex >= state.filteredSuggestions.length
         )
           return;
+        deleteForwardUrls(
+          state.filteredSuggestions[state.activeIndex],
+        );
         state.filteredSuggestions.splice(state.activeIndex, 1);
         setState(previous => ({
           ...previous,
