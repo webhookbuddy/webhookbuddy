@@ -2,11 +2,11 @@ import { gql, useMutation } from '@apollo/client';
 import {
   AddForwardUrl,
   AddForwardUrlVariables,
-} from './types/AddForwardUrl';
+} from 'schema/types/AddForwardUrl';
 import {
   GetForwardUrls,
   GetForwardUrlsVariables,
-} from './types/GetForwardUrls';
+} from 'schema/types/GetForwardUrls';
 
 import { GET_FORWARD_URLS } from './useFetchForwardUrls';
 
