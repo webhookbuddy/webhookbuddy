@@ -13,10 +13,12 @@ export enum AutosuggestPositionEnum {
 const SuggestionsList = ({
   activeIndex,
   filteredSuggestions,
+  deleteForwardUrls,
   onMouseDown,
 }: {
   activeIndex: number;
   filteredSuggestions: string[];
+  deleteForwardUrls: (url: string) => void;
   onMouseDown: (e: React.MouseEvent<HTMLElement>) => void;
 }) => {
   if (filteredSuggestions.length)
@@ -40,8 +42,7 @@ const SuggestionsList = ({
             <i
               className={`fa fa-times pointer ${styles.closeBtn}`}
               onMouseDown={() => {
-                console.log('Locally deleting: ' + suggestion);
-                console.log(filteredSuggestions.indexOf(suggestion));
+                deleteForwardUrls(suggestion);
                 filteredSuggestions.splice(
                   filteredSuggestions.indexOf(suggestion),
                   1,
@@ -59,6 +60,7 @@ const Autosuggest = ({
   type,
   placeholder,
   suggestions,
+  deleteForwardUrls,
   userInput,
   setUserInput,
   position = AutosuggestPositionEnum.Down,
@@ -67,6 +69,7 @@ const Autosuggest = ({
   type: string;
   placeholder: string;
   suggestions: string[];
+  deleteForwardUrls: (url: string) => void;
   userInput: string;
   setUserInput: React.Dispatch<React.SetStateAction<string>>;
   position?: AutosuggestPositionEnum;
@@ -188,6 +191,7 @@ const Autosuggest = ({
       <SuggestionsList
         activeIndex={state.activeIndex}
         filteredSuggestions={state.filteredSuggestions}
+        deleteForwardUrls={deleteForwardUrls}
         onMouseDown={onMouseDown}
       />
     </div>
