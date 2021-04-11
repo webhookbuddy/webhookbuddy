@@ -9,14 +9,7 @@ import {
 } from 'schema/types/GetForwardUrls';
 
 import { GET_FORWARD_URLS } from './useFetchForwardUrls';
-
-const DELETE_FORWARD_URLS = gql`
-  mutation DeleteForwardUrls($input: DeleteForwardUrlInput!) {
-    deleteForwardUrls(input: $input) {
-      affectedRows
-    }
-  }
-`;
+import { DELETE_FORWARD_URLS } from 'schema/queries';
 
 const useDeleteForwardUrls = (endpointId: string) => {
   const [mutate] = useMutation<AddForwardUrl, AddForwardUrlVariables>(
