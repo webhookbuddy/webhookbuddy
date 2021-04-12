@@ -8,7 +8,7 @@ import {
   GetForwardUrlsVariables,
 } from 'schema/types/GetForwardUrls';
 
-import { GET_FORWARD_URLS } from './useFetchForwardUrls';
+import { GET_FORWARD_URLS } from 'schema/queries';
 import { DELETE_FORWARD_URLS } from 'schema/queries';
 
 const useDeleteForwardUrls = (endpointId: string) => {
