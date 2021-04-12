@@ -1,6 +1,7 @@
 import { ApolloError, ApolloQueryResult } from '@apollo/client';
 import Error from 'components/Error';
 import { GetEndpoints } from 'schema/types/GetEndpoints';
+import { useState } from 'react';
 
 const AutoForwardDropdown = (props: {
   error: ApolloError | undefined;
@@ -10,6 +11,7 @@ const AutoForwardDropdown = (props: {
   data: GetEndpoints | undefined;
   loading: boolean;
 }) => {
+  const [defaultSelection, setDefaultSelection] = useState('DEFAULT');
   return (
     <div className="form-group">
       <label>Endpoint</label>
@@ -27,8 +29,11 @@ const AutoForwardDropdown = (props: {
       ) : (
         <select
           className="custom-select custom-select-sm"
-          onChange={e => props.setEndpointId(e.target.value)}
-          defaultValue={'DEFAULT'}
+          onChange={e => {
+            setDefaultSelection(e.target.value);
+            props.setEndpointId(e.target.value);
+          }}
+          value={defaultSelection}
           disabled={props.running}
         >
           <option value="DEFAULT" disabled>
