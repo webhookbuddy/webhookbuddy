@@ -6,9 +6,20 @@
   "main": "index.js",
   "scripts": {
     "start": "firebase emulators:start --only auth,firestore,hosting --import exports/seed",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "debug": "firebase emulators:start --inspect-functions --only auth,firestore,hosting --import exports/seed",
+    "build": "cd functions && npm run lint && npm run build",
+    "watch": "cd functions && npm run lint && npm run watch",
+    "test": "cd test && npm test"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@firebase/testing": "^0.20.11",
+    "@types/jest": "^26.0.20",
+    "jest": "^26.6.3",
+    "moment": "^2.29.1",
+    "ts-jest": "^26.5.1",
+    "typescript": "^4.2.4"
+  }
 }
