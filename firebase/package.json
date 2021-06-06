@@ -1,0 +1,14 @@
+{
+  "name": "webhook-buddy-firebase",
+  "version": "1.0.0",
+  "private": true,
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "firebase emulators:start --only auth,firestore,hosting --import exports/seed",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
