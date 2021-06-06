@@ -4,5 +4,108 @@ service cloud.firestore {
     match /{document=**} {
       allow read, write: if false;
     }
+
+    match /users/{userId} {
+      allow read: if isAuthenticated() && request.auth.uid == userId;
+      allow create: if isAuthenticated() && request.auth.uid == userId && isUserValid(request.resource.data);
+      allow update: if isVerified() && request.auth.uid == userId && isUserValid(request.resource.data);
+    }
+
+    // Explanation of how endpoints and all subcollection security rules work: https://stackoverflow.com/a/67220661/188740
+    match /endpoints/{endpointId}/{document=**} {
+      allow read: if hasAccessToEndpoint();
+
+      function hasAccessToEndpoint() {
+        return isVerified() && isRoleInEndpoint(getEndpoint());
+      }
+
+      function getEndpoint() {
+        return get(/databases/$(database)/documents/endpoints/$(endpointId)).data;
+      }
+    }
+
+    match /endpoints/{endpointId} {
+      allow read: if isVerified() && resource.data.roles[request.auth.uid] > '';
+      allow update: if hasAccessToEndpoint() && isEndpointValid();
+      allow delete: if isOwnerOfEndpoint(resource.data);
+
+      match /webhooks/{webhookId} {
+        allow read, delete: if hasAccessToEndpoint();
+        allow update: if hasAccessToEndpoint() && isWebhookValid();
+      }
+
+      function hasAccessToEndpoint() {
+        return isVerified() && isRoleInEndpoint(get(/databases/$(database)/documents/endpoints/$(endpointId)).data);
+      }
+    }
+  }
+
+  // resource.data should not be touched in a create rules, so add an isCreating() condition: https://stackoverflow.com/q/66790745/188740
+
+  function isCreating() {
+    return resource == null; // https://stackoverflow.com/a/66791978/188740
+  }
+
+  function onlyAffectingTheseFields(fields) {
+    return isCreating()
+      ? request.resource.data.keys()
+          .toSet()
+          .hasOnly(fields)
+      : request.resource.data.diff(resource.data)
+          .affectedKeys()
+          .hasOnly(fields);
+  }
+
+  function fieldAffected(field) {
+    return isCreating()
+      ? request.resource.data.keys().hasAny([field])
+      : request.resource.data
+        .diff(resource.data)
+        .affectedKeys()
+        .hasAny([field]);
+  }
+
+  function fieldSetToRequestTimeOnCreate(field) {
+    return
+      (isCreating() && request.time == request.resource.data[field])
+      ||
+      (!isCreating() && !fieldAffected(field));
+  }
+
+  function isAuthenticated() {
+    return request.auth != null;
+  }
+
+  function isVerified() {
+    return request.auth != null && request.auth.token.email_verified;
+  }
+
+  function isUserValid(user) {
+    return (
+      onlyAffectingTheseFields(['createdAt', 'firstName', 'lastName']) &&
+      fieldSetToRequestTimeOnCreate('createdAt') &&
+      user.firstName is string && user.firstName != '' &&
+      user.lastName is string && user.lastName != ''
+    );
+  }
+
+  function isRoleInEndpoint(endpoint) {
+    return endpoint.roles[request.auth.uid] in ['Owner', 'Editor'];
+  }
+
+  function isOwnerOfEndpoint(endpoint) {
+    return endpoint.roles[request.auth.uid] == 'Owner';
+  }
+
+  function isEndpointValid() {
+    return (
+      onlyAffectingTheseFields(['forwardUrls'])
+    );
+  }
+
+  function isWebhookValid() {
+    return (
+      !fieldAffected('createdAt')
+    );
   }
 }
