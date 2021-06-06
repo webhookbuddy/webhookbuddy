@@ -1,0 +1,6 @@
+{
+  "projects": {
+    "dev": "webhookbuddy-dev",
+    "prod": "webhookbuddy"
+  }
+}
