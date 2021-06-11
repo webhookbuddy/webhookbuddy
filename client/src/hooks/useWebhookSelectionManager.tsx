@@ -2,24 +2,28 @@ import { useState } from 'react';
 import { matchPath, useHistory, useLocation } from 'react-router-dom';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { sortDistinct } from 'services/ids';
-import useReadWebhook from './useReadWebhook';
 import useDeleteWebhooks from './useDeleteWebhooks';
-import { GetWebhooks_webhooks_nodes } from 'schema/types/GetWebhooks';
-import { useMe } from 'context/user-context';
+import { User } from 'types/User';
+import { Webhook } from 'types/Webhook';
+import { toast } from 'react-toastify';
+import useSetDocument from './useSetDocument';
 
 const useWebhookSelectionManager = ({
+  me,
   endpointId,
   webhooks,
   ensureIndexVisible,
 }: {
+  me: User;
   endpointId: string;
-  webhooks: GetWebhooks_webhooks_nodes[];
+  webhooks: Webhook[];
   ensureIndexVisible: (index: number) => void;
 }) => {
   const history = useHistory();
   const location = useLocation();
-  const me = useMe();
-  const { readWebhook } = useReadWebhook();
+  const { setDocument } = useSetDocument(
+    `endpoints/${endpointId}/webhooks`,
+  );
   const { deleteWebhooks } = useDeleteWebhooks(endpointId);
 
   const match = matchPath<{
@@ -50,7 +54,7 @@ const useWebhookSelectionManager = ({
   };
 
   const handleWebhookClick = (
-    webhook: GetWebhooks_webhooks_nodes,
+    webhook: Webhook,
     ctrlKey: boolean,
     shiftKey: boolean,
   ) => {
@@ -111,13 +115,15 @@ const useWebhookSelectionManager = ({
     setSingleSelection(webhook);
   };
 
-  const setSingleSelection = (
-    webhook: GetWebhooks_webhooks_nodes,
-  ) => {
+  const setSingleSelection = (webhook: Webhook) => {
     setSelection([webhook.id]);
     setStartWebhookId(webhook.id);
-    if (!webhook.reads.some(r => r.reader.id === me?.id))
-      readWebhook(webhook);
+    if (!webhook.reads[me.id])
+      setDocument(webhook.id, {
+        reads: {
+          [me.id]: true,
+        },
+      });
   };
 
   const selectIndex = (index: number) => {
@@ -264,7 +270,7 @@ const useWebhookSelectionManager = ({
         ),
       webhooks.length - 1,
     );
-    deleteWebhooks(ids);
+    deleteWebhooks(ids, (message: string) => toast.error(message));
 
     const remainingSelections = selectedWebhookIds.filter(
       i => !ids.includes(i),

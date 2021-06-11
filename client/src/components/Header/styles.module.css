@@ -1,0 +1,26 @@
+.header {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #bbb;
+}
+
+.content {
+  color: #007bff;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.title {
+  display: inline-block;
+}
+
+.icon {
+  margin-right: 10px;
+}
+
+.title {
+  font-size: 30px;
+}

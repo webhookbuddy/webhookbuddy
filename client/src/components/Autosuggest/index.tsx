@@ -24,7 +24,7 @@ const SuggestionsList = ({
   if (filteredSuggestions.length)
     return (
       <div className={`dropdown-menu ${styles.dropdownMenuCustom}`}>
-        {filteredSuggestions.slice(0, 3).map((suggestion, index) => (
+        {filteredSuggestions.slice(0, 5).map((suggestion, index) => (
           <div
             className={`btn-group ${styles.btnGroupCustom}`}
             key={suggestion}
@@ -60,7 +60,7 @@ const Autosuggest = ({
   type,
   placeholder,
   suggestions,
-  deleteForwardUrls,
+  deleteForwardUrl,
   userInput,
   setUserInput,
   position = AutosuggestPositionEnum.Down,
@@ -69,7 +69,7 @@ const Autosuggest = ({
   type: string;
   placeholder: string;
   suggestions: string[];
-  deleteForwardUrls: (url: string) => void;
+  deleteForwardUrl: (url: string) => void;
   userInput: string;
   setUserInput: React.Dispatch<React.SetStateAction<string>>;
   position?: AutosuggestPositionEnum;
@@ -134,7 +134,7 @@ const Autosuggest = ({
           state.activeIndex >= state.filteredSuggestions.length
         )
           return;
-        deleteForwardUrls(
+        deleteForwardUrl(
           state.filteredSuggestions[state.activeIndex],
         );
         state.filteredSuggestions.splice(state.activeIndex, 1);
@@ -194,7 +194,7 @@ const Autosuggest = ({
       <SuggestionsList
         activeIndex={state.activeIndex}
         filteredSuggestions={state.filteredSuggestions}
-        deleteForwardUrls={deleteForwardUrls}
+        deleteForwardUrls={deleteForwardUrl}
         onMouseDown={onMouseDown}
       />
     </div>

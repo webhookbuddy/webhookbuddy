@@ -1,24 +1,22 @@
-import { useMe } from 'context/user-context';
-import { useEffect } from 'react';
-import { Webhook } from 'schema/types';
-import { extractContentType, mapHeaders } from 'utils/http-fragment';
+import { useCallback, useEffect } from 'react';
+import { nanoid } from 'nanoid';
 import {
-  AddForward_addForward_webhook,
-  AddForward_addForward_webhook_forwards,
-} from 'schema/types/AddForward';
+  extractContentType,
+  mapRawHeaders,
+} from 'utils/http-fragment';
+import { User } from 'types/User';
+import { Webhook } from 'types/Webhook';
+import { Forward } from 'types/Forward';
 
 const { ipcRenderer } = window.require('electron');
 
 const useNodeSender = ({
+  me,
   onForwarded,
 }: {
-  onForwarded: (
-    webhook: AddForward_addForward_webhook,
-    forward: AddForward_addForward_webhook_forwards,
-  ) => void;
+  me: User;
+  onForwarded: (webhook: Webhook, forward: Forward) => void;
 }) => {
-  const me = useMe();
-
   useEffect(() => {
     const onForwardedListener = (
       _: any,
@@ -31,7 +29,7 @@ const useNodeSender = ({
       }: {
         metadata: {
           url: string;
-          webhook: AddForward_addForward_webhook;
+          webhook: Webhook;
         };
         statusCode: number;
         rawHeaders: string[];
@@ -40,19 +38,23 @@ const useNodeSender = ({
       },
     ) => {
       onForwarded(metadata.webhook, {
-        __typename: 'Forward',
-        id: '_' + Math.round(Math.random() * 1000000),
+        id: nanoid(),
+        userId: me.id,
+        user: {
+          id: me.id,
+          firstName: me.firstName,
+          lastName: me.lastName,
+        },
+        createdAt: new Date(),
         url: metadata.url,
+        method: metadata.webhook.method,
         statusCode: error ? 502 : statusCode,
         success: statusCode >= 200 && statusCode < 300,
-        createdAt: new Date(),
-        method: metadata.webhook.method,
-        headers: mapHeaders(rawHeaders),
+        contentType: extractContentType(mapRawHeaders(rawHeaders)),
+        headers: mapRawHeaders(rawHeaders),
         query: metadata.webhook.query,
-        contentType: extractContentType(mapHeaders(rawHeaders)),
-        body: data ?? '',
-        user: me,
-      } as AddForward_addForward_webhook_forwards);
+        body: data,
+      });
     };
 
     ipcRenderer.on('http-request-completed', onForwardedListener);
@@ -65,15 +67,15 @@ const useNodeSender = ({
     };
   }, [me, onForwarded]);
 
-  const send = (url: string, webhook: Webhook) => {
+  const send = useCallback((url: string, webhook: Webhook) => {
     ipcRenderer.send('http-request', {
       method: webhook.method,
       url,
-      headers: webhook.headers
-        .filter(header => header.key.toLowerCase() !== 'host')
-        .reduce((acc, cur) => {
-          acc[cur.key] = cur.value;
-          return acc;
+      headers: Object.keys(webhook.headers)
+        .filter(key => key.toLowerCase() !== 'host')
+        .reduce((headers, key) => {
+          headers[key] = webhook.headers[key];
+          return headers;
         }, {} as any),
       body: webhook.body,
       metadata: {
@@ -81,7 +83,7 @@ const useNodeSender = ({
         webhook,
       },
     });
-  };
+  }, []);
 
   return { send };
 };

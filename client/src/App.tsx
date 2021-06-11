@@ -1,48 +1,57 @@
-import { useQuery } from '@apollo/client';
-import { useMe } from 'context/user-context';
-import Login from 'components/Login';
-import Register from 'components/Register';
-import Session from 'components/Session';
-import Viewport from 'routes/Viewport';
-import { IsUserLoggedIn } from 'types/IsUserLoggedIn';
-
 import {
   HashRouter as Router,
   Switch,
   Route,
 } from 'react-router-dom';
-
+import { AuthProvider, useAuthContext } from 'contexts/AuthContext';
+import { SessionProvider } from 'contexts/SessionContext';
+import Login from 'routes/Login';
+import Logout from 'routes/Logout';
+import ResetPassword from 'routes/ResetPassword';
+import Register from 'routes/Register';
+import Session from 'routes/Session';
+import Loading from 'components/Loading';
 import { toast } from 'react-toastify';
+
 import 'react-toastify/dist/ReactToastify.min.css';
-import { IS_LOGGED_IN } from 'schema/queries';
+
 toast.configure({
   autoClose: 6000,
 });
 
-function Program() {
-  const { data } = useQuery<IsUserLoggedIn>(IS_LOGGED_IN);
-  const me = useMe();
-  return !data || !data.isLoggedIn ? (
+function AppSession() {
+  const { me } = useAuthContext();
+  return me === undefined ? (
+    <Loading />
+  ) : me === null ? (
     <Login />
-  ) : me ? (
-    <Viewport />
   ) : (
-    <Session />
+    <SessionProvider me={me}>
+      <Session />
+    </SessionProvider>
   );
 }
 
 function App() {
   return (
-    <Router>
-      <Switch>
-        <Route path="/register">
-          <Register />
-        </Route>
-        <Route path="/">
-          <Program />
-        </Route>
-      </Switch>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <Switch>
+          <Route path="/logout">
+            <Logout />
+          </Route>
+          <Route path="/resetpassword">
+            <ResetPassword />
+          </Route>
+          <Route path="/register">
+            <Register />
+          </Route>
+          <Route path="/">
+            <AppSession />
+          </Route>
+        </Switch>
+      </Router>
+    </AuthProvider>
   );
 }
 

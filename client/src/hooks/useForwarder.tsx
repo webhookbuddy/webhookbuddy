@@ -1,13 +1,14 @@
-import { Webhook } from 'schema/types';
-import useForwardingIds from './useForwardingIds';
-import {
-  AddForward_addForward_webhook,
-  AddForward_addForward_webhook_forwards,
-} from 'schema/types/AddForward';
-import useAddForward from './useAddForward';
 import { appendQuery } from 'utils/http-fragment';
 import isElectron from 'is-electron';
-import useAddForwardUrl from './useAddForwardUrl';
+import useSetForwardUrl from './useSetForwardUrl';
+import { useCallback } from 'react';
+import { User } from 'types/User';
+import { Webhook } from 'types/Webhook';
+import { Forward } from 'types/Forward';
+import useSetDocument from './useSetDocument';
+import { arrayUnion } from 'firebase/firestore';
+import { useSessionContext } from 'contexts/SessionContext';
+import { Endpoint } from 'types/Endpoint';
 
 let useSender: any;
 
@@ -21,60 +22,40 @@ if (isElectron()) {
   });
 }
 
-const useForwarder = (endpointId: string) => {
-  const { addForwardingIds, removeForwardingId } = useForwardingIds();
-  const { addForwardUrl } = useAddForwardUrl(endpointId);
-  const { addForward } = useAddForward();
+const useForwarder = (me: User, endpointId: string) => {
+  const { setForwardingIds } = useSessionContext();
+  const { addForwardUrl } = useSetForwardUrl(me, endpointId);
+  const { setDocument } = useSetDocument(
+    `endpoints/${endpointId}/webhooks`,
+  );
 
-  const onForwarded = (
-    webhook: AddForward_addForward_webhook,
-    forward: AddForward_addForward_webhook_forwards,
-  ) => {
-    removeForwardingId(webhook.id);
+  const onForwarded = useCallback(
+    (webhook: Webhook, forward: Forward) => {
+      setForwardingIds(prev => prev.filter(id => id !== webhook.id));
 
-    addForward({
-      variables: {
-        input: {
-          webhookId: webhook.id,
-          url: forward.url,
-          method: forward.method,
-          statusCode: forward.statusCode,
-          // need to remap here b/c server rejects __typename property
-          headers: forward.headers.map(kv => ({
-            key: kv.key,
-            value: kv.value,
-          })),
-          // need to remap here b/c server rejects __typename property
-          query: forward.query.map(kv => ({
-            key: kv.key,
-            value: kv.value,
-          })),
-          body: forward.body,
-        },
-      },
-      optimisticResponse: {
-        addForward: {
-          __typename: 'AddForwardPayload',
-          webhook: {
-            ...webhook,
-            forwards: [forward, ...webhook.forwards],
-          },
-        },
-      },
-    });
-  };
+      setDocument(webhook.id, {
+        forwards: arrayUnion(forward),
+      });
+    },
+    [setForwardingIds, setDocument],
+  );
 
-  const { send } = useSender({ onForwarded });
+  const { send } = useSender({ me, onForwarded });
 
-  const forwardWebhook = (url: string, webhooks: Webhook[]) => {
-    addForwardUrl(url);
-    addForwardingIds(webhooks.map(w => w.id));
-    webhooks
-      .sort((a, b) => parseInt(a.id, 10) - parseInt(b.id, 10))
-      .forEach(webhook =>
-        send(appendQuery(url, webhook.query), webhook),
-      );
-  };
+  const forwardWebhook = useCallback(
+    (url: string, endpoint: Endpoint, webhooks: Webhook[]) => {
+      setForwardingIds(prev => prev.concat(webhooks.map(w => w.id)));
+      webhooks
+        .sort((a, b) => parseInt(a.id, 10) - parseInt(b.id, 10))
+        .forEach(webhook =>
+          send(appendQuery(url, webhook.query), webhook),
+        );
+
+      if (!endpoint.forwardUrls[me.id].some(u => u === url))
+        addForwardUrl(url);
+    },
+    [me.id, addForwardUrl, setForwardingIds, send],
+  );
 
   return {
     forwardWebhook,

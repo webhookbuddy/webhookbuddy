@@ -1,72 +1,69 @@
-import { useMe } from 'context/user-context';
-import { Webhook } from 'schema/types';
-import { extractContentType, mapHeaders } from 'utils/http-fragment';
-import {
-  AddForward_addForward_webhook,
-  AddForward_addForward_webhook_forwards,
-} from 'schema/types/AddForward';
+import { nanoid } from 'nanoid';
+import { extractContentType } from 'utils/http-fragment';
+import { User } from 'types/User';
+import { Webhook } from 'types/Webhook';
+import { Forward } from 'types/Forward';
+import { useCallback } from 'react';
 
 const axios = require('axios').default;
 
 const useBrowserSender = ({
+  me,
   onForwarded,
 }: {
-  onForwarded: (
-    webhook: AddForward_addForward_webhook,
-    forward: AddForward_addForward_webhook_forwards,
-  ) => void;
+  me: User;
+  onForwarded: (webhook: Webhook, forward: Forward) => void;
 }) => {
-  const me = useMe();
-
-  const send = (url: string, webhook: Webhook) => {
-    let ignoreHeaders = [
-      'host',
-      'content-length',
-      'connection',
-      'user-agent',
-    ];
-    axios({
-      method: webhook.method,
-      url: url,
-      headers: webhook.headers
-        .filter(
-          header => !ignoreHeaders.includes(header.key.toLowerCase()),
-        )
-        .reduce((acc, cur) => {
-          acc[cur.key] = cur.value;
-          return acc;
-        }, {} as any),
-      data: webhook.body,
-      transformResponse: (data: any) => {
-        return data;
-      },
-    }).then(
-      (response: any) => {
-        onForwarded(
-          webhook as AddForward_addForward_webhook,
-          {
-            __typename: 'Forward',
-            id: '_' + Math.round(Math.random() * 1000000),
+  const send = useCallback(
+    (url: string, webhook: Webhook) => {
+      let ignoreHeaders = [
+        'host',
+        'accept-encoding',
+        'content-length',
+        'connection',
+        'user-agent',
+      ];
+      axios({
+        method: webhook.method,
+        url: url,
+        headers: Object.keys(webhook.headers)
+          .filter(key => !ignoreHeaders.includes(key.toLowerCase()))
+          .reduce((headers, key) => {
+            headers[key] = webhook.headers[key];
+            return headers;
+          }, {} as any),
+        data: webhook.body,
+        transformResponse: (data: any) => {
+          return data;
+        },
+      }).then(
+        (response: any) => {
+          onForwarded(webhook, {
+            id: nanoid(),
+            userId: me.id,
+            user: {
+              id: me.id,
+              firstName: me.firstName,
+              lastName: me.lastName,
+            },
+            createdAt: new Date(),
             url: url,
+            method: webhook.method,
             statusCode: response.status ?? 502,
             success: response.status >= 200 && response.status < 300,
-            createdAt: new Date(),
-            method: webhook.method,
-            headers: mapHeaders(response.headers),
+            headers: response.headers,
             query: webhook.query,
-            contentType: extractContentType(
-              mapHeaders(response.headers),
-            ),
-            body: response.data ?? '',
-            user: me,
-          } as AddForward_addForward_webhook_forwards,
-        );
-      },
-      (error: any) => {
-        console.log(error);
-      },
-    );
-  };
+            contentType: extractContentType(response.headers),
+            body: response.data,
+          });
+        },
+        (error: any) => {
+          console.log(error);
+        },
+      );
+    },
+    [me, onForwarded],
+  );
 
   return { send };
 };

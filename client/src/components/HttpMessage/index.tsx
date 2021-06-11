@@ -1,9 +1,8 @@
 import { useState } from 'react';
-import {
-  HttpMessage as HttpMessageType,
-  KeyValue,
-} from 'schema/types';
 import moment from 'moment';
+import { toDate } from 'services/date';
+import { Webhook } from 'types/Webhook';
+import { Forward } from 'types/Forward';
 
 import styles from './styles.module.css';
 
@@ -16,7 +15,7 @@ const isJSON = (json: string | undefined) => {
   }
 };
 
-const formatJson = (body: string | undefined, format: boolean) =>
+const formatJson = (body: string | null, format: boolean) =>
   !format
     ? body
     : !body
@@ -31,8 +30,8 @@ const HttpMessage = ({
   message,
 }: {
   type: string;
-  headings: KeyValue[];
-  message: HttpMessageType;
+  headings: { key: string; value: string }[];
+  message: Webhook | Forward;
 }) => {
   const [formatBody, setFormatBody] = useState(true);
   return (
@@ -50,10 +49,12 @@ const HttpMessage = ({
             <tbody>
               <tr>
                 <td>Date</td>
-                <td>{moment(message.createdAt).format('LLL')}</td>
+                <td>
+                  {moment(toDate(message.createdAt)).format('LLL')}
+                </td>
               </tr>
               {headings.map((heading, i) => (
-                <tr key={`heading-${i}`}>
+                <tr key={heading.key}>
                   <td>{heading.key}</td>
                   <td>{heading.value}</td>
                 </tr>
@@ -75,13 +76,15 @@ const HttpMessage = ({
               </tr>
             </thead>
             <tbody>
-              {message.query.length ? (
-                message.query.map((q, i) => (
-                  <tr key={`query-${i}`}>
-                    <td>{q.key}</td>
-                    <td>{q.value}</td>
-                  </tr>
-                ))
+              {Object.keys(message.query).length ? (
+                Object.keys(message.query)
+                  .sort((a, b) => a.localeCompare(b))
+                  .map(key => (
+                    <tr key={key}>
+                      <td>{key}</td>
+                      <td>{message.query[key]}</td>
+                    </tr>
+                  ))
               ) : (
                 <tr>
                   <td>
@@ -103,12 +106,14 @@ const HttpMessage = ({
               </tr>
             </thead>
             <tbody>
-              {message.headers.map((header, i) => (
-                <tr key={`header-${i}`}>
-                  <td>{header.key}</td>
-                  <td>{header.value}</td>
-                </tr>
-              ))}
+              {Object.keys(message.headers)
+                .sort((a, b) => a.localeCompare(b))
+                .map(key => (
+                  <tr key={key}>
+                    <td>{key}</td>
+                    <td>{message.headers[key]}</td>
+                  </tr>
+                ))}
             </tbody>
           </table>
         </div>
