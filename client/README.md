@@ -24,7 +24,7 @@ Install `Prettier - Code formatter` extension. Prettier will automatically forma
 
 - Get server running with `Quick Start` instructions here: [webhook-buddy-server](https://github.com/webhook-buddy/webhook-buddy-server)
 - `npm start` (Runs both Electron and React app)
-- `npm run electron` (Runs only Electon. Useful if you want to see console.log() output.)
+- `npm run electron` (Runs only Electon. Useful if you want to see console.log() output, but electron needs to be installed globally.)
 - `npm run react-start` (Runs only React app. Needed if you use `npm run electron`.)
 
 # Automatically Generate Typescript Types
