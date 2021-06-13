@@ -9,28 +9,36 @@ const request = require('request');
 // - Insecure Content-Security-Policy
 process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = true;
 
-ipcMain.on(
-  'http-request',
-  (event, { method, url, headers, body, metadata }) => {
-    request(
-      {
-        method,
-        url,
-        headers,
-        body,
-        followAllRedirects: true,
-        strictSSL: false,
-      },
-      (error, response, data) => {
-        event.sender.send('http-request-completed', {
-          metadata,
-          statusCode: response ? response.statusCode : null,
-          rawHeaders: response ? response.rawHeaders : null,
-          data,
-          error,
-        });
-      },
-    );
+function asyncRequest(options) {
+  return new Promise(function (resolve) {
+    request(options, function (error, response, body) {
+      resolve({ error, response, body });
+    });
+  });
+}
+
+ipcMain.handle(
+  'forward-webhook',
+  async (_event, { method, url, headers, body, metadata }) => {
+    const {
+      error,
+      response,
+      body: data,
+    } = await asyncRequest({
+      method,
+      url,
+      headers,
+      body,
+      followAllRedirects: true,
+      strictSSL: false,
+    });
+    return {
+      metadata,
+      statusCode: response ? response.statusCode : null,
+      rawHeaders: response ? response.rawHeaders : null,
+      data,
+      error,
+    };
   },
 );
 

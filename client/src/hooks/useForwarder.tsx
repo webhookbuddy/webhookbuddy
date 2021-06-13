@@ -51,7 +51,7 @@ const useForwarder = (me: User, endpointId: string) => {
           send(appendQuery(url, webhook.query), webhook),
         );
 
-      if (!endpoint.forwardUrls[me.id].some(u => u === url))
+      if (!endpoint.forwardUrls[me.id]?.some(u => u === url))
         addForwardUrl(url);
     },
     [me.id, addForwardUrl, setForwardingIds, send],
