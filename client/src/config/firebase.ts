@@ -17,7 +17,7 @@ import {
 const emulate = window.location.hostname === 'localhost';
 
 var firebaseConfig = emulate
-  ? { apiKey: 'emulator', projectId: 'webhook-buddy-dev' }
+  ? { apiKey: 'emulator', projectId: 'webhookbuddy-dev' }
   : {
       apiKey: process.env.REACT_APP_FIREBASE_KEY,
       authDomain: process.env.REACT_APP_FIREBASE_DOMAIN,

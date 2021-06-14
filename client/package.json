@@ -1,5 +1,5 @@
 {
-  "name": "webhook-buddy-client",
+  "name": "webhookbuddy-client",
   "description": "Desktop client that captures and forwards webhooks to your local development server.",
   "version": "0.2.0",
   "author": "Johnny Oshika",

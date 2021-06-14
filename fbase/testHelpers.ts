@@ -1,6 +1,6 @@
 import * as firebase from '@firebase/testing';
 
-const PROJECT_ID = 'webhook-buddy-dev';
+const PROJECT_ID = 'webhookbuddy-dev';
 
 export const setup = async (auth?: UserInfo) =>
   (
