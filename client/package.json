@@ -37,13 +37,15 @@
     "use-deep-compare-effect": "^1.6.1"
   },
   "scripts": {
-    "start": "nf start -p 3000",
+    "start": "nf start react,electron -p 3000",
+    "start:emulator": "nf start react-emulator,electron -p 3000",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "electron": "nodemon --exec \"\"electron .\"\"",
     "electron-start": "node src/electron-wait-react",
     "react-start": "react-scripts start",
+    "react-start-emulator": "set REACT_APP_EMULATOR=true && react-scripts start",
     "dist": "npm run build && electron-builder",
     "postinstall": "electron-builder install-app-deps"
   },

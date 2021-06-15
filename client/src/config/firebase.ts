@@ -14,9 +14,11 @@ import {
   useFunctionsEmulator as functionsEmulator,
 } from 'firebase/functions';
 
-const emulate = window.location.hostname === 'localhost';
+const emulator =
+  window.location.hostname === 'localhost' &&
+  process.env.REACT_APP_EMULATOR;
 
-var firebaseConfig = emulate
+var firebaseConfig = emulator
   ? { apiKey: 'emulator', projectId: 'webhookbuddy-dev' }
   : {
       apiKey: process.env.REACT_APP_FIREBASE_KEY,
@@ -33,7 +35,7 @@ const auth = getAuth(firebaseApp);
 const db = getFirestore(firebaseApp);
 const functions = getFunctions(firebaseApp);
 
-if (emulate) {
+if (emulator) {
   authEmulator(auth, 'http://localhost:9099');
   firestoreEmulator(db, 'localhost', 8080);
   functionsEmulator(functions, 'localhost', 5001);
