@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Welcome to Firebase Hosting</title>
 
+    <link href="/button.css" rel="stylesheet" />
     <!-- update the version number as needed -->
     <script defer src="/__/firebase/8.6.5/firebase-app.js"></script>
     <!-- include only the Firebase features as you need -->
@@ -39,13 +40,27 @@
     </style>
   </head>
   <body>
-    <div id="message">
-      <h2>Welcome</h2>
-      <h1>Firebase Hosting Setup Complete</h1>
-      <p>You're seeing this because you've successfully setup Firebase Hosting. Now it's time to go build something extraordinary!</p>
-      <a target="_blank" href="https://firebase.google.com/docs/hosting/">Open Hosting Documentation</a>
-    </div>
+    <div id="message"></div>
     <p id="load">Firebase SDK Loading&hellip;</p>
+
+    <script id="logged-out" type="text/html">
+      <div>
+        <h2>Welcome</h2>
+        <p>Sign in to continue!</p>
+        <button type="button" class="btn btn-primary" data-action="sign-in">Sign in</button>
+      </div>
+    </script>
+
+    <script id="logged-in" type="text/html">
+      <div>
+      <h2>Welcome</h2>
+        <h1>{email}</h1>
+        <p>It's time to go build something extraordinary!</p>
+        <button type="button" class="btn btn-primary" data-action="sign-out">Sign out</button>
+        <button type="button" class="btn btn-primary" data-action="log-user">Log user</button>
+        <button type="button" class="btn btn-primary" data-action="copy-token">Copy token</button>
+    </div>
+    </script>
 
     <script>
       document.addEventListener('DOMContentLoaded', function() {
@@ -79,6 +94,29 @@
             'performance',
           ].filter(feature => typeof app[feature] === 'function');
           loadEl.textContent = `Firebase SDK loaded with ${features.join(', ')}`;
+          firebase
+            .auth()
+            .onAuthStateChanged(async user => {
+              if (user)
+                document.querySelector('#message').innerHTML
+                  = document.querySelector('#logged-in').innerHTML.replace('{email}', user.email);
+              else
+                document.querySelector('#message').innerHTML
+                  = document.querySelector('#logged-out').innerHTML;
+            });
+
+          document.querySelector('#message').addEventListener('click', async (e) => {
+            if (e.target.dataset.action === 'sign-in') {
+              var provider = new firebase.auth.GoogleAuthProvider();
+              await firebase.auth().signInWithPopup(provider);
+            }
+            else if (e.target.dataset.action === 'sign-out')
+              await firebase.auth().signOut();
+            else if (e.target.dataset.action === 'log-user')
+              console.log(firebase.auth().currentUser);
+            else if (e.target.dataset.action === 'copy-token')
+              navigator.clipboard.writeText(await firebase.auth().currentUser.getIdToken());
+          }, false)
         } catch (e) {
           console.error(e);
           loadEl.textContent = 'Error loading the Firebase SDK, check the console.';
