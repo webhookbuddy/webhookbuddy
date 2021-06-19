@@ -1,7 +1,7 @@
 import Jumbotron from 'components/Jumbotron';
 import { useEffect, useState } from 'react';
 import { auth } from 'config/firebase';
-import { reload } from 'firebase/auth';
+import { reload, getIdToken } from 'firebase/auth';
 
 const EmailVerification = ({
   email,
@@ -24,11 +24,19 @@ const EmailVerification = ({
   }>({ error: undefined, sending: false, sent: false });
 
   useEffect(() => {
+    // Sadly we need to poll for emailVerified change
     const timer = window.setInterval(() => {
-      if (auth.currentUser)
-        reload(auth.currentUser).then(() => {
-          if (auth.currentUser?.emailVerified) resetAuthState();
+      if (!auth.currentUser) return;
+
+      reload(auth.currentUser).then(() => {
+        if (!auth.currentUser?.emailVerified) return;
+
+        // It's not enough to reload the user.
+        // We need to refresh the token that's sent to Firestore: https://stackoverflow.com/a/68043785/188740
+        getIdToken(auth.currentUser, true).then(() => {
+          resetAuthState();
         });
+      });
     }, 2000);
 
     return () => window.clearInterval(timer);
