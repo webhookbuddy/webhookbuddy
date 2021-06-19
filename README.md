@@ -50,16 +50,16 @@ Runs both Electron and React app
 
 ```
 cd client
-npm run start:emulator
+npm start
 ```
 
-### With Firebase dev
+### With Firebase in the cloud
 
 Runs both Electron and React app
 
 ```
 cd client
-npm start
+npm run start:dev
 ```
 
 ### Run Electron and React separately
