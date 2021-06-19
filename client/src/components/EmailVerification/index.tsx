@@ -2,6 +2,7 @@ import Jumbotron from 'components/Jumbotron';
 import { useEffect, useState } from 'react';
 import { auth } from 'config/firebase';
 import { reload, getIdToken } from 'firebase/auth';
+import { toast } from 'react-toastify';
 
 const EmailVerification = ({
   email,
@@ -18,10 +19,8 @@ const EmailVerification = ({
   logOut: () => void;
 }) => {
   const [state, setState] = useState<{
-    error: string | undefined;
     sending: boolean;
-    sent: boolean;
-  }>({ error: undefined, sending: false, sent: false });
+  }>({ sending: false });
 
   useEffect(() => {
     // Sadly we need to poll for emailVerified change
@@ -37,18 +36,22 @@ const EmailVerification = ({
           resetAuthState();
         });
       });
-    }, 2000);
+    }, 4000);
 
     return () => window.clearInterval(timer);
   }, [resetAuthState]);
 
   const onResendclick = () => {
-    setState({ error: undefined, sending: true, sent: false });
+    setState(prev => ({ ...prev, sending: true }));
     resendVerification(
-      () =>
-        setState({ error: undefined, sending: false, sent: true }),
-      (message: string) =>
-        setState({ error: message, sending: false, sent: false }),
+      () => {
+        setState(prev => ({ ...prev, sending: false }));
+        toast.info('A fresh verification email was sent.');
+      },
+      (message: string) => {
+        setState(prev => ({ ...prev, sending: false }));
+        return toast.error(message);
+      },
     );
   };
 
@@ -63,17 +66,8 @@ const EmailVerification = ({
                 An email was sent to <strong>{email}</strong> with a
                 link to verify your email.
               </p>
-              {state.error ? (
-                <div className="alert alert-danger">
-                  {state.error}
-                </div>
-              ) : state.sent ? (
-                <div className="alert alert-info">
-                  A fresh email was sent. Still didn't get it?
-                </div>
-              ) : (
-                <p>Didn't get it?</p>
-              )}
+
+              <p>Didn't get it?</p>
 
               <button
                 className="btn btn-primary"
@@ -83,7 +77,7 @@ const EmailVerification = ({
                 Resend verification email
               </button>
               <button
-                className="btn btn-primary ml-3"
+                className="btn btn-secondary ml-3"
                 onClick={logOut}
               >
                 Log out
