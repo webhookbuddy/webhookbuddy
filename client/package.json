@@ -45,7 +45,7 @@
     "electron": "nodemon --exec \"\"electron .\"\"",
     "electron-start": "node src/electron-wait-react",
     "react-start": "react-scripts start",
-    "react-start-emulator": "set REACT_APP_EMULATOR=true && react-scripts start",
+    "react-start-emulator": "cross-env REACT_APP_EMULATOR=true react-scripts start",
     "dist": "npm run build && electron-builder",
     "postinstall": "electron-builder install-app-deps"
   },
@@ -92,6 +92,7 @@
     "@types/react-toastify": "^4.1.0",
     "@types/react-virtualized-auto-sizer": "^1.0.0",
     "@types/react-window": "^1.8.3",
+    "cross-env": "^7.0.3",
     "electron": "^13.1.2",
     "electron-builder": "^22.11.7",
     "foreman": "^3.0.1",
