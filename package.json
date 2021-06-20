@@ -4,7 +4,7 @@
   "description": "# Setup",
   "main": "index.js",
   "scripts": {
-    "ci-all": "npm ci && cd client && npm ci && cd .. && cd fbase && npm ci && cd functions && npm ci",
+    "ci-all": "npm ci && cd client && npm ci && cd .. && cd fbase && npm ci && cd functions && npm ci && cd .. && cd test && npm ci",
     "start": "npm-run-all start-firebase:build --parallel start-client start-firebase:watch start-firebase:debug",
     "start:seed": "npm-run-all start-firebase:build --parallel start-client start-firebase:watch start-firebase:debug:seed",
     "start-client": "cd client && npm start",

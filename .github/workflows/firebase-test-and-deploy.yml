@@ -37,6 +37,9 @@ jobs:
       - name: Install functions dependencies
         working-directory: fbase/functions
         run: npm ci
+      - name: Install test dependencies
+        working-directory: fbase/test
+        run: npm ci
       - name: Set Project Id
         working-directory: fbase
         run: firebase use webhookbuddy-dev
