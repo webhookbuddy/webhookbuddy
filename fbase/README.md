@@ -20,7 +20,7 @@ scoop bucket add java
 scoop install openjdk
 ```
 
-# Test Data
+# Seed Data
 
 Export
 

@@ -1,5 +1,13 @@
 # Webhook Buddy
 
+Webhook Buddy source code includes:
+
+- Webhook Buddy Electron client (`client`)
+- Firebase
+  - Firestore security rules (`fbase/firestore.rules`)
+  - Firestore indexes (`fbase/firestore.indexes.json`)
+  - Firestore functions (`fbase/functions`)
+
 # Setup
 
 ## VS Code
@@ -10,65 +18,40 @@ Install `Prettier - Code formatter` extension. Prettier will automatically forma
 
 Use Node version 12+ (e.g. 12.16.1)
 
-```
-cd fbase/functions
-npm ci
-```
+Sadly you need a Firebase account and an active project to use the Firebase emulator, even though you won't use Firebase nor the active project when running Webhook Buddy with the Firebase emulator.
 
-```
-cd fbase
-npm ci
-npm run build
-```
-
-```
-cd client
-npm ci
-```
+- Install Firebase CLI: `npm install -g firebase-tools`
+- Go to fbase directory: `cd fbase`
+  - Log in to Firebase: `firebase login`
+  - Open `.firebaserc` and replace the project ID with your project ID (it can be any) for alias `dev`
+  - Set active project: `firebase use dev`
+- Install Java (required for Firebase emulator). See tips in `fbase/README.md`.
+- Install project dependencies: `npm run ci-all`
 
 # Test
 
 ```
-cd fbase
 npm test
 ```
 
 # Run
 
-## Emulator
+The following script will use the Firebase emulator as the server.
+To use Firebase in the cloud, see instructions in `client/README.md`.
 
 ```
-cd fbase
 npm start
 ```
 
-## Client
+The Electron app will automatically open. If you prefer to run the app in a browser, navigate to http://localhost:3000/
 
-### With emulator
+The first time you run the app, the emulator database will be empty.
+Use the Webhook Buddy Client to register a new user and you will be asked to verify your email.
+The link to verify your email will appear in the terminal logs.
 
-Runs both Electron and React app
+See `Seed Data` in `fbase/README.md` on instructions to save your data to use as seed for next time you run this project.
 
-```
-cd client
-npm start
-```
+# More setup options:
 
-### With Firebase in the cloud
-
-Runs both Electron and React app
-
-```
-cd client
-npm run start:dev
-```
-
-### Run Electron and React separately
-
-- `npm run electron` (Runs only Electon. Useful if you want to see console.log() output, but electron needs to be installed globally.)
-- `npm run react-start` (Runs only React app. Needed if you use `npm run electron`.)
-
-# Distribution
-
-- `cd client`
-- `npm run dist`
-- Distribution package for current environment will be in `dist` folder
+- `client/README.md`
+- `fbase/README.md`
