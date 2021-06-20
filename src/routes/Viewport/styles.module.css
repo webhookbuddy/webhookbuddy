@@ -1,4 +1,0 @@
-.viewport {
-  height: 100vh;
-  overflow-y: hidden; /* needed when .dock is hidden but still has bordr top and docker still have bottom -1px */
-}

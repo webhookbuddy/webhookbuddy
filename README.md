@@ -1,13 +1,12 @@
-# Webhook Buddy Client
+# Webhook Buddy
 
-Electron desktop app with React.js (via Create React App)
+Webhook Buddy source code includes:
 
-Initial configuration inspired by: https://www.freecodecamp.org/news/building-an-electron-application-with-create-react-app-97945861647c/
-
-Distribution setup inspired by:
-
-- https://medium.com/how-to-electron/a-complete-guide-to-packaging-your-electron-app-1bdc717d739f
-- https://medium.com/@kitze/%EF%B8%8F-from-react-to-an-electron-app-ready-for-production-a0468ecb1da3
+- Webhook Buddy Electron client (`client`)
+- Firebase
+  - Firestore security rules (`fbase/firestore.rules`)
+  - Firestore indexes (`fbase/firestore.indexes.json`)
+  - Firestore functions (`fbase/functions`)
 
 # Setup
 
@@ -17,24 +16,42 @@ Install `Prettier - Code formatter` extension. Prettier will automatically forma
 
 ## Environment
 
-- Use Node version 12+ (e.g. 12.16.1)
-  - `npm install`
+Use Node version 12+ (e.g. 12.16.1)
+
+Sadly you need a Firebase account and an active project to use the Firebase emulator, even though you won't use Firebase nor the active project when running Webhook Buddy with the Firebase emulator.
+
+- Install Firebase CLI: `npm install -g firebase-tools`
+- Go to fbase directory: `cd fbase`
+  - Log in to Firebase: `firebase login`
+  - Open `.firebaserc` and replace the project ID with your project ID (it can be any) for alias `dev`
+  - Set active project: `firebase use dev`
+- Install Java (required for Firebase emulator). See tips in `fbase/README.md`.
+- Install project dependencies: `npm run ci-all`
+
+# Test
+
+```
+npm test
+```
 
 # Run
 
-- Get server running with `Quick Start` instructions here: [webhook-buddy-server](https://github.com/webhook-buddy/webhook-buddy-server)
-- `npm start` (Runs both Electron and React app)
-- `npm run electron` (Runs only Electon. Useful if you want to see console.log() output.)
-- `npm run react-start` (Runs only React app. Needed if you use `npm run electron`.)
-
-# Automatically Generate Typescript Types
+The following script will use the Firebase emulator as the server.
+To use Firebase in the cloud, see instructions in `client/README.md`.
 
 ```
-npm run types-download
-npm run types-generate
+npm start
 ```
 
-# Distribution
+The Electron app will automatically open. If you prefer to run the app in a browser, navigate to http://localhost:3000/
 
-- `npm run dist`
-- Distribution package for current environment will be in `dist` folder
+The first time you run the app, the emulator database will be empty.
+Use the Webhook Buddy Client to register a new user and you will be asked to verify your email.
+The link to verify your email will appear in the terminal logs.
+
+See `Seed Data` in `fbase/README.md` on instructions to save your data to use as seed for next time you run this project.
+
+# More setup options:
+
+- `client/README.md`
+- `fbase/README.md`

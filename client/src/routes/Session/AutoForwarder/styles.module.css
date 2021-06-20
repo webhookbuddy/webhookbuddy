@@ -1,0 +1,50 @@
+.autoForwarder {
+  display: grid;
+  grid-template-columns: auto 1fr 3fr;
+  align-items: center;
+  transition: height 0.3s;
+  height: 0;
+  border-top: 1px solid #ccc;
+  padding: 0 20px;
+}
+
+.docked {
+  height: 90px;
+}
+
+.iconWrapper {
+  margin-right: 20px;
+}
+
+.idleIcon {
+  color: #28a745;
+  margin-right: 2px;
+}
+
+.runningIcon {
+  color: hsl(354, 70%, 54%);
+  animation: recorderButtonOn 1.6s infinite;
+}
+
+.notSelected {
+  display: grid;
+  place-items: center;
+}
+
+@keyframes recorderButtonOn {
+  0% {
+    color: hsl(354, 70%, 54%);
+  }
+  30% {
+    color: hsl(354, 70%, 75%);
+  }
+  50% {
+    color: hsl(354, 70%, 75%);
+  }
+  90% {
+    color: hsl(354, 70%, 54%);
+  }
+  100% {
+    color: hsl(354, 70%, 54%);
+  }
+}

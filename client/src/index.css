@@ -1,0 +1,19 @@
+a,
+a:hover {
+  text-decoration: none;
+  color: #007bff;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.super-center {
+  height: 100vh;
+  display: grid;
+  place-items: center;
+}
+
+.btn {
+  text-transform: uppercase;
+}
