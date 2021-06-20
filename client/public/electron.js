@@ -49,6 +49,9 @@ function createWindow() {
     height: 880,
     webPreferences: {
       nodeIntegration: true,
+      // contextIsolation became true by default in Electron 12: https://github.com/electron/electron/releases/tag/v12.0.0
+      // but it needs to be false for window.require('electron') in useNodeSender.tsx: https://stackoverflow.com/a/66779209/188740
+      contextIsolation: false,
       webSecurity: false,
     },
   });
