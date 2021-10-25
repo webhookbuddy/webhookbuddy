@@ -33,3 +33,10 @@ Import
 ```
 firebase emulators:start --import exports/<foldername>
 ```
+
+# Trigger Pubsub
+
+```
+firebase functions:shell
+firebase > limitWebhooks()
+```
