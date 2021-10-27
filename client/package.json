@@ -6,6 +6,10 @@
   "private": true,
   "main": "public/electron.js",
   "homepage": "./",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/webhookbuddy/webhookbuddy.git"
+  },
   "dependencies": {
     "@testing-library/jest-dom": "^5.11.9",
     "@testing-library/react": "^11.2.3",
