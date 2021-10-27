@@ -11,7 +11,7 @@ export const limitWebhooks = functions
   .runWith({
     timeoutSeconds: 300,
   })
-  .pubsub.schedule('*/5 * * * *') // Every 5 minutes: https://crontab.guru/every-5-minutes
+  .pubsub.schedule('*/30 * * * *') // Every 30 minutes: https://crontab.guru/every-30-minutes
   .onRun(async () => {
     const endpointStats = await db
       .collectionGroup('endpointStats')
