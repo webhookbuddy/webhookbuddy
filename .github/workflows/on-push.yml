@@ -1,0 +1,57 @@
+name: Run tests and deploy
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+    paths:
+      - '**/on-push.yml'
+      - 'fbase/*.rules'
+      - 'fbase/*.json'
+      - 'fbase/functions/**'
+
+jobs:
+  run_firebase_tests:
+    name: Tests
+    uses: webhookbuddy/webhookbuddy/.github/workflows/run-firebase-tests.yml@dev
+    secrets:
+      firebaseToken: ${{secrets.FIREBASE_TOKEN}}
+  # Job to run change detection: https://github.com/dorny/paths-filter#examples
+  changes:
+    needs: run_firebase_tests
+    name: Changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    # Set job outputs to values from filter step
+    outputs:
+      firebase: ${{steps.filter.outputs.firebase}}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            firebase:
+              - '**/on-push-dev.yml'
+              - 'fbase/*.rules'
+              - 'fbase/*.json'
+              - 'fbase/functions/**'
+  deploy_firebase_dev:
+    needs: changes
+    if: ${{github.event_name == 'push' && github.ref == 'refs/heads/dev' && needs.changes.outputs.firebase == 'true'}}
+    name: DEV
+    uses: webhookbuddy/webhookbuddy/.github/workflows/deploy-firebase.yml@dev
+    with:
+      projectAlias: dev
+    secrets:
+      firebaseToken: ${{secrets.FIREBASE_TOKEN}}
+  deploy_firebase_prod:
+    needs: changes
+    if: ${{github.event_name == 'push' && github.ref == 'refs/heads/main' && needs.changes.outputs.firebase == 'true'}}
+    name: PROD
+    uses: webhookbuddy/webhookbuddy/.github/workflows/deploy-firebase.yml@dev
+    with:
+      projectAlias: prod
+    secrets:
+      firebaseToken: ${{secrets.FIREBASE_TOKEN}}

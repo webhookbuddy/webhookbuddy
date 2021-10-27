@@ -1,0 +1,44 @@
+name: Run firebase tests
+
+on:
+  workflow_call:
+    secrets:
+      firebaseToken:
+        required: true
+
+jobs:
+  run_firebase_tests:
+    name: Firebase
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      # Needed for `firebase use webhookbuddy-dev`
+      # Generate with `firebase login:ci`
+      FIREBASE_TOKEN: ${{secrets.firebaseToken}}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '14'
+      - name: Cache firebase emulators
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/firebase/emulators
+          key: ${{runner.os}}-firebase-emulators-${{hashFiles('~/.cache/firebase/emulators/**')}}
+      - name: Install Firebase CLI
+        run: npm install -g firebase-tools
+      - name: Install fbase dependencies
+        working-directory: fbase
+        run: npm ci
+      - name: Install functions dependencies
+        working-directory: fbase/functions
+        run: npm ci
+      - name: Install test dependencies
+        working-directory: fbase/test
+        run: npm ci
+      - name: Set Project Id
+        working-directory: fbase
+        run: firebase use webhookbuddy-dev
+      - name: Run all tests
+        working-directory: fbase/test
+        run: firebase emulators:exec 'npm run test:ci' --only firestore
