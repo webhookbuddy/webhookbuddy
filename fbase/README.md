@@ -40,3 +40,16 @@ firebase emulators:start --import exports/<foldername>
 firebase functions:shell
 firebase > limitWebhooks()
 ```
+
+# Firestore indexes
+
+Limits: https://firebase.google.com/docs/firestore/query-data/index-overview#index_limitations
+
+Explanation of indexes in `firestore.indexes.json`:
+
+## Composite Indexes
+
+- endpointStats: totalwebhooks Ascending
+  - For collection group query in tasks/limitWebhooks.ts
+
+## Single Field Indexes
