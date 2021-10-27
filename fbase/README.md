@@ -53,3 +53,33 @@ Explanation of indexes in `firestore.indexes.json`:
   - For collection group query in tasks/limitWebhooks.ts
 
 ## Single Field Indexes
+
+- None
+
+# Run Cloud Scripts Locally
+
+- Create an GCP IAM Service Account with the following permissions:
+  - Cloud Datastore Owner
+  - Firebase Authentication Admin
+- Generate a JSON key file and store it in keys folder
+- Create a JS script file in functions/scripts (e.g. functions/scripts/foo.js)
+- `cd` into functions folder
+- Execute it as follow:
+
+Windows
+
+```
+$env:GOOGLE_APPLICATION_CREDENTIALS='../keys/key-file.json'
+```
+
+macOS
+
+```
+export GOOGLE_APPLICATION_CREDENTIALS='../keys/key-file.json'
+```
+
+Windows & macOS
+
+```
+node scripts/foo.js
+```
