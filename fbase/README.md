@@ -49,8 +49,7 @@ Explanation of indexes in `firestore.indexes.json`:
 
 ## Composite Indexes
 
-- endpointStats: totalwebhooks Ascending
-  - For collection group query in tasks/limitWebhooks.ts
+- None
 
 ## Single Field Indexes
 

@@ -13,20 +13,14 @@ export const limitWebhooks = functions
   })
   .pubsub.schedule('*/30 * * * *') // Every 30 minutes: https://crontab.guru/every-30-minutes
   .onRun(async () => {
-    const endpointStats = await db
-      .collectionGroup('endpointStats')
-      .where('totalWebhooks', '>', MAX_WEBHOOKS)
+    const endpoints = await db
+      .collection('endpoints')
+      .where('webhookCount', '>', MAX_WEBHOOKS)
       .get();
 
     return Promise.all(
-      endpointStats.docs.map(doc => {
-        const endpointId = doc.ref.parent.parent?.id;
-        if (endpointId)
-          return trimWebhooks(
-            endpointId,
-            doc.data().totalWebhooks - MAX_WEBHOOKS,
-          );
-        else return null;
-      }),
+      endpoints.docs.map(doc =>
+        trimWebhooks(doc.id, doc.data().webhookCount - MAX_WEBHOOKS),
+      ),
     );
   });
