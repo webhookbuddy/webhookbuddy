@@ -13,8 +13,10 @@ export const appendQuery = (
     ? `${url}&${queryString(query)}`
     : `${url}?${queryString(query)}`;
 
-export const mapRawHeaders = (rawHeaders: string[]) => {
+export const mapRawHeaders = (rawHeaders: string[] | null) => {
   const headers: Record<string, string> = {};
+  if (!rawHeaders) return headers;
+
   for (let i = 0; i < rawHeaders.length; i = i + 2)
     headers[rawHeaders[i]] = rawHeaders[i + 1];
 

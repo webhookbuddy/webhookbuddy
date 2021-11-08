@@ -48,7 +48,7 @@ const useNodeSender = ({
               webhook: Webhook;
             };
             statusCode: number;
-            rawHeaders: string[];
+            rawHeaders: string[] | null;
             data: string;
             error: any;
           }) => {
