@@ -36,7 +36,7 @@ ipcMain.handle(
       metadata,
       statusCode: response ? response.statusCode : null,
       rawHeaders: response ? response.rawHeaders : null,
-      data,
+      data: data ?? null,
       error,
     };
   },
