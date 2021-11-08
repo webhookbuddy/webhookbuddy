@@ -104,15 +104,7 @@ describe('Endpoint rules', () => {
     await expect(ref.get()).toDeny();
   });
 
-  it('Denies verified user access to set endpoint even if in role', async () => {
-    const uid = 'user123';
-    const endpointId = 'endpoint1';
-    await createEndpoint(endpointId, { roles: { [uid]: 'Owner' } });
-
-    const db = await setup({ uid, email_verified: true });
-    const ref = db.collection('endpoints').doc(endpointId);
-    await expect(ref.set({ foo: 'bar' }, { merge: true })).toDeny();
-  });
+  // forwardUrls
 
   it('Allows verified user access to forwardUrls if in role', async () => {
     const uid = 'user123';
@@ -128,6 +120,42 @@ describe('Endpoint rules', () => {
       ),
     ).toAllow();
   });
+
+  it('Allows verified user access to set forwardUrls if in role', async () => {
+    const uid = 'user123';
+    const endpointId = 'endpoint1';
+    await createEndpoint(endpointId, { roles: { [uid]: 'Owner' } });
+
+    const db = await setup({ uid, email_verified: true });
+    const ref = db.collection('endpoints').doc(endpointId);
+    await expect(
+      ref.set(
+        {
+          forwardUrls: [
+            'http://www.example.com/1',
+            'http://www.example.com/2',
+          ],
+        },
+        { merge: true },
+      ),
+    ).toAllow();
+  });
+
+  // webhookCount
+
+  it('Denies verified user access to set webhookCount even if in role', async () => {
+    const uid = 'user123';
+    const endpointId = 'endpoint1';
+    await createEndpoint(endpointId, { roles: { [uid]: 'Owner' } });
+
+    const db = await setup({ uid, email_verified: true });
+    const ref = db.collection('endpoints').doc(endpointId);
+    await expect(
+      ref.set({ webhookCount: 100 }, { merge: true }),
+    ).toDeny();
+  });
+
+  // Delete
 
   it('Allows owner access to delete endpoint', async () => {
     const uid = 'user123';
