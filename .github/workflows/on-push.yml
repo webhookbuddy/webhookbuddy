@@ -1,3 +1,5 @@
+# Force deploy: 0
+
 name: Run tests and deploy
 
 on:
@@ -18,9 +20,29 @@ jobs:
     secrets:
       firebaseToken: ${{secrets.FIREBASE_TOKEN}}
   # Job to run change detection: https://github.com/dorny/paths-filter#examples
-  changes:
+  changes_dev:
     needs: run_firebase_tests
-    name: Changes
+    name: Changes dev
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    # Set job outputs to values from filter step
+    outputs:
+      firebase: ${{steps.filter.outputs.firebase}}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          base: 'dev'
+          filters: |
+            firebase:
+              - '**/on-push.yml'
+              - 'fbase/*.rules'
+              - 'fbase/*.json'
+              - 'fbase/functions/**'
+  changes_main:
+    needs: run_firebase_tests
+    name: Changes main
     runs-on: ubuntu-latest
     timeout-minutes: 5
     # Set job outputs to values from filter step
@@ -33,13 +55,13 @@ jobs:
         with:
           filters: |
             firebase:
-              - '**/on-push-dev.yml'
+              - '**/on-push.yml'
               - 'fbase/*.rules'
               - 'fbase/*.json'
               - 'fbase/functions/**'
   deploy_firebase_dev:
-    needs: changes
-    if: ${{github.event_name == 'push' && github.ref == 'refs/heads/dev' && needs.changes.outputs.firebase == 'true'}}
+    needs: changes_dev
+    if: ${{github.event_name == 'push' && github.ref == 'refs/heads/dev' && needs.changes_dev.outputs.firebase == 'true'}}
     name: DEV
     uses: webhookbuddy/webhookbuddy/.github/workflows/deploy-firebase.yml@dev
     with:
@@ -47,8 +69,8 @@ jobs:
     secrets:
       firebaseToken: ${{secrets.FIREBASE_TOKEN}}
   deploy_firebase_prod:
-    needs: changes
-    if: ${{github.event_name == 'push' && github.ref == 'refs/heads/main' && needs.changes.outputs.firebase == 'true'}}
+    needs: changes_main
+    if: ${{github.event_name == 'push' && github.ref == 'refs/heads/main' && needs.changes_main.outputs.firebase == 'true'}}
     name: PROD
     uses: webhookbuddy/webhookbuddy/.github/workflows/deploy-firebase.yml@dev
     with:
