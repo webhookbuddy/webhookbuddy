@@ -14,7 +14,7 @@ export default async (userId: string, name: string) => {
   const user = userSnap.data();
   if (!userSnap.exists || !user) throw new Error('User not found.');
 
-  return await db.collection('endpoints').add({
+  const snap = await db.collection('endpoints').add({
     createdAt: admin.firestore.FieldValue.serverTimestamp(),
     name: name,
     referenceId: nanoid(),
@@ -30,4 +30,8 @@ export default async (userId: string, name: string) => {
     },
     forwardUrls: {},
   });
+
+  return {
+    id: snap.id,
+  };
 };
