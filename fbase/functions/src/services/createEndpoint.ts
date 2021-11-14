@@ -9,13 +9,25 @@ const nanoid = customAlphabet(
   22,
 );
 
-export default async (userId: string, name: string) =>
-  await db.collection('endpoints').add({
+export default async (userId: string, name: string) => {
+  const userSnap = await db.doc(`users/${userId}`).get();
+  const user = userSnap.data();
+  if (!userSnap.exists || !user) throw new Error('User not found.');
+
+  return await db.collection('endpoints').add({
     createdAt: admin.firestore.FieldValue.serverTimestamp(),
     name: name,
     referenceId: nanoid(),
-    roles: {
-      [userId]: 'Owner',
+    users: {
+      [userId]: {
+        exists: true,
+        role: 'Admin',
+        id: userId,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+      },
     },
     forwardUrls: {},
   });
+};

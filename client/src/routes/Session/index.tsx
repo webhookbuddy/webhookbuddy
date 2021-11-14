@@ -42,9 +42,9 @@ const Verified = () => {
     loading,
   } = useStreamDocuments<Endpoint>('endpoints', [
     {
-      fieldPath: `roles.${me.id}`,
-      opStr: '>',
-      value: '',
+      fieldPath: `users.${me.id}.exists`,
+      opStr: '==',
+      value: true,
     } as CollectionFilter,
   ]);
 

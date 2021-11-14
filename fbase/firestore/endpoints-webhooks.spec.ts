@@ -3,7 +3,7 @@ import { setup, setupAdmin, teardown } from '../testHelpers';
 import moment = require('moment');
 
 const createWebhook = async (
-  roleUserId: string,
+  userId: string,
   endpointId: string,
   webhookId: string,
   overrides?: object,
@@ -12,8 +12,12 @@ const createWebhook = async (
   await admin.doc(`endpoints/${endpointId}`).set({
     name: 'My Endpoint',
     createdAt: moment().subtract(5, 'minutes').toDate(),
-    roles: {
-      [roleUserId]: 'Owner',
+    users: {
+      [userId]: {
+        exists: true,
+        role: 'Admin',
+        id: userId,
+      },
     },
   });
   await admin

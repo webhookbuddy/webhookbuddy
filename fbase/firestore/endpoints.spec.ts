@@ -12,7 +12,7 @@ const createEndpoint = async (
     .set({
       name: 'My Endpoint',
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      roles: {},
+      users: {},
       ...overrides,
     });
 };
@@ -54,49 +54,61 @@ describe('Endpoint rules', () => {
     await expect(ref.get()).toDeny();
   });
 
-  it('Denies authorized but unverified user access to list endpoints even if in role', async () => {
+  it('Denies authorized but unverified user access to list endpoints even if in users list', async () => {
     const uid = 'user123';
     const db = await setup({ uid });
     const ref = db
       .collection('endpoints')
-      .where(`roles.${uid}`, '>', '');
+      .where(`users.${uid}.exists`, '==', true);
     await expect(ref.get()).toDeny();
   });
 
-  it('Allows verified user access to list endpoints if in role', async () => {
+  it('Allows verified user access to list endpoints if in users list', async () => {
     const uid = 'user123';
     const db = await setup({ uid, email_verified: true });
     const ref = db
       .collection('endpoints')
-      .where(`roles.${uid}`, '>', '');
+      .where(`users.${uid}.exists`, '==', true);
     await expect(ref.get()).toAllow();
   });
 
-  it('Denies authorized but unverified user access to get endpoint even if in role', async () => {
-    const uid = 'user123';
-    const endpointId = 'endpoint1';
-    await createEndpoint(endpointId, { roles: { [uid]: 'Owner' } });
-
-    const db = await setup({ uid });
-    const ref = db.collection('endpoints').doc(endpointId);
-    await expect(ref.get()).toDeny();
-  });
-
-  it('Allows verified user access to get endpoint if in role', async () => {
-    const uid = 'user123';
-    const endpointId = 'endpoint1';
-    await createEndpoint(endpointId, { roles: { [uid]: 'Owner' } });
-
-    const db = await setup({ uid, email_verified: true });
-    const ref = db.collection('endpoints').doc(endpointId);
-    await expect(ref.get()).toAllow();
-  });
-
-  it('Denies verified user access to get endpoint if not in role', async () => {
+  it('Denies authorized but unverified user access to get endpoint even if in users list', async () => {
     const uid = 'user123';
     const endpointId = 'endpoint1';
     await createEndpoint(endpointId, {
-      roles: { anotheruser: 'Owner' },
+      users: {
+        [uid]: {
+          exists: true,
+        },
+      },
+    });
+
+    const db = await setup({ uid });
+    const ref = db.collection('endpoints').doc(endpointId);
+    await expect(ref.get()).toDeny();
+  });
+
+  it('Allows verified user access to get endpoint if in users list', async () => {
+    const uid = 'user123';
+    const endpointId = 'endpoint1';
+    await createEndpoint(endpointId, {
+      users: {
+        [uid]: {
+          exists: true,
+        },
+      },
+    });
+
+    const db = await setup({ uid, email_verified: true });
+    const ref = db.collection('endpoints').doc(endpointId);
+    await expect(ref.get()).toAllow();
+  });
+
+  it('Denies verified user access to get endpoint if not in users list', async () => {
+    const uid = 'user123';
+    const endpointId = 'endpoint1';
+    await createEndpoint(endpointId, {
+      users: { anotherUser: { exists: true } },
     });
 
     const db = await setup({ uid, email_verified: true });
@@ -106,10 +118,16 @@ describe('Endpoint rules', () => {
 
   // forwardUrls
 
-  it('Allows verified user access to forwardUrls if in role', async () => {
+  it('Allows verified user access to add forwardUrls if in users list', async () => {
     const uid = 'user123';
     const endpointId = 'endpoint1';
-    await createEndpoint(endpointId, { roles: { [uid]: 'Owner' } });
+    await createEndpoint(endpointId, {
+      users: {
+        [uid]: {
+          exists: true,
+        },
+      },
+    });
 
     const db = await setup({ uid, email_verified: true });
     const ref = db.collection('endpoints').doc(endpointId);
@@ -121,10 +139,16 @@ describe('Endpoint rules', () => {
     ).toAllow();
   });
 
-  it('Allows verified user access to set forwardUrls if in role', async () => {
+  it('Allows verified user access to update forwardUrls if in users list', async () => {
     const uid = 'user123';
     const endpointId = 'endpoint1';
-    await createEndpoint(endpointId, { roles: { [uid]: 'Owner' } });
+    await createEndpoint(endpointId, {
+      users: {
+        [uid]: {
+          exists: true,
+        },
+      },
+    });
 
     const db = await setup({ uid, email_verified: true });
     const ref = db.collection('endpoints').doc(endpointId);
@@ -143,10 +167,16 @@ describe('Endpoint rules', () => {
 
   // webhookCount
 
-  it('Denies verified user access to set webhookCount even if in role', async () => {
+  it('Denies verified user access to set webhookCount even if in users list ', async () => {
     const uid = 'user123';
     const endpointId = 'endpoint1';
-    await createEndpoint(endpointId, { roles: { [uid]: 'Owner' } });
+    await createEndpoint(endpointId, {
+      users: {
+        [uid]: {
+          exists: true,
+        },
+      },
+    });
 
     const db = await setup({ uid, email_verified: true });
     const ref = db.collection('endpoints').doc(endpointId);
@@ -157,20 +187,34 @@ describe('Endpoint rules', () => {
 
   // Delete
 
-  it('Allows owner access to delete endpoint', async () => {
+  it('Allows admin access to delete endpoint', async () => {
     const uid = 'user123';
     const endpointId = 'endpoint1';
-    await createEndpoint(endpointId, { roles: { [uid]: 'Owner' } });
+    await createEndpoint(endpointId, {
+      users: {
+        [uid]: {
+          exists: true,
+          role: 'Admin',
+        },
+      },
+    });
 
     const db = await setup({ uid, email_verified: true });
     const ref = db.collection('endpoints').doc(endpointId);
     await expect(ref.delete()).toAllow();
   });
 
-  it('Denies editor access to delete endpoint', async () => {
+  it('Denies developer access to delete endpoint', async () => {
     const uid = 'user123';
     const endpointId = 'endpoint1';
-    await createEndpoint(endpointId, { roles: { [uid]: 'Editor' } });
+    await createEndpoint(endpointId, {
+      users: {
+        [uid]: {
+          exists: true,
+          role: 'Developer',
+        },
+      },
+    });
 
     const db = await setup({ uid, email_verified: true });
     const ref = db.collection('endpoints').doc(endpointId);
