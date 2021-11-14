@@ -22,6 +22,7 @@ jobs:
   # Job to run change detection: https://github.com/dorny/paths-filter#examples
   changes_dev:
     needs: run_firebase_tests
+    if: ${{github.event_name == 'push' && github.ref == 'refs/heads/dev'}}
     name: Changes dev
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -42,6 +43,7 @@ jobs:
               - 'fbase/functions/**'
   changes_main:
     needs: run_firebase_tests
+    if: ${{github.event_name == 'push' && github.ref == 'refs/heads/main'}}
     name: Changes main
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -61,7 +63,7 @@ jobs:
               - 'fbase/functions/**'
   deploy_firebase_dev:
     needs: changes_dev
-    if: ${{github.event_name == 'push' && github.ref == 'refs/heads/dev' && needs.changes_dev.outputs.firebase == 'true'}}
+    if: ${{needs.changes_dev.outputs.firebase == 'true'}}
     name: DEV
     uses: webhookbuddy/webhookbuddy/.github/workflows/deploy-firebase.yml@dev
     with:
@@ -70,7 +72,7 @@ jobs:
       firebaseToken: ${{secrets.FIREBASE_TOKEN}}
   deploy_firebase_prod:
     needs: changes_main
-    if: ${{github.event_name == 'push' && github.ref == 'refs/heads/main' && needs.changes_main.outputs.firebase == 'true'}}
+    if: ${{needs.changes_main.outputs.firebase == 'true'}}
     name: PROD
     uses: webhookbuddy/webhookbuddy/.github/workflows/deploy-firebase.yml@dev
     with:
