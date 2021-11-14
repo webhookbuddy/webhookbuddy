@@ -1,6 +1,6 @@
 import point from './https/point';
-import { timestamp } from './callables/timestamp';
-import { createEndpoint } from './callables/createEndpoint';
+import { callTimestamp } from './callables/callTimestamp';
+import { callCreateEndpoint } from './callables/callCreateEndpoint';
 import { onUserCreate } from './listeners/onUserCreate';
 import { onUserWrite } from './listeners/onUserWrite';
 import { onEndpointDelete } from './listeners/onEndpointDelete';
@@ -9,8 +9,8 @@ import { limitWebhooks } from './tasks/limitWebhooks';
 
 export {
   point,
-  timestamp,
-  createEndpoint,
+  callTimestamp,
+  callCreateEndpoint,
   onUserCreate,
   onUserWrite,
   onEndpointDelete,
