@@ -4,7 +4,7 @@ import useLazyCallFunction from 'hooks/useLazyCallFunction';
 import FormLayout, { FormAlignment } from 'components/FormLayout';
 
 const Create = () => {
-  const { call } = useLazyCallFunction('createEndpoint');
+  const { call } = useLazyCallFunction('callCreateEndpoint');
   const history = useHistory();
 
   const [state, setState] = useState<{

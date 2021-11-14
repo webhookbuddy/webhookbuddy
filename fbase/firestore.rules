@@ -16,7 +16,7 @@ service cloud.firestore {
       allow read: if hasAccessToEndpoint();
 
       function hasAccessToEndpoint() {
-        return isVerified() && isRoleInEndpoint(getEndpoint());
+        return isVerified() && isUserInEndpoint(getEndpoint());
       }
 
       function getEndpoint() {
@@ -25,9 +25,9 @@ service cloud.firestore {
     }
 
     match /endpoints/{endpointId} {
-      allow read: if isVerified() && resource.data.roles[request.auth.uid] > '';
+      allow read: if isVerified() && resource.data.users[request.auth.uid].exists;
       allow update: if hasAccessToEndpoint() && isEndpointValid();
-      allow delete: if isOwnerOfEndpoint(resource.data);
+      allow delete: if isAdminOfEndpoint(resource.data);
 
       match /webhooks/{webhookId} {
         allow read, delete: if hasAccessToEndpoint();
@@ -35,7 +35,7 @@ service cloud.firestore {
       }
 
       function hasAccessToEndpoint() {
-        return isVerified() && isRoleInEndpoint(get(/databases/$(database)/documents/endpoints/$(endpointId)).data);
+        return isVerified() && isUserInEndpoint(get(/databases/$(database)/documents/endpoints/$(endpointId)).data);
       }
     }
   }
@@ -89,12 +89,12 @@ service cloud.firestore {
     );
   }
 
-  function isRoleInEndpoint(endpoint) {
-    return endpoint.roles[request.auth.uid] in ['Owner', 'Editor'];
+  function isUserInEndpoint(endpoint) {
+    return endpoint.users[request.auth.uid].exists;
   }
 
-  function isOwnerOfEndpoint(endpoint) {
-    return endpoint.roles[request.auth.uid] == 'Owner';
+  function isAdminOfEndpoint(endpoint) {
+    return endpoint.users[request.auth.uid].role == 'Admin';
   }
 
   function isEndpointValid() {
