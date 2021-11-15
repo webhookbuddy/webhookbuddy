@@ -5,13 +5,14 @@
   "main": "index.js",
   "scripts": {
     "ci-all": "npm ci && cd client && npm ci && cd .. && cd fbase && npm ci && cd functions && npm ci && cd .. && cd test && npm ci",
-    "start": "npm-run-all start-firebase:build --parallel start-client start-firebase:watch start-firebase:debug",
-    "start:seed": "npm-run-all start-firebase:build --parallel start-client start-firebase:watch start-firebase:debug:seed",
-    "start-client": "cd client && npm start",
-    "start-firebase:build": "cd fbase && npm run build",
-    "start-firebase:watch": "cd fbase && npm run watch",
-    "start-firebase:debug": "cd fbase && npm run debug",
-    "start-firebase:debug:seed": "cd fbase && npm run debug:seed",
+    "init": "npm-run-all firebase:build firebase:debug",
+    "save": "cd fbase && firebase emulators:export exports/seed",
+    "start": "npm-run-all firebase:build --parallel client firebase:watch firebase:debug:seed",
+    "client": "cd client && npm start",
+    "firebase:build": "cd fbase && npm run build",
+    "firebase:watch": "cd fbase && npm run watch",
+    "firebase:debug": "cd fbase && npm run debug",
+    "firebase:debug:seed": "cd fbase && npm run debug:seed",
     "test": "cd fbase && npm test"
   },
   "repository": {
