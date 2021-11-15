@@ -27,42 +27,40 @@ interface FirebaseUser {
   emailVerified: boolean;
 }
 
-const AuthContext =
-  createContext<
-    | {
-        me: User | null | undefined;
-        resetAuthState: () => void;
-        signIn: (
-          email: string,
-          password: string,
-        ) => Promise<AuthResponse | null>;
-        signOut: () => Promise<AuthResponse | null>;
-        verifyEmail: () => Promise<AuthResponse | null>;
-        resetPassword: (
-          email: string,
-        ) => Promise<AuthResponse | null>;
-      }
-    | undefined
-  >(undefined);
+const AuthContext = createContext<
+  | {
+      me: User | null | undefined;
+      resetAuthState: () => void;
+      signIn: (
+        email: string,
+        password: string,
+      ) => Promise<AuthResponse | null>;
+      signOut: () => Promise<AuthResponse | null>;
+      verifyEmail: () => Promise<AuthResponse | null>;
+      resetPassword: (email: string) => Promise<AuthResponse | null>;
+    }
+  | undefined
+>(undefined);
 
 const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [firebaseUser, setFirebaseUser] =
-    useState<FirebaseUser | null | undefined>(undefined);
+  const [firebaseUser, setFirebaseUser] = useState<
+    FirebaseUser | null | undefined
+  >(undefined);
 
   const [authCounter, setAuthCounter] = useState(0);
 
-  const [user, setUser] =
-    useState<
-      | {
-          firstName: string | null;
-          lastName: string | null;
-        }
-      | null
-      | undefined
-    >(undefined);
+  const [user, setUser] = useState<
+    | {
+        firstName: string | null;
+        lastName: string | null;
+      }
+    | null
+    | undefined
+  >(undefined);
 
-  const [authUser, setAuthUser] =
-    useState<User | null | undefined>(undefined);
+  const [authUser, setAuthUser] = useState<User | null | undefined>(
+    undefined,
+  );
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {
