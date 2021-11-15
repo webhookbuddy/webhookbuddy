@@ -14,7 +14,7 @@ Webhook Buddy source code includes:
 
 Install `Prettier - Code formatter` extension. Prettier will automatically format files on save.
 
-## Environment
+## Firebase Emulator Setup
 
 Use Node version 12+ (e.g. 12.16.1)
 
@@ -27,6 +27,9 @@ Sadly you need a Firebase account and an active project to use the Firebase emul
   - Set active project: `firebase use dev`
 - Install Java (required for Firebase emulator). See tips in `fbase/README.md`.
 - Install project dependencies: `npm run ci-all`
+- Initialize Firebase emulator: `npm run init`
+- Save server state: `npm run save`
+- Stop server: <kbd>CTRL</kbd>+<kbd>c</kbd>
 
 # Test
 
@@ -36,22 +39,15 @@ npm test
 
 # Run
 
-The following script will use the Firebase emulator as the server.
-To use Firebase in the cloud, see instructions in `client/README.md`.
-
 ```
 npm start
 ```
 
 The Electron app will automatically open. If you prefer to run the app in a browser, navigate to http://localhost:3000/
 
-The first time you run the app, the emulator database will be empty.
-Use the Webhook Buddy Client to register a new user and you will be asked to verify your email.
-The link to verify your email will appear in the terminal logs.
-
-See `Seed Data` in `fbase/README.md` on instructions to save your data to use as seed for next time you run this project.
+The first time you run the app, the emulator will be empty. To see the database, follow instructions here: https://github.com/webhookbuddy/webhookbuddy/wiki/Seed-Database
 
 # More setup options:
 
-- `client/README.md`
-- `fbase/README.md`
+- [client/README.md](https://github.com/webhookbuddy/webhookbuddy/tree/main/client)
+- [fbase/README.md](https://github.com/webhookbuddy/webhookbuddy/tree/main/fbase)

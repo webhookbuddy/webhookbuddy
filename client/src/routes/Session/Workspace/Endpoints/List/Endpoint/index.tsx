@@ -7,15 +7,13 @@ import { functions } from 'config/firebase';
 
 import styles from './styles.module.css';
 
-const dev = window.location.hostname === 'localhost';
-const emulator = dev && process.env.REACT_APP_EMULATOR;
+const emulator = process.env.REACT_APP_EMULATOR;
+const endpointUrl = process.env.REACT_APP_ENDPOINT_URL;
 
 const Endpoint = ({ endpoint }: { endpoint: EndpointType }) => {
   const urlPrefix = emulator
     ? `http://localhost:5001/${functions.app.options.projectId}/${functions.region}/point`
-    : dev
-    ? 'https://point-dev.webhookbuddy.com'
-    : `https://point.webhookbuddy.com`;
+    : endpointUrl;
 
   const url = `${urlPrefix}/${endpoint.referenceId}`;
 
