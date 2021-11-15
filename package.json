@@ -13,7 +13,8 @@
     "firebase:watch": "cd fbase && npm run watch",
     "firebase:debug": "cd fbase && npm run debug",
     "firebase:debug:seed": "cd fbase && npm run debug:seed",
-    "test": "cd fbase && npm test"
+    "test": "cd fbase && npm test",
+    "format": "prettier --write \"./**/*.{ts,tsx,json}\""
   },
   "repository": {
     "type": "git",
