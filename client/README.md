@@ -21,8 +21,11 @@ npm start
 
 ### Use Firebase in the cloud
 
-Copy `.env.sample` and save as `.env.development.local`.
-Create a Firebase project and populate `.env.development.local` with settings from Firebase Console's project settings page.
+.env file:
+
+- Copy `.env.sample` and save as `.env.development.local`.
+- Create a Firebase project and populate `.env.development.local` with settings from Firebase Console's project settings page.
+- Set `REACT_APP_ENDPOINT_URL` to the cloud endpoint url (e.g. Webhook Buddy uses https://point-dev.webhookbuddy.com in production).
 
 Runs both Electron and React app
 
