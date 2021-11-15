@@ -2,16 +2,15 @@ import { createContext, ReactNode, useContext } from 'react';
 import { Endpoint } from 'types/Endpoint';
 import { Webhook } from 'types/Webhook';
 
-const DashboardContext =
-  createContext<
-    | {
-        endpoint: Endpoint;
-        webhooks: Webhook[] | undefined;
-        webhooksLoading: boolean;
-        webhooksError: string | undefined;
-      }
-    | undefined
-  >(undefined);
+const DashboardContext = createContext<
+  | {
+      endpoint: Endpoint;
+      webhooks: Webhook[] | undefined;
+      webhooksLoading: boolean;
+      webhooksError: string | undefined;
+    }
+  | undefined
+>(undefined);
 
 const DashboardProvider = ({
   endpoint,

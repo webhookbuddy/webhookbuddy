@@ -1,8 +1,9 @@
 import { createContext, ReactNode, useContext } from 'react';
 import { Endpoint } from 'types/Endpoint';
 
-const WorkspaceContext =
-  createContext<{ endpoints: Endpoint[] } | undefined>(undefined);
+const WorkspaceContext = createContext<
+  { endpoints: Endpoint[] } | undefined
+>(undefined);
 
 const WorkspaceProvider = ({
   endpoints,
