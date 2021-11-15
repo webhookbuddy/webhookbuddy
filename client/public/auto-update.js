@@ -1,7 +1,12 @@
 const { dialog } = require('electron');
 const { autoUpdater } = require('electron-updater');
 
-exports.init = init;
+const isUpdateDownloaded = false;
+exports.modules = {
+    init: init,
+    checkUpdateDownloaded: checkUpdateDownloaded,
+    triggerUpdate: triggerUpdate
+}
 
 function init(win) {
     autoUpdater.autoDownload = false;
@@ -41,10 +46,20 @@ function init(win) {
 
         if (resp == 0) {
             autoUpdater.quitAndInstall();
+        } else {
+            isUpdateDownloaded = true;
         }
     });
 
     autoUpdater.on('error', (error) => {
         console.log(`AUTO_UPDATE_ERROR: ${JSON.stringify(error)}`);
     });
+}
+
+function checkUpdateDownloaded() {
+    return isUpdateDownloaded;
+}
+
+function triggerUpdate() {
+    autoUpdater.quitAndInstall(true, false);
 }
