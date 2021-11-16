@@ -16,7 +16,7 @@ jobs:
   publish_client:
     name: Publish Client
     runs-on: ${{inputs.runsOn}}
-    timeout-minutes: 15
+    timeout-minutes: 25
     env:
       GH_TOKEN: ${{secrets.githubToken}}
       REACT_APP_ENDPOINT_URL: https://point.webhookbuddy.com
