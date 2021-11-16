@@ -37,17 +37,15 @@ function init(win) {
     });
 
     autoUpdater.on('update-downloaded', () => {
+        isUpdateDownloaded = true;
         let resp = dialog.showMessageBoxSync(win, {
             message: 'New version downloaded. Update now?',
             type: 'question',
             title: 'UPDATE NOTIFICATION',
             buttons: ['YES', 'NO']
         });
-
         if (resp == 0) {
             autoUpdater.quitAndInstall();
-        } else {
-            isUpdateDownloaded = true;
         }
     });
 
@@ -61,5 +59,5 @@ function checkUpdateDownloaded() {
 }
 
 function triggerUpdate() {
-    autoUpdater.quitAndInstall(true, false);
+    autoUpdater.quitAndInstall();
 }
