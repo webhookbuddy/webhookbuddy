@@ -21,7 +21,7 @@ function init(win) {
     
     autoUpdater.on('update-available', (info) => {
         let resp = dialog.showMessageBoxSync(win, {
-            message: 'New update available. Do you want to download the bundle?',
+            message: `A new version is available(version ${info.version}). Download it now?`,
             type: 'question',
             title: 'UPDATE NOTIFICATION',
             buttons: ['YES', 'NO']
@@ -38,7 +38,7 @@ function init(win) {
 
     autoUpdater.on('update-downloaded', () => {
         let resp = dialog.showMessageBoxSync(win, {
-            message: 'New update downloaded. Do you want to quit the app now to update?',
+            message: 'New version downloaded. Update now?',
             type: 'question',
             title: 'UPDATE NOTIFICATION',
             buttons: ['YES', 'NO']
