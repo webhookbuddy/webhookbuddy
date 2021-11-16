@@ -96,6 +96,7 @@ jobs:
         id: check
         uses: EndBug/version-check@v1 # https://github.com/marketplace/actions/version-check
         with:
+          diff-search: true
           file-name: ./client/package.json
   publish_client:
     needs: version_check
