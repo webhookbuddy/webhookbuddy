@@ -28,7 +28,7 @@ jobs:
       REACT_APP_FIREBASE_APP_ID: 1:758686201783:web:29fc8030cfe83a953b1a32
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@v2
         with:
           node-version: '14'
       - name: Install client dependencies

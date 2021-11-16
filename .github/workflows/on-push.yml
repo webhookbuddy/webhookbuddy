@@ -89,7 +89,7 @@ jobs:
       version_changed: ${{steps.check.outputs.changed}} # https://github.community/t/sharing-a-variable-between-jobs/16967/14
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@v2
         with:
           node-version: '14'
       - name: Check if version changed in client/package.json
