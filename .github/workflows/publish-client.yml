@@ -1,0 +1,26 @@
+name: Publish client
+
+on:
+  workflow_call:
+    secrets:
+      githubToken:
+        required: true
+
+jobs:
+  publish_client:
+    name: Publish Client
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      GH_TOKEN: ${{secrets.githubToken}}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '14'
+      - name: Install client dependencies
+        working-directory: client
+        run: npm ci
+      - name: Publish
+        working-directory: client
+        run: npm run publish

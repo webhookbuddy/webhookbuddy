@@ -12,6 +12,7 @@ on:
       - 'fbase/*.rules'
       - 'fbase/*.json'
       - 'fbase/functions/**'
+      - 'client/package.json'
 
 jobs:
   run_firebase_tests:
@@ -79,3 +80,27 @@ jobs:
       projectAlias: prod
     secrets:
       firebaseToken: ${{secrets.FIREBASE_TOKEN}}
+  version_check:
+    needs: run_firebase_tests
+    if: ${{github.event_name == 'push' && github.ref == 'refs/heads/main'}}
+    name: Check client version
+    runs-on: ubuntu-latest
+    outputs:
+      version_changed: ${{steps.check.outputs.changed}} # https://github.community/t/sharing-a-variable-between-jobs/16967/14
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '14'
+      - name: Check if version changed in client/package.json
+        id: check
+        uses: EndBug/version-check@v1 # https://github.com/marketplace/actions/version-check
+        with:
+          file-name: ./client/package.json
+  publish_client:
+    needs: version_check
+    if: ${{needs.version_check.outputs.version_changed == 'true'}}
+    name: PROD
+    uses: webhookbuddy/webhookbuddy/.github/workflows/publish-client.yml@dev
+    secrets:
+      githubToken: ${{secrets.GITHUB_TOKEN}}
