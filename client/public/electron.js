@@ -3,6 +3,8 @@ const path = require('path');
 const isDev = require('electron-is-dev');
 const request = require('request');
 
+const update = require('./auto-update');
+
 // Disable warnings for:
 // - Disabled webSecurity
 // - allowRunningInsecureContent
@@ -66,6 +68,7 @@ function createWindow() {
 
   // Open the DevTools.
   if (isDev) win.webContents.openDevTools();
+  update.modules.init(win);
 }
 
 // This method will be called when Electron has finished
@@ -77,8 +80,12 @@ app.whenReady().then(createWindow);
 app.on('window-all-closed', () => {
   // On macOS it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
-  if (process.platform !== 'darwin') {
-    app.quit();
+  if (update.modules.checkUpdateDownloaded()) {
+    update.modules.triggerUpdate();
+  } else {
+    if (process.platform !== 'darwin') {
+      app.quit();
+    }
   }
 });
 
