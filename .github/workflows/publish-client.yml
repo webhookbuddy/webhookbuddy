@@ -2,6 +2,10 @@ name: Publish client
 
 on:
   workflow_call:
+    inputs:
+      runsOn:
+        required: true
+        type: string
     secrets:
       githubToken:
         required: true
@@ -9,7 +13,7 @@ on:
 jobs:
   publish_client:
     name: Publish Client
-    runs-on: ubuntu-latest
+    runs-on: ${{inputs.runsOn}}
     timeout-minutes: 15
     env:
       GH_TOKEN: ${{secrets.githubToken}}

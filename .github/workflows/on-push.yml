@@ -98,10 +98,30 @@ jobs:
         with:
           diff-search: true
           file-name: ./client/package.json
-  publish_client:
+  publish_client_linux:
     needs: version_check
     if: ${{needs.version_check.outputs.version_changed == 'true'}}
-    name: PROD
+    name: Linux
     uses: webhookbuddy/webhookbuddy/.github/workflows/publish-client.yml@dev
+    with:
+      runsOn: ubuntu-latest
+    secrets:
+      githubToken: ${{secrets.GITHUB_TOKEN}}
+  publish_client_macos:
+    needs: version_check
+    if: ${{needs.version_check.outputs.version_changed == 'true'}}
+    name: macOS
+    uses: webhookbuddy/webhookbuddy/.github/workflows/publish-client.yml@dev
+    with:
+      runsOn: macos-latest
+    secrets:
+      githubToken: ${{secrets.GITHUB_TOKEN}}
+  publish_client_windows:
+    needs: version_check
+    if: ${{needs.version_check.outputs.version_changed == 'true'}}
+    name: Windows
+    uses: webhookbuddy/webhookbuddy/.github/workflows/publish-client.yml@dev
+    with:
+      runsOn: windows-latest
     secrets:
       githubToken: ${{secrets.GITHUB_TOKEN}}
