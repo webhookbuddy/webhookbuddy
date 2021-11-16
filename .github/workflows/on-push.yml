@@ -107,6 +107,7 @@ jobs:
       runsOn: ubuntu-latest
     secrets:
       githubToken: ${{secrets.GITHUB_TOKEN}}
+      firebaseKey: ${{secrets.REACT_APP_FIREBASE_KEY}}
   publish_client_macos:
     needs: version_check
     if: ${{needs.version_check.outputs.version_changed == 'true'}}
@@ -116,6 +117,7 @@ jobs:
       runsOn: macos-latest
     secrets:
       githubToken: ${{secrets.GITHUB_TOKEN}}
+      firebaseKey: ${{secrets.REACT_APP_FIREBASE_KEY}}
   publish_client_windows:
     needs: version_check
     if: ${{needs.version_check.outputs.version_changed == 'true'}}
@@ -125,3 +127,4 @@ jobs:
       runsOn: windows-latest
     secrets:
       githubToken: ${{secrets.GITHUB_TOKEN}}
+      firebaseKey: ${{secrets.REACT_APP_FIREBASE_KEY}}

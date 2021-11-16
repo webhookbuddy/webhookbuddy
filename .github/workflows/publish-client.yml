@@ -9,6 +9,8 @@ on:
     secrets:
       githubToken:
         required: true
+      firebaseKey:
+        required: true
 
 jobs:
   publish_client:
@@ -17,6 +19,13 @@ jobs:
     timeout-minutes: 15
     env:
       GH_TOKEN: ${{secrets.githubToken}}
+      REACT_APP_ENDPOINT_URL: https://point.webhookbuddy.com
+      REACT_APP_FIREBASE_KEY: ${{secrets.firebaseKey}}
+      REACT_APP_FIREBASE_DOMAIN: webhookbuddy.firebaseapp.com
+      REACT_APP_FIREBASE_PROJECT_ID: webhookbuddy
+      REACT_APP_FIREBASE_STORAGE_BUCKET: webhookbuddy.appspot.com
+      REACT_APP_FIREBASE_SENDER_ID: 758686201783
+      REACT_APP_FIREBASE_APP_ID: 1:758686201783:web:29fc8030cfe83a953b1a32
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
