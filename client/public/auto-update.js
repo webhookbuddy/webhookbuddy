@@ -1,7 +1,7 @@
 const { dialog } = require('electron');
 const { autoUpdater } = require('electron-updater');
 
-const isUpdateDownloaded = false;
+var isUpdateDownloaded = false;
 exports.modules = {
     init: init,
     checkUpdateDownloaded: checkUpdateDownloaded,
