@@ -118,6 +118,8 @@ jobs:
     secrets:
       githubToken: ${{secrets.GITHUB_TOKEN}}
       firebaseKey: ${{secrets.REACT_APP_FIREBASE_KEY}}
+      appleId: ${{secrets.APPLE_ID}}
+      appleAppPassword: ${{secrets.APPLE_APP_PASSWORD}}
       macCerts: ${{secrets.MAC_CERTS}}
       macCertsPassword: ${{secrets.MAC_CERTS_PASSWORD}}
   publish_client_windows:
