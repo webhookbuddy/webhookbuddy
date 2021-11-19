@@ -71,7 +71,15 @@
     },
     "afterSign": "scripts/notarize.js",
     "mac": {
-      "category": "developer.tools"
+      "category": "developer.tools",
+      "hardenedRuntime" : true,
+      "gatekeeperAssess": false,
+      "entitlements": "build/entitlements.mac.plist",
+      "entitlementsInherit": "build/entitlements.mac.plist"
+      
+    },
+    "dmg": {
+      "sign": false
     },
     "linux": {
       "target": [
