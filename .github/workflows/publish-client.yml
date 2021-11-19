@@ -11,6 +11,14 @@ on:
         required: true
       firebaseKey:
         required: true
+      appleId:
+        required: false
+      appleAppPassword:
+        required: false
+      macCerts:
+        required: false
+      macCertsPassword:
+        required: false
 
 jobs:
   publish_client:
@@ -26,6 +34,10 @@ jobs:
       REACT_APP_FIREBASE_STORAGE_BUCKET: webhookbuddy.appspot.com
       REACT_APP_FIREBASE_SENDER_ID: 758686201783
       REACT_APP_FIREBASE_APP_ID: 1:758686201783:web:29fc8030cfe83a953b1a32
+      APPLE_ID: ${{secrets.appleId}}
+      APPLE_APP_PASSWORD: ${{secrets.appleAppPassword}}
+      mac_certs: ${{secrets.macCerts}}
+      mac_certs_password: ${{secrets.macCertsPassword}}
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
