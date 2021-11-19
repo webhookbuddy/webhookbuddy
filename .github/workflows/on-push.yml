@@ -118,6 +118,8 @@ jobs:
     secrets:
       githubToken: ${{secrets.GITHUB_TOKEN}}
       firebaseKey: ${{secrets.REACT_APP_FIREBASE_KEY}}
+      macCerts: ${{secrets.MAC_CERTS}}
+      macCertsPassword: ${{secrets.MAC_CERTS_PASSWORD}}
   publish_client_windows:
     needs: version_check
     if: ${{needs.version_check.outputs.version_changed == 'true'}}
