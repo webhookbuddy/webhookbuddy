@@ -1,7 +1,7 @@
 {
   "name": "webhookbuddy-client",
   "description": "Desktop client that captures and forwards webhooks to your local development server.",
-  "version": "0.2.9",
+  "version": "0.2.10",
   "author": {
     "name": "Jobcast Media Inc.",
     "email": "johnny@jobcast.net"
@@ -72,11 +72,10 @@
     "afterSign": "scripts/notarize.js",
     "mac": {
       "category": "developer.tools",
-      "hardenedRuntime" : true,
+      "hardenedRuntime": true,
       "gatekeeperAssess": false,
       "entitlements": "build/entitlements.mac.plist",
       "entitlementsInherit": "build/entitlements.mac.plist"
-      
     },
     "dmg": {
       "sign": false
