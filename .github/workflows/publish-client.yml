@@ -46,6 +46,10 @@ jobs:
       - name: Install client dependencies
         working-directory: client
         run: npm ci
+      - name: Echo inputs.runsOn
+        run: echo "${{inputs.runsOn}}"
+      - name: Echo matrix.os
+        run: echo "${{matrix.os}}"
       - name: Add MACOS cert
         if: ${{inputs.runsOn}} == 'macos-latest'
         working-directory: client
