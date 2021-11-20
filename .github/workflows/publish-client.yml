@@ -48,7 +48,7 @@ jobs:
         run: npm ci
       - name: Add MACOS cert
         working-directory: client
-        if: matrix.os == 'macos-latest'
+        if: ${{inputs.runsOn}} == 'macos-latest'
         run: chmod +x ./scripts/add-mac-cert.sh && ./scripts/add-mac-cert.sh
       - name: Publish
         working-directory: client
