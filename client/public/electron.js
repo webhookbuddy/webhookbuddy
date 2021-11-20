@@ -44,9 +44,10 @@ ipcMain.handle(
   },
 );
 
+let win = null;
 function createWindow() {
   // Create the browser window.
-  const win = new BrowserWindow({
+  win = new BrowserWindow({
     width: 1600,
     height: 880,
     webPreferences: {
@@ -71,10 +72,22 @@ function createWindow() {
   update.modules.init(win);
 }
 
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
-app.whenReady().then(createWindow);
+const gotTheLock = app.requestSingleInstanceLock();
+if (!gotTheLock) app.quit();
+else {
+  app.on('second-instance', () => {
+    // Someone tried to run a second instance, we should focus our window.
+    if (win) {
+      if (win.isMinimized()) win.restore();
+      win.focus();
+    }
+  });
+
+  // This method will be called when Electron has finished
+  // initialization and is ready to create browser windows.
+  // Some APIs can only be used after this event occurs.
+  app.whenReady().then(createWindow);
+}
 
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {
