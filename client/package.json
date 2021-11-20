@@ -64,7 +64,8 @@
     "productName": "Webhook Buddy",
     "files": [
       "build/**/*",
-      "node_modules/**/*"
+      "node_modules/**/*",
+      "scripts/**/*"
     ],
     "directories": {
       "buildResources": "assets"
@@ -74,8 +75,8 @@
       "category": "developer.tools",
       "hardenedRuntime": true,
       "gatekeeperAssess": false,
-      "entitlements": "build/entitlements.mac.plist",
-      "entitlementsInherit": "build/entitlements.mac.plist"
+      "entitlements": "scripts/entitlements.mac.plist",
+      "entitlementsInherit": "scripts/entitlements.mac.plist"
     },
     "dmg": {
       "sign": false
