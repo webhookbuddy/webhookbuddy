@@ -47,8 +47,8 @@ jobs:
         working-directory: client
         run: npm ci
       - name: Add MACOS cert
-        working-directory: client
         if: ${{inputs.runsOn}} == 'macos-latest'
+        working-directory: client
         run: chmod +x ./scripts/add-mac-cert.sh && ./scripts/add-mac-cert.sh
       - name: Publish
         working-directory: client
