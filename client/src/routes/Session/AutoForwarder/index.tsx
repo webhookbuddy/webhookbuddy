@@ -27,7 +27,7 @@ const AutoForwarder = ({ docked }: { docked: Boolean }) => {
   const [running, setRunning] = useState(false);
   const { forwardWebhook } = useForwarder(me, endpointId);
   const { call } =
-    useLazyCallFunction<{ now: number }>('calltimestamp');
+    useLazyCallFunction<{ now: number }>('callTimestamp');
 
   useEffect(() => {
     if (!endpoint || !url || !running) return;
