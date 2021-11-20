@@ -42,3 +42,9 @@ npm run start:dev
 
 - `npm run dist`
 - Distribution package for current environment will be in `dist` folder
+
+# Publish via GitHub Action
+
+- Bump the version number in package.json
+- Run `npm install`
+- Commit with message: `Release {version, e.g. 0.2.19}`
