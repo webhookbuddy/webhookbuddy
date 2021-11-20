@@ -27,7 +27,7 @@ service cloud.firestore {
     match /endpoints/{endpointId} {
       allow read: if isVerified() && resource.data.users[request.auth.uid].exists;
       allow update: if hasAccessToEndpoint() && isEndpointValid();
-      allow delete: if isAdminOfEndpoint(resource.data);
+      allow delete: if isOwnerOfEndpoint(resource.data);
 
       match /webhooks/{webhookId} {
         allow read, delete: if hasAccessToEndpoint();
@@ -93,8 +93,8 @@ service cloud.firestore {
     return endpoint.users[request.auth.uid].exists;
   }
 
-  function isAdminOfEndpoint(endpoint) {
-    return endpoint.users[request.auth.uid].role == 'Admin';
+  function isOwnerOfEndpoint(endpoint) {
+    return endpoint.users[request.auth.uid].role == 'Owner';
   }
 
   function isEndpointValid() {

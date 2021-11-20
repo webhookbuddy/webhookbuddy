@@ -21,7 +21,7 @@ export default async (userId: string, name: string) => {
     users: {
       [userId]: {
         exists: true,
-        role: 'Admin',
+        role: 'Owner',
         id: userId,
         firstName: user.firstName,
         lastName: user.lastName,

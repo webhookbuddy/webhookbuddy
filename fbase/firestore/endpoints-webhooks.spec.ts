@@ -15,7 +15,7 @@ const createWebhook = async (
     users: {
       [userId]: {
         exists: true,
-        role: 'Admin',
+        role: 'Owner',
         id: userId,
       },
     },

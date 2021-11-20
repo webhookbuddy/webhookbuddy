@@ -187,14 +187,14 @@ describe('Endpoint rules', () => {
 
   // Delete
 
-  it('Allows admin access to delete endpoint', async () => {
+  it('Allows owner access to delete endpoint', async () => {
     const uid = 'user123';
     const endpointId = 'endpoint1';
     await createEndpoint(endpointId, {
       users: {
         [uid]: {
           exists: true,
-          role: 'Admin',
+          role: 'Owner',
         },
       },
     });
@@ -204,14 +204,14 @@ describe('Endpoint rules', () => {
     await expect(ref.delete()).toAllow();
   });
 
-  it('Denies developer access to delete endpoint', async () => {
+  it('Denies guest from deleting endpoint', async () => {
     const uid = 'user123';
     const endpointId = 'endpoint1';
     await createEndpoint(endpointId, {
       users: {
         [uid]: {
           exists: true,
-          role: 'Developer',
+          role: 'Guest',
         },
       },
     });
