@@ -51,7 +51,7 @@ jobs:
       - name: Echo matrix.os
         run: echo "${{matrix.os}}"
       - name: Add MACOS cert
-        if: ${{inputs.runsOn}} == 'macos-latest'
+        if: ${{matrix.os == 'macos-latest'}}
         working-directory: client
         run: chmod +x ./scripts/add-mac-cert.sh && ./scripts/add-mac-cert.sh
       - name: Publish
