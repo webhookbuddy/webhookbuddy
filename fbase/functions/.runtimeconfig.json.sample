@@ -1,0 +1,12 @@
+{
+  "env": {
+    "signatureKey": "",
+    "fromEmail": "do-not-reply@example.com",
+    "unsubscribeUrlFormat": "http://localhost:3100/unsubscribes/{email}?hash={hash}",
+    "inviteUrlFormat": "http://localhost:3100/invites/{endpointId}?email={email}&hash={hash}",
+    "smtpHost": "smtp.mailtrap.io",
+    "smtpPort": 587,
+    "smtpAuthUser": "",
+    "smtpAuthPass": ""
+  }
+}
