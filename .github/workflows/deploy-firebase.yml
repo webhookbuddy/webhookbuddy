@@ -6,8 +6,30 @@ on:
       projectAlias: # As defined in fbase/.firebaserc (e.g. dev, prod)
         required: true
         type: string
+      fromEmail:
+        required: true
+        type: string
+      unsubscribeUrlFormat:
+        required: true
+        type: string
+      inviteUrlFormat:
+        required: true
+        type: string
+      smtpHost:
+        required: true
+        type: string
+      smtpPort:
+        required: true
+        type: number
+      smtpAuthUser:
+        required: true
+        type: string
     secrets:
       firebaseToken:
+        required: true
+      signatureKey:
+        required: true
+      smtpAuthPass:
         required: true
 
 jobs:
@@ -30,6 +52,19 @@ jobs:
       - name: Set Firebase project
         working-directory: fbase
         run: firebase use ${{inputs.projectAlias}}
+      - name: Set environment variables
+        working-directory: fbase
+        run: >
+          firebase functions:config:unset env &&
+          firebase functions:config:set
+          env.signatureKey="${{secrets.signatureKey}}"
+          env.fromEmail="${{inputs.fromEmail}}"
+          env.unsubscribeUrlFormat="${{inputs.unsubscribeUrlFormat}}"
+          env.inviteUrlFormat="${{inputs.inviteUrlFormat}}"
+          env.smtpHost="${{inputs.smtpHost}}"
+          env.smtpPort="${{inputs.smtpPort}}"
+          env.smtpAuthUser="${{inputs.smtpAuthUser}}"
+          env.smtpAuthPass="${{secrets.smtpAuthPass}}"
       - name: Deploy
         working-directory: fbase
         run: firebase deploy --only functions,firestore:rules,firestore:indexes --project ${{inputs.projectAlias}} --non-interactive -f

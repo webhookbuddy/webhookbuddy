@@ -69,8 +69,16 @@ jobs:
     uses: webhookbuddy/webhookbuddy/.github/workflows/deploy-firebase.yml@dev
     with:
       projectAlias: dev
+      fromEmail: webhookbuddy-dev@jobcast.net
+      unsubscribeUrlFormat: https://app-dev.webhookbuddy.com/unsubscribes/{email}?hash={hash}
+      inviteUrlFormat: https://app-dev.webhookbuddy.com/invites/{endpointId}?email={email}&hash={hash}
+      smtpHost: smtp.mailgun.org
+      smtpPort: 587
+      smtpAuthUser: postmaster@mg.webhookbuddy.com
     secrets:
       firebaseToken: ${{secrets.FIREBASE_TOKEN}}
+      signatureKey: ${{secrets.SIGNATURE_KEY_DEV}}
+      smtpAuthPass: ${{secrets.SMTP_AUTH_PASS}}
   deploy_firebase_prod:
     needs: changes_main
     if: ${{needs.changes_main.outputs.firebase == 'true'}}
@@ -78,8 +86,16 @@ jobs:
     uses: webhookbuddy/webhookbuddy/.github/workflows/deploy-firebase.yml@dev
     with:
       projectAlias: prod
+      fromEmail: webhookbuddy@jobcast.net
+      unsubscribeUrlFormat: https://app.webhookbuddy.com/unsubscribes/{email}?hash={hash}
+      inviteUrlFormat: https://app.webhookbuddy.com/invites/{endpointId}?email={email}&hash={hash}
+      smtpHost: smtp.mailgun.org
+      smtpPort: 587
+      smtpAuthUser: postmaster@mg.webhookbuddy.com
     secrets:
       firebaseToken: ${{secrets.FIREBASE_TOKEN}}
+      signatureKey: ${{secrets.SIGNATURE_KEY_PROD}}
+      smtpAuthPass: ${{secrets.SMTP_AUTH_PASS}}
   version_check:
     needs: run_firebase_tests
     if: ${{github.event_name == 'push' && github.ref == 'refs/heads/main'}}
