@@ -1,5 +1,4 @@
 import { MouseEvent, useEffect, useRef, useState } from 'react';
-import { Endpoint } from 'types/Endpoint';
 
 const Copy = ({
   url,
