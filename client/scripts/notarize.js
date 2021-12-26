@@ -7,8 +7,14 @@ exports.default = async function notarizeMacos(context) {
     return;
   }
 
-  if (!('APPLE_ID' in process.env && 'APPLE_APP_PASSWORD' in process.env)) {
-    console.warn('Skipping notarizing step. APPLE_ID and APPLE_ID_PASS env variables must be set');
+  if (
+    !(
+      'APPLE_ID' in process.env && 'APPLE_APP_PASSWORD' in process.env
+    )
+  ) {
+    console.warn(
+      'Skipping notarizing step. APPLE_ID and APPLE_ID_PASS env variables must be set',
+    );
     return;
   }
 
