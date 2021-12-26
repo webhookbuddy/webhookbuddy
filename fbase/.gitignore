@@ -4,6 +4,9 @@ keys/
 # Emulator exports
 exports/
 
+# Compiled folder
+lib/
+
 # Logs
 logs
 *.log
