@@ -30,7 +30,7 @@ service cloud.firestore {
       allow delete: if isOwnerOfEndpoint(resource.data);
 
       match /webhooks/{webhookId} {
-        allow read, delete: if hasAccessToEndpoint();
+        allow delete: if hasAccessToEndpoint();
         allow update: if hasAccessToEndpoint() && isWebhookValid();
       }
 
