@@ -17,9 +17,9 @@ function init(win) {
 
   autoUpdater.on('update-available', info => {
     let resp = dialog.showMessageBoxSync(win, {
-      message: `A new version is available(version ${info.version}). Download it now?`,
+      message: `There is a new version of Webhook Buddy (v${info.version}). Download it now?`,
       type: 'question',
-      title: 'UPDATE NOTIFICATION',
+      title: 'New Version Available',
       buttons: ['YES', 'NO'],
     });
 
@@ -35,7 +35,7 @@ function init(win) {
     let resp = dialog.showMessageBoxSync(win, {
       message: 'New version downloaded. Update now?',
       type: 'question',
-      title: 'UPDATE NOTIFICATION',
+      title: 'New Version Available',
       buttons: ['YES', 'NO'],
     });
     if (resp == 0) {
