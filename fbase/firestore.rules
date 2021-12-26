@@ -34,6 +34,12 @@ service cloud.firestore {
         allow update: if hasAccessToEndpoint() && isWebhookValid();
       }
 
+      match /invites/{inviteId} {
+        allow write: if hasAccessToEndpoint() &&
+          isOwnerOfEndpoint(get(/databases/$(database)/documents/endpoints/$(endpointId)).data) &&
+          isInviteValid(database, request.resource.data);
+      }
+
       function hasAccessToEndpoint() {
         return isVerified() && isUserInEndpoint(get(/databases/$(database)/documents/endpoints/$(endpointId)).data);
       }
@@ -106,6 +112,16 @@ service cloud.firestore {
   function isWebhookValid() {
     return (
       !fieldAffected('createdAt')
+    );
+  }
+
+  function isInviteValid(database, invite) {
+    let user = get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    let inviter = invite.inviter;
+    return (
+      inviter.email == request.auth.token.email &&
+      inviter.firstName == user.firstName &&
+      inviter.lastName == user.lastName
     );
   }
 }
