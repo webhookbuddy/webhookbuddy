@@ -1,6 +1,7 @@
-import { Route, useLocation } from 'react-router-dom';
+import { Route, Switch, useLocation } from 'react-router-dom';
 import Header from 'components/Header';
 import List from './List';
+import Team from './Team';
 import Create from './Create';
 
 import styles from './styles.module.css';
@@ -15,8 +16,11 @@ const Endpoints = () => {
         <div className={styles.endpointsFullHeight}>
           <div className={styles.endpointsPadding}>
             <div className="container">
-              <Route exact path="/" component={List} />
-              <Route path="/endpoints/create" component={Create} />
+              <Switch>
+                <Route exact path="/" component={List} />
+                <Route path="/endpoints/:id/team" component={Team} />
+                <Route path="/endpoints/create" component={Create} />
+              </Switch>
             </div>
           </div>
         </div>
