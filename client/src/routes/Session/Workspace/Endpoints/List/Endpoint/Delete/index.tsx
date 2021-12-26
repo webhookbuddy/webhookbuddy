@@ -8,7 +8,7 @@ const Delete = ({
   iconStyle,
 }: {
   endpoint: Endpoint;
-  iconStyle: String;
+  iconStyle: string;
 }) => {
   const { deleteDocument } = useDeleteDocument('endpoints');
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -27,6 +27,7 @@ const Delete = ({
       <i
         onClick={handleClick}
         className={`fa fa-trash pointer ${iconStyle}`}
+        title="Delete"
       ></i>
       {/*
       // @ts-ignore: Legacy JSX error in ConfirmModal */}

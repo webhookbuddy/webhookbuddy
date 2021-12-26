@@ -6,6 +6,7 @@ import { Endpoint as EndpointType } from 'types/Endpoint';
 import { functions } from 'config/firebase';
 
 import styles from './styles.module.css';
+import Copy from './Copy';
 
 const emulator = process.env.REACT_APP_EMULATOR;
 const endpointUrl = process.env.REACT_APP_ENDPOINT_URL;
@@ -16,10 +17,6 @@ const Endpoint = ({ endpoint }: { endpoint: EndpointType }) => {
     : endpointUrl;
 
   const url = `${urlPrefix}/${endpoint.referenceId}`;
-
-  const handleCopyClick = (e: MouseEvent<HTMLElement>) => {
-    navigator.clipboard.writeText(url);
-  };
 
   return (
     <div className="list-group-item list-group-item-action list-group-item-secondary">
@@ -44,10 +41,7 @@ const Endpoint = ({ endpoint }: { endpoint: EndpointType }) => {
             className={styles.input}
           />
         </div>
-        <i
-          className={`fa fa-clipboard pointer ${styles.icon}`}
-          onClick={handleCopyClick}
-        ></i>
+        <Copy url={url} iconStyle={styles.icon} />
         <Delete endpoint={endpoint} iconStyle={styles.icon} />
       </div>
     </div>
