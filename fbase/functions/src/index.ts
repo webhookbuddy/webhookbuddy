@@ -1,3 +1,4 @@
+export { app } from './https/app';
 export { point } from './https/point';
 export { callTimestamp } from './callables/callTimestamp';
 export { callCreateEndpoint } from './callables/callCreateEndpoint';
