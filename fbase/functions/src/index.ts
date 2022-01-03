@@ -5,4 +5,5 @@ export { onUserCreate } from './listeners/onUserCreate';
 export { onUserWrite } from './listeners/onUserWrite';
 export { onEndpointDelete } from './listeners/onEndpointDelete';
 export { onWebhookWrite } from './listeners/onWebhookWrite';
+export { onInviteWrite } from './listeners/onInviteWrite';
 export { limitWebhooks } from './tasks/limitWebhooks';
