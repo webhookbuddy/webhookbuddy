@@ -25,7 +25,7 @@ const Forward = ({ forward }: { forward: ForwardType }) => {
         <div className={styles.header}>
           <div className={styles.label}>
             [
-            {moment(toDate(forward.createdAt)).format(
+            {dayjs(toDate(forward.createdAt)).format(
               'MMM DD, YYYY HH:mm',
             )}
             ] {forward.method} {forward.url}

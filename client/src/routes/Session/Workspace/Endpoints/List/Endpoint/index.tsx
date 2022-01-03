@@ -26,7 +26,7 @@ const Endpoint = ({ endpoint }: { endpoint: EndpointType }) => {
           </Link>
         </h5>
         <small>
-          Created {moment(endpoint.createdAt.toDate()).fromNow()}
+          Created {dayjs(endpoint.createdAt.toDate()).fromNow()}
         </small>
       </div>
       <div className="mb-1">Send your webhooks to this URL:</div>

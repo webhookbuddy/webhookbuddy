@@ -50,7 +50,7 @@ const HttpMessage = ({
               <tr>
                 <td>Date</td>
                 <td>
-                  {moment(toDate(message.createdAt)).format('LLL')}
+                  {dayjs(toDate(message.createdAt)).format('LLL')}
                 </td>
               </tr>
               {headings.map((heading, i) => (

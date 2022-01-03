@@ -11,7 +11,7 @@ const createWebhook = async (
   const admin = await setupAdmin();
   await admin.doc(`endpoints/${endpointId}`).set({
     name: 'My Endpoint',
-    createdAt: moment().subtract(5, 'minutes').toDate(),
+    createdAt: dayjs().subtract(5, 'minutes').toDate(),
     users: {
       [userId]: {
         exists: true,
@@ -24,7 +24,7 @@ const createWebhook = async (
     .doc(`endpoints/${endpointId}/webhooks/${webhookId}`)
     .set({
       method: 'POST',
-      createdAt: moment().subtract(5, 'minutes').toDate(),
+      createdAt: dayjs().subtract(5, 'minutes').toDate(),
       ...overrides,
     });
 };

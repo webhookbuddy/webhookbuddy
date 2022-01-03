@@ -28,7 +28,7 @@ const Item = ({
 }) => {
   const { me, forwardingIds } = useSessionContext();
 
-  const label = `[${moment(webhook.createdAt.toDate()).format(
+  const label = `[${dayjs(webhook.createdAt.toDate()).format(
     'MMM DD, YYYY HH:mm',
   )}] ${webhookDescription(webhook)}`;
 
