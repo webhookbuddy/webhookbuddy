@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import Delete from './Delete';
 import { Endpoint as EndpointType } from 'types/Endpoint';
 import { functions } from 'config/firebase';

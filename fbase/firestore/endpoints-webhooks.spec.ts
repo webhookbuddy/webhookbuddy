@@ -1,6 +1,6 @@
 import * as firebase from '@firebase/testing';
 import { setup, setupAdmin, teardown } from '../testHelpers';
-import moment = require('moment');
+import dayjs = require('dayjs');
 
 const createWebhook = async (
   userId: string,

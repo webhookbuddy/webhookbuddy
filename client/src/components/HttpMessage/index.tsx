@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { toDate } from 'services/date';
 import { Webhook } from 'types/Webhook';
 import { Forward } from 'types/Forward';

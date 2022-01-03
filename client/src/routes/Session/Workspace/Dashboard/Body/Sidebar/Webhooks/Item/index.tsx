@@ -1,5 +1,5 @@
 import { Webhook } from 'types/Webhook';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import PeopleIcon from 'components/PeopleIcon';
 import { webhookDescription } from 'services/webhook';
 import { useSessionContext } from 'contexts/SessionContext';
