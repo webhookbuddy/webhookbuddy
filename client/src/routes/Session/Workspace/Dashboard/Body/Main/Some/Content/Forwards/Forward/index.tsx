@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import HttpMessage from 'components/HttpMessage';
 import { Forward as ForwardType } from 'types/Forward';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { toDate } from 'services/date';
 import PeopleIcon from 'components/PeopleIcon';
 import { useSessionContext } from 'contexts/SessionContext';
@@ -25,7 +25,7 @@ const Forward = ({ forward }: { forward: ForwardType }) => {
         <div className={styles.header}>
           <div className={styles.label}>
             [
-            {moment(toDate(forward.createdAt)).format(
+            {dayjs(toDate(forward.createdAt)).format(
               'MMM DD, YYYY HH:mm',
             )}
             ] {forward.method} {forward.url}

@@ -1,6 +1,6 @@
 import * as firebase from '@firebase/testing';
 import { setup, setupAdmin, teardown } from '../testHelpers';
-import moment = require('moment');
+import dayjs = require('dayjs');
 
 const createUser = async (uid: string, payload: any) => {
   const admin = await setupAdmin();
@@ -103,7 +103,7 @@ describe('User rules', () => {
     const ref = db.collection('users').doc(uid);
     await expect(
       ref.set({
-        createdAt: moment().subtract(5, 'minutes').toDate(),
+        createdAt: dayjs().subtract(5, 'minutes').toDate(),
         firstName: 'Lou',
         lastName: 'Ferigno',
       }),
@@ -153,7 +153,7 @@ describe('User rules', () => {
   it('Denies verified user access to chnage createdAt', async () => {
     const uid = 'user123';
     await createUser(uid, {
-      createdAt: moment().subtract(5, 'minutes').toDate(),
+      createdAt: dayjs().subtract(5, 'minutes').toDate(),
       firstName: 'Lou',
       lastName: 'Ferigno',
     });

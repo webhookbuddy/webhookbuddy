@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { toDate } from 'services/date';
 import { Webhook } from 'types/Webhook';
 import { Forward } from 'types/Forward';
@@ -50,7 +50,7 @@ const HttpMessage = ({
               <tr>
                 <td>Date</td>
                 <td>
-                  {moment(toDate(message.createdAt)).format('LLL')}
+                  {dayjs(toDate(message.createdAt)).format('LLL')}
                 </td>
               </tr>
               {headings.map((heading, i) => (

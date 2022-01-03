@@ -8,6 +8,11 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
+// dayjs plugin import: https://day.js.org/docs/en/installation/typescript#locale-and-plugin-import
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+dayjs.extend(relativeTime);
+
 ReactDOM.render(
   <StrictMode>
     <App />
