@@ -1,5 +1,6 @@
 export { app } from './https/app';
 export { point } from './https/point';
+export { verifySignature } from './https/verifySignature';
 export { callTimestamp } from './callables/callTimestamp';
 export { callCreateEndpoint } from './callables/callCreateEndpoint';
 export { onUserCreate } from './listeners/onUserCreate';
