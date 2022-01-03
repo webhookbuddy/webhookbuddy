@@ -37,7 +37,7 @@ const mapHeaders = (rawHeaders: string[]) => {
 // https://point.webhookbuddy.com/endpoint-reference-id to https://us-central1-webhookbuddy.cloudfunctions.net/point/endpoint-reference-id
 // and
 // https://point-dev.webhookbuddy.com/endpoint-reference-id to https://us-central1-webhookbuddy-dev.cloudfunctions.net/point/endpoint-reference-id
-const point = functions.https.onRequest(async (req, res) => {
+export const point = functions.https.onRequest(async (req, res) => {
   // Trim off the first /, as req.params[0] comes in as:
   // - /
   // - /foo
@@ -81,5 +81,3 @@ const point = functions.https.onRequest(async (req, res) => {
   await Promise.all(promises);
   res.status(204).send();
 });
-
-export default point;
